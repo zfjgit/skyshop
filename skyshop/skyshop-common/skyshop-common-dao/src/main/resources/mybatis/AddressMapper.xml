@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.common.dao.IAddressDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.common.domain.Address">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<association property="parent" column="parentid" select="get"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.common.domain.Address" statementType="PREPARED">
+		INSERT INTO address(parentid, name) VALUES (#{parent.id}, #{name})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM address WHERE id=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.common.domain.Address" statementType="PREPARED" >
+		UPDATE address 
+		SET name=#{name}, 
+		<if test="parent != null">
+			parentid=#{parent.id} 
+		</if>
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM address WHERE id=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT *
+		FROM address  
+		WHERE 1 = 1 
+		<if test="param != null and param.name != null">
+			AND name LIKE CONCAT('%', #{param.name}, '%')
+		</if>
+		<if test="param != null and param.parentId != null">
+			AND parentid = #{param.parentId}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+	
+</mapper>

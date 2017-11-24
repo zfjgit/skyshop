@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>音效测试</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<script type="text/javascript">
+			function award() {
+				document.getElementById('award').play();
+			}
+			function win() {
+				document.getElementById('win').play();
+			}
+			function lose() {
+				document.getElementById('lose').play();
+			}
+		</script>
+	</head>
+	<body>
+		<audio id="award">
+			<!-- // AAC file (Chrome/Safari/IE9) -->
+		    <source src="audio/award.wav" type="audio/wav" />
+		</audio>
+		<audio id="lose">
+			<!-- // AAC file (Chrome/Safari/IE9) -->
+		    <source src="audio/lose.wav" type="audio/wav" />
+			<!-- // Ogg Vorbis (Firefox) -->
+		    <source src="audio/lose.ogg" type="audio/ogg" />
+		</audio>
+		<audio id="win">
+			<!-- // AAC file (Chrome/Safari/IE9) -->
+		    <source src="audio/win1.wav" type="audio/wav" />
+			<!-- // Ogg Vorbis (Firefox) -->
+		    <source src="audio/win1.ogg" type="audio/ogg" />
+		</audio>
+		
+		<input type="button" value="award" onclick="award()"/>
+		<input type="button" value="win" onclick="win()"/>
+		<input type="button" value="lose" onclick="lose()"/>
+	</body>
+</html>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.user.IRolePermissionDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.user.UserRole">
+		<association property="permission" column="permissionid" select="com.sitv.skyshop.massagechair.dao.user.IPermissionDao.get"/>
+		<association property="role" column="roleid" select="com.sitv.skyshop.massagechair.dao.user.IRoleDao.get"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.user.RolePermission" statementType="PREPARED">
+		INSERT INTO rolepermissions
+			(permissionid, roleid) 
+		VALUES 
+			(#{permission.id}, #{role.id})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.massagechair.domain.user.RolePermission">
+		SELECT * FROM rolepermissions WHERE userid=#{permission.id} AND roleid=#{role.id}
+	</select>
+	
+	<select id="findByRole" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM rolepermissions WHERE roleid=#{id}
+	</select>
+	
+	<select id="findByPermission" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM rolepermissions WHERE permissionid=#{id}
+	</select>
+	
+	<delete id="delete" parameterType="com.sitv.skyshop.massagechair.domain.user.RolePermission" statementType="PREPARED">
+	    DELETE FROM rolepermissions WHERE userid=#{permission.id} AND roleid=#{role.id}
+	</delete>
+	
+	<delete id="deleteByRole" parameterType="long" statementType="PREPARED">
+	    DELETE FROM rolepermissions WHERE roleid=#{id}
+	</delete>
+	
+	<delete id="deleteByPermission" parameterType="long" statementType="PREPARED">
+	    DELETE FROM rolepermissions WHERE permissionid=#{id}
+	</delete>
+</mapper>

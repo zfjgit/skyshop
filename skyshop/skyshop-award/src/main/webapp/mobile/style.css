@@ -1,0 +1,72 @@
+﻿body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div{margin:0;padding:0;border:0;}
+body{color:#333; font-size:12px;font-family:"Microsoft YaHei";background: url("images/bg1.jpg");background-size: 100%;background-color: #f6d36e;background-repeat: no-repeat;}
+ul,ol{list-style-type:none;}
+select,input,img,select{vertical-align:middle;}
+input{ font-size:12px;}
+a{ text-decoration:none; color:#000;}
+a:hover{color:#c00; text-decoration:none;}
+.clear{clear:both;}
+.title {color:yellow; text-align: center;font-family:"Microsoft YaHei";padding: 20px 0;font-size: x-large;display: none;}
+
+.marquee {display: inline-block;background-color: transparent;color: red;margin:auto;max-width:400px;overflow:hidden;width: 95%;height: 200px;padding: 0px;border-radius: 5px;font-size: 15px;letter-spacing: 1px;}
+
+/*
+.award-show{opacity:0.95;display:none;text-align:center;background-image: url('images/award.jpg');background-repeat:no-repeat; width: 90%;height: 80%;background-size: cover;top: 50%;left: 50%;position: fixed;z-index:100;border-radius: 10px;box-shadow: 2px 2px 2px #fa6175;}
+*/
+
+.award-show{border:solid 1px #fa6175;opacity:0.95;text-align:center;background-image: url('images/award.jpg');background-repeat:no-repeat; width: 0;height: 0;background-size: cover;top: 50%;left: 50%;position: fixed;z-index:100;border-radius: 10px;box-shadow: 2px 2px 2px #fa6175;}
+
+.award{display:none;color: yellow;font-size: 20px;font-weight:bold; margin-top: 70%;text-align: center;width: 80%;word-wrap:break-word;word-break:break-all;}
+.award-button{display:none;padding: 10px 20px;color: white;font-size: 16px;width: 130px;height: 27px;line-height:27px;background-color: #e84860;text-align: center;margin-top: 10%;}
+
+.award-lose{background-image: url('images/lose.jpg');background-size: 100%;}
+.award-button-lose {margin-top: 91%;width: 170px;height: 32px;line-height: 32px;}
+
+.msg{display:none;background: rgba(255, 255, 255, 0.95);height: auto;width: 0;z-index: 101;}
+.msg-content{display: block;text-align: center;color: #ca1518;padding: 20px;font-size: 16px;height: auto;}
+.button-msg{display: block;margin: auto;margin-bottom: 10px;}
+
+.login-form{background: rgba(255, 255, 255, 0.95);}
+
+.award-list{margin-right: 5px;display: inline-block;width: 100%;text-align: right;}
+.info{padding:3px;color:white;font-size: 15px;max-width: 540px;margin: auto;}
+.list-title{margin: auto;max-width: 540px;color: white;background-color: #a60000;height: 30px;line-height:30px;font-size:25px;text-align:center;font-weight:bold;padding: 10px 0;margin-top: 40px;}
+
+/* 大转盘样式 */
+.banner { display:block; width:95%; margin-left:auto; margin-right:auto; margin-bottom: 0px; max-width: 500px; margin-top: 43%;}
+.banner .turnplate{display:block;width:100%;position:relative;}
+.banner .turnplate canvas.item{width:100%;}
+.banner .turnplate img.pointer{position:absolute;width:60%;height:60%;left:20%;top:20%;}
+
+table {
+	background-color: red;
+	width: 100%;
+}
+
+tr {
+}
+th {
+	height: 40px;
+	background-color: white;
+}
+
+td {
+	height: 40px;
+	background-color: white;
+	overflow: hidden;
+}
+
+/* 宽度超过720px*/
+@media screen and (min-width:720px) {
+	body {
+		background-size: 30%;
+		background-position-x: 50%;
+	}
+	.banner {
+		margin-top: 220px;
+		margin-bottom: 15px;
+	}
+	.award-show {
+		max-width: 25%;
+	}
+}

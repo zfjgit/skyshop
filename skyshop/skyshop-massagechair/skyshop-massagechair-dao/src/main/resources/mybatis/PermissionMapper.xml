@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.user.IPermissionDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.user.Permission">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+		<result column="uri" jdbcType="VARCHAR" property="uri" />
+		<result column="createTime" javaType="java.util.Calendar" property="createTime"/>
+		<result column="updateTime" javaType="java.util.Calendar" property="updateTime"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.user.Permission" statementType="PREPARED">
+		INSERT INTO permissions
+			(name, code, uri) 
+		VALUES 
+			(#{name}, #{code}, #{uri})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM permissions WHERE id=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.user.Permission" statementType="PREPARED" >
+		UPDATE permissions 
+		SET name=#{name}, 
+		 	uri=#{uri},
+		 	code=#{code},
+		 	updateTime=#{updateTime}
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM permissions WHERE id=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT m.*
+		FROM permissions m
+		WHERE 1 = 1 
+		<if test="param != null and param.name != null">
+			AND name LIKE CONCAT('%', #{param.name}, '%')
+		</if>
+		<if test="param != null and param.code != null">
+			AND code LIKE CONCAT('%', #{param.code}, '%')
+		</if>
+		<if test="param != null and param.uri != null">
+			AND uri =#{param.uri}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+</mapper>
