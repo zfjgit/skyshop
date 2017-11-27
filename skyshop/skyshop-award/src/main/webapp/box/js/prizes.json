@@ -1,0 +1,14 @@
+{
+	"prizes":[
+		{"id": 1, "name": "100点 商贸通点数", "probility": 20},
+		{"id": 2, "name": "3张 富苑酒店入住券", "probility": 5},
+		{"id": 3, "name": "谢谢参与", "probility": 30, "noprize": 1},
+		{"id": 4, "name": "1台 iPhone7Plus", "probility": 0},
+		{"id": 5, "name": "500点 商贸通点数", "probility": 10},
+		{"id": 6, "name": "5张 KISS酒吧畅饮券", "probility": 10},
+		{"id": 7, "name": "500元 商贸通奖金", "probility": 10},
+		{"id": 8, "name": "1张 共享平台VIP卡", "probility": 5},
+		{"id": 9, "name": "200元 商贸通奖金", "probility": 10},
+		{"id": 10, "name": "1套 智能家居设备", "probility": 0}
+	]
+}

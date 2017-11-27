@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.device.IGSMModuleDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.device.GSMModule">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="imei" jdbcType="VARCHAR" property="imei" />
+		<result column="module" jdbcType="VARCHAR" property="module" />
+		<result column="createTime" javaType="java.util.Calendar" property="createTime"/>
+		<result column="updateTime" javaType="java.util.Calendar" property="updateTime"/>
+		<association property="simCard" column="simcardid" select="com.sitv.skyshop.massagechair.dao.device.ISIMCardDao.get"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.GSMModule" statementType="PREPARED">
+		INSERT INTO gsmmodules
+			(name, description, imei, module, simcardid) 
+		VALUES 
+			(#{name}, #{description}, #{imei}, #{module}, #{simCard.id})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM gsmmodules WHERE id=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.device.GSMModule" statementType="PREPARED" >
+		UPDATE gsmmodules 
+		SET name=#{name}, 
+		 	description=#{description},
+		 	imei=#{imei},
+		 	module=#{module},
+		 	simcardid=#{simCard.id},
+		 	updateTime=#{updateTime}
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM gsmmodules WHERE id=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT m.*
+		FROM gsmmodules m
+		LEFT JOIN simcards s ON m.simcardid = s.id
+		WHERE 1 = 1 
+		<if test="param != null and param.name != null">
+			AND name LIKE CONCAT('%', #{param.name}, '%')
+		</if>
+		<if test="param != null and param.imei != null">
+			AND imei like CONCAT('%', #{param.imei}, '%')
+		</if>
+		<if test="param != null and param.simCard != null and param.simCard.sim != null">
+			AND s.sim like CONCAT('%', #{param.simCard.sim}, '%')
+		</if>
+		<if test="param != null and param.module != null">
+			AND module like CONCAT('%', #{param.module}, '%')
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+</mapper>

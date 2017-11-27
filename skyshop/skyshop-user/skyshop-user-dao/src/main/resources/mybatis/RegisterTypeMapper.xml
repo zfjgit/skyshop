@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.user.dao.IRegisterTypeDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.user.domain.RegisterType">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="code" jdbcType="VARCHAR" property="code" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.user.domain.RegisterType" statementType="PREPARED">
+		INSERT INTO registertypes(code, name) VALUES (#{code}, #{name})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM registertypes WHERE id=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.user.domain.RegisterType" statementType="PREPARED" >
+		UPDATE registertypes 
+		SET name=#{name}, 
+		SET code=#{code}
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM registertypes WHERE id=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT *
+		FROM registertypes  
+		WHERE 1 = 1 
+		<if test="param != null and param.name != null">
+			AND name LIKE CONCAT('%', #{param.name}, '%')
+		</if>
+		<if test="param != null and param.code != null">
+			AND code = #{param.code}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+</mapper>

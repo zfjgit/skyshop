@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.price.IPromotionPriceDao" >
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.price.PromotionPrice" statementType="PREPARED">
+		INSERT INTO prices
+			(price, type, earlierOn, earlierMoney) 
+		VALUES 
+			(#{name}, #{type}, #{earlierOn}, #{earlierMoney})    
+	</insert>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.price.PromotionPrice" statementType="PREPARED" >
+		UPDATE prices 
+		SET price=#{price}, 
+		 	updateTime=#{updateTime},
+		 	earlierOn=#{earlierOn},
+		 	earlierMoney=#{earlierMoney}
+		WHERE id=#{id}
+	</update>
+	
+</mapper>

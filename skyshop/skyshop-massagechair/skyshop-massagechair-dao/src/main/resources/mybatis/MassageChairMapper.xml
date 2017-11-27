@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.device.MassageChair">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="brand" jdbcType="VARCHAR" property="brand" />
+		<result column="description" jdbcType="VARCHAR" property="description" />
+		<result column="status" jdbcType="VARCHAR" property="status" />
+		<result column="isPromotionPrice" jdbcType="TINYINT" property="isPromotionPrice" />
+		<result column="createtime" property="createTime" />
+		<result column="updatetime" property="updateTime" />
+		<association property="gsmModule" column="gsmmoduleid" select="com.sitv.skyshop.massagechair.dao.device.IGSMModuleDao.get"/>
+		<association property="installationAddress" column="installationAddressid" select="com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao.get"/>
+		<collection property="prices" column="id" select="getPrices" ofType="com.sitv.skyshop.massagechair.domain.price.Price"/>
+	</resultMap>
+	
+	<select id="getPrices" resultMap="com.sitv.skyshop.massagechair.dao.price.IPriceDao.BaseResultMap" parameterType="long">
+		SELECT p.* 
+		FROM pricepackages pp 
+		LEFT JOIN prices p ON pp.priceid=p.id
+		WHERE pp.chairid=#{id}
+	</select>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED">
+		INSERT INTO massagechairs
+			(name, brand, description, ispromotionprice, gsmmoduleid, status) 
+		VALUES 
+			(#{name}, #{brand}, #{description}, #{isPromotionPrice}, #{gsmModule.id}, #{status})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM massagechairs WHERE id=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" >
+		UPDATE massagechairs 
+		SET name=#{name}, 
+		 	brand=#{brand},
+		 	description=#{description},
+		 	isPromotionPrice=#{isPromotionPrice},
+		 	gsmmoduleid=#{gsmModule.id},
+		 	status=#{status}
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM massagechairs WHERE id=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT m.*
+		FROM massagechairs m
+		LEFT JOIN installationaddresses a ON m.installationAddressid = a.id
+		WHERE 1 = 1 
+		<if test="param != null and param.gsmModule != null">
+			AND gsmModuleid = #{param.gsmModule.id}
+		</if>
+		<if test="param != null and param.name != null">
+			AND name LIKE CONCAT('%', #{param.name}, '%')
+		</if>
+		<if test="param != null and param.installationAddress != null and param.installationAddress.fullAddress != null">
+			AND a.fulladdress like CONCAT('%', #{param.installationAddress.fullAddress}, '%')
+		</if>
+		<if test="param != null and param.installationAddress != null and param.installationAddress.contact != null">
+			AND a.contact like CONCAT('%', #{param.installationAddress.contact}, '%')
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+</mapper>

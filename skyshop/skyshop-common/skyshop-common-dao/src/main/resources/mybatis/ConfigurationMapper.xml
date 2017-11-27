@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.common.dao.IConfigurationDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.common.domain.Configuration">
+		<id column="id" property="id" />
+		<result column="name" property="name" />
+		<result column="level" property="level" />
+		<result column="imgurl" property="imgurl" />
+		<result column="createtime" property="createTime" javaType="java.util.Calendar" jdbcType="TIMESTAMP" typeHandler="com.sitv.skyshop.dao.typehandler.CalendarTypeHandler"/>
+		<result column="updatetime" property="updateTime" javaType="java.util.Calendar" jdbcType="TIMESTAMP" typeHandler="com.sitv.skyshop.dao.typehandler.CalendarTypeHandler"/>
+		<result column="serialnumber" property="serialNumber" />
+		<result column="classification" property="classification" />
+		<association property="parent" column="parentid" select="get"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.common.domain.Configuration" statementType="PREPARED">
+		INSERT INTO configurations(parentid, name, classification, level, imgurl, serialnumber, createtime) VALUES (#{parent.id}, #{name}, #{classification}, #{level}, #{imgurl}, #{serialNumber}, #{createTime})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM configurations WHERE id=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.common.domain.Configuration" statementType="PREPARED" >
+		UPDATE configurations 
+		SET name=#{name}, 
+			level=#{level},
+			classification=#{classification},
+			imgurl=#{imgurl},
+			serialnumber=#{serialNumber},
+			updatetime=#{updateTime}
+		<if test="parent != null">
+			parentid=#{parent.id} 
+		</if>
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM configurations WHERE id=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT *
+		FROM configurations  
+		WHERE 1 = 1 
+		<if test="param != null and param.name != null">
+			AND name LIKE CONCAT('%', #{param.name}, '%')
+		</if>
+		<if test="param != null and param.parentId != null">
+			AND parentid = #{param.parentId}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+	
+</mapper>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<meta http-equiv="pragma" content="no-cache">
+<meta http-equiv="cache-control" content="no-cache">
+<meta http-equiv="expires" content="0">
+
+<title>幸运大抽奖</title>
+
+<link href="style.css" rel="stylesheet" type="text/css">
+
+<script type="text/javascript" src="js/jquery-1.10.2.js"></script>
+<script type="text/javascript" src="js/awardRotate.js"></script>
+<script type="text/javascript" src="js/cookie.js"></script>
+<script type="text/javascript" src="js/server.js"></script>
+<script type="text/javascript" src="js/dialogs.js"></script>
+<script type="text/javascript" src="js/award14.js"></script>
+<script type="text/javascript" src="js/distpicker.data.min.js"></script>
+<script type="text/javascript" src="js/distpicker.min.js"></script>
+
+<script type="text/javascript" src="js/aes.js"></script>
+<script type="text/javascript" src="js/util.js"></script>
+
+</head>
+<body style="overflow-x:hidden;">
+    <img src="images/1.png" id="shan-img" style="display:none;" />
+    <img src="images/2.png" id="sorry-img" style="display:none;" />
+    
+    <h1 class="title">&gt;&gt; 参与抽奖，试试手气 &lt;&lt;</h1>
+	<div class="banner">
+		<div class="turnplate" style="background-image:url(images/turnplate-bg.png);background-size:100% 100%;">
+			<canvas class="item" id="wheelcanvas" width="422px" height="422px"></canvas>
+			<img id="pointer" class="pointer" src="images/turnplate-pointer.png"/>
+		</div>
+	</div>
+	
+	<div class="info">
+    	<div style="float: left;">
+	    	<span style="margin-left: 10px;">玩家：<span style="color: #ca1518;" id="player">-</span></span><br/>
+	    	<span style="margin-left: 10px;">大米点数：<span style="color: #ca1518;" id="point">-</span></span>
+    	</div>
+    	<div style="float: right;">
+    		<span class="award-list">【<a href="javascript:void(0);" onclick="showAwards();" style="color: #ca1518;">中奖记录</a>】</span><br/>
+    		<span style="margin-right: 5px;font-size: 14px;">抽一次仅需 <span id="cost" style="color: #ca1518;">-</span> 点</span>
+    	</div>
+    </div>
+    
+    <div class="list-title">
+    	中奖名单
+    </div>
+    
+	<div id="award-show" class="award-show">
+		<div id="award" class="award"></div>
+		<div id="addr" style="margin:auto;margin-top: 10%;width: 95%;display: none;border:solid 1px #ca1518;border-radius:10px;padding: 10px 0;">
+			<div id="div-newaddr" style="margin-top: 5px;display: none;font-size:16px;" data-toggle="distpicker">
+				<div><span style="visibility: hidden;">收</span>收货人：<input id="user_name" style="width: 60%;height: 21px;font-size: 16px;" placeholder="收货人" disabled/></div>
+				<div style="margin-top: 3px;">收货地址：<input id="user_address" style="width: 60%;height: 21px;font-size: 16px;" placeholder="收货地址" disabled/></div>
+				<div style="margin-top: 3px;">联系电话：<input id="user_tel" style="width: 60%;height: 21px;font-size: 16px;" placeholder="联系电话" disabled/></div>
+				<div style="margin-top: 10px;"><a id="btn-addr" style="margin-top:5px;font-size: 16px;padding:5px 10px;border:none;background-color:#fa6175;border-radius:5px;color:white;">编辑</a></div>
+			</div>
+		</div>
+		<div>
+			<a id="award-button" href="javascript:void(0)" onclick="hideWin()" class="award-button">再玩一次</a>
+		</div>
+	</div>
+	
+	<div id="award-lose" class="award-show award-lose" >
+		<div>
+			<a id="award-button-lose" href="javascript:void(0)" onclick="hideLose();" class="award-button award-button-lose" >再玩一次</a>
+		</div>
+	</div>
+	
+	<div id="msg" class="award-show msg">
+		<div id="msg-content" class="msg-content" style="max-height:10%;overflow:auto;"></div>
+		<div>
+			<a id="button-msg" href="javascript:void(0)" onclick="hideMsg();" class="award-button button-msg">确定</a>
+		</div>
+	</div>
+	
+	<div id="login-form" class="award-show login-form">
+		<div id="form-content" class="msg-content" style="display: none;">
+			<div style="text-align:center;font-weight:bold;font-size:22px;">商贸通登录</div>
+			<table cellspacing="0" style="border:none;background-color: white;margin-top:10px;">
+				<tr style="background-color:white;"><td style="width:100px;">商贸通账号：</td><td><input id="account" style="width:95%;height: 22px;font-size:16px;padding:2px;border:solid 1px #e84c5f;"/></td></tr>
+				<tr style="background-color:white;"><td style="width:100px;">商贸通密码：</td><td><input type="password" id="password" style="width:95%;height: 22px;padding:2px;font-size:16px;border:solid 1px #e84c5f;"/></td></tr>
+			</table>
+		</div>
+		<div>
+			<a id="button-login" href="javascript:void(0)" onclick="login();" class="award-button button-msg" style="display: none;">登录</a>
+		</div>
+	</div>
+	
+	<audio id="award-audio">
+		<source src="audio/award.wav" type="audio/wav">
+	</audio>
+	<audio id="win-audio">
+		<!-- // AAC file (Chrome/Safari/IE9) -->
+		    <source src="audio/win1.wav" type="audio/wav" />
+			<!-- // Ogg Vorbis (Firefox) -->
+		    <source src="audio/win1.ogg" type="audio/ogg" />
+	</audio>
+	<audio id="lose-audio">
+		<!-- // AAC file (Chrome/Safari/IE9) -->
+		    <source src="audio/lose.wav" type="audio/wav" />
+			<!-- // Ogg Vorbis (Firefox) -->
+		    <source src="audio/lose.ogg" type="audio/ogg" />
+	</audio>
+	
+	<div>
+		<h1 class="title">&gt;&gt; 中奖名单 &lt;&lt;</h1>
+		<div style="text-align: center;margin-bottom: 20px;">
+			<marquee direction="down" class="marquee" scrollamount="20" scrolldelay="400" behavior="alternate">
+				<div style="display: inline-block;padding: 10px 10px;float: left;">
+					<ul style="list-style: none;">
+						<li>1569****851</li>
+						<li>1515****206</li>
+						<li>1550****789</li>
+						<li>1370****627</li>
+						<li>1828****215</li>
+						<li>1569****851</li>
+						<li>1515****206</li>
+						<li>1550****789</li>
+						<li>1370****627</li>
+						<li>1828****215</li>
+					</ul>
+				</div>
+				
+				<div style="display: inline-block;padding: 10px 10px;float: left;">
+					<ul style="list-style: none;">
+						<li>1569****851</li>
+						<li>1515****206</li>
+						<li>1550****789</li>
+						<li>1370****627</li>
+						<li>1828****215</li>
+						<li>1569****851</li>
+						<li>1515****206</li>
+						<li>1550****789</li>
+						<li>1370****627</li>
+						<li>1828****215</li>
+					</ul>
+				</div>
+				
+				<div style="display: inline-block;padding: 10px 10px;float: left;">
+					<ul style="list-style: none;">
+						<li>1569****851</li>
+						<li>1515****206</li>
+						<li>1550****789</li>
+						<li>1370****627</li>
+						<li>1828****215</li>
+						<li>1569****851</li>
+						<li>1515****206</li>
+						<li>1550****789</li>
+						<li>1370****627</li>
+						<li>1828****215</li>
+					</ul>
+				</div>
+				
+			</marquee>
+		</div>
+	</div>
+</body>
+</html>

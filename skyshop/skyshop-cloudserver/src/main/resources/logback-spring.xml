@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="true">
+    
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder charset="UTF-8" >
+			<pattern >%d{yyyy-MM-dd HH:mm:ss} %level [%thread] %replace(%caller{1}){'(\bCaller\+?0?\s*at?)|\r|\n|\t', ''}    -     %msg%n  </pattern>
+		</encoder>
+	</appender>
+
+	<appender name="logfile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<File>${logs.dir}/skyshop-cloudserver.log</File>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<FileNamePattern>${logs.dir}/skyshop-cloudserver.log.%d{yyyy-MM-dd}.gz
+			</FileNamePattern>
+		</rollingPolicy>
+		<encoder charset="UTF-8">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %level [%thread] %replace(%caller{1}){'(\bCaller\+?0?\s*at?)|\r|\n|\t', ''}    -     %msg%n  
+			</pattern>
+		</encoder>
+	</appender>
+
+<!-- 	<appender name="sql-appender" -->
+<!-- 		class="ch.qos.logback.core.rolling.RollingFileAppender"> -->
+<!-- 		<File>${catalina.home}/logs/sql.log</File> -->
+<!-- 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> -->
+<!-- 			<FileNamePattern>${catalina.home}/logs/sql.log.%d{yyyy-MM-dd}.gz -->
+<!-- 			</FileNamePattern> -->
+<!-- 		</rollingPolicy> -->
+<!-- 		<encoder charset="UTF-8"> -->
+<!-- 			<pattern>%X{sessionId} %date [%thread] %-5level %logger{80} - %msg%n -->
+<!-- 			</pattern> -->
+<!-- 		</encoder> -->
+<!-- 	</appender> -->
+
+<!-- 	<appender name="sql-timing-appender" -->
+<!-- 		class="ch.qos.logback.core.rolling.RollingFileAppender"> -->
+<!-- 		<File>${catalina.home}/logs/sqltiming.log</File> -->
+<!-- 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> -->
+<!-- 			<FileNamePattern>${catalina.home}/logs/sqltiming.log.%d{yyyy-MM-dd}.gz -->
+<!-- 			</FileNamePattern> -->
+<!-- 		</rollingPolicy> -->
+<!-- 		<encoder charset="UTF-8"> -->
+<!-- 			<pattern>%X{sessionId} %date [%thread] %-5level %logger{80} - %msg%n -->
+<!-- 			</pattern> -->
+<!-- 		</encoder> -->
+<!-- 	</appender> -->
+
+<!-- 	<appender name="jdbc-appender" -->
+<!-- 		class="ch.qos.logback.core.rolling.RollingFileAppender"> -->
+<!-- 		<File>${catalina.home}/logs/jdbc.log</File> -->
+<!-- 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> -->
+<!-- 			<FileNamePattern>${catalina.home}/logs/jdbc.log.%d{yyyy-MM-dd}.gz -->
+<!-- 			</FileNamePattern> -->
+<!-- 		</rollingPolicy> -->
+<!-- 		<encoder charset="UTF-8"> -->
+<!-- 			<pattern>%X{sessionId} %date [%thread] %-5level %logger{80} - %msg%n -->
+<!-- 			</pattern> -->
+<!-- 		</encoder> -->
+<!-- 	</appender> -->
+
+<!-- 	<appender name="jdbc-connection-appender" -->
+<!-- 		class="ch.qos.logback.core.rolling.RollingFileAppender"> -->
+<!-- 		<File>${catalina.home}/logs/connection.log</File> -->
+<!-- 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> -->
+<!-- 			<FileNamePattern>${catalina.home}/logs/connection.log.%d{yyyy-MM-dd}.gz -->
+<!-- 			</FileNamePattern> -->
+<!-- 		</rollingPolicy> -->
+<!-- 		<encoder charset="UTF-8"> -->
+<!-- 			<pattern>%X{sessionId} %date [%thread] %-5level %logger{80} - %msg%n -->
+<!-- 			</pattern> -->
+<!-- 		</encoder> -->
+<!-- 	</appender> -->
+
+<!-- 	<logger name="jdbc.sqlonly" additivity="false"> -->
+<!-- 		<level value="INFO" /> -->
+<!-- 		<appender-ref ref="sql-appender" /> -->
+<!-- 	</logger> -->
+
+<!-- 	<logger name="jdbc.sqltiming" additivity="false"> -->
+<!-- 		<level value="fatal" /> -->
+<!-- 		<appender-ref ref="sql-timing-appender" /> -->
+<!-- 	</logger> -->
+
+<!-- 	<logger name="jdbc.audit" additivity="false"> -->
+<!-- 		<level value="fatal" /> -->
+<!-- 		<appender-ref ref="jdbc-appender" /> -->
+<!-- 	</logger> -->
+
+<!-- 	<logger name="jdbc.resultset" additivity="false"> -->
+<!-- 		<level value="fatal" /> -->
+<!-- 		<appender-ref ref="jdbc-appender" /> -->
+<!-- 	</logger> -->
+
+<!-- 	<logger name="jdbc.connection" additivity="false"> -->
+<!-- 		<level value="fatal" /> -->
+<!-- 		<appender-ref ref="jdbc-connection-appender" /> -->
+<!-- 	</logger> -->
+
+<!-- 	<logger name="log4jdbc.debug" additivity="false"> -->
+<!-- 		<level value="fatal" /> -->
+<!-- 		<appender-ref ref="stdout" /> -->
+<!-- 		<appender-ref ref="logfile" /> -->
+<!-- 	</logger> -->
+	
+	<logger name="com.sitv" additivity="false">
+	    <level value="INFO"/>
+	    <appender-ref ref="stdout" />
+		<appender-ref ref="logfile" />
+	</logger>
+
+	<root level="INFO">
+		<appender-ref ref="stdout" />
+		<appender-ref ref="logfile"/>
+	</root>
+</configuration>
+

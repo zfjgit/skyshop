@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.device.IPricePackageDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.device.PricePackage">
+		<association property="price" column="priceid" select="com.sitv.skyshop.massagechair.dao.price.IPriceDao.get"/>
+		<association property="massageChair" column="chairid" select="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao.get"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.PricePackage" statementType="PREPARED">
+		INSERT INTO pricepackages
+			(chairid, priceid) 
+		VALUES 
+			(#{massageChair.id}, #{price.id})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.massagechair.domain.device.PricePackage">
+		SELECT * FROM pricepackages WHERE chairid=#{massageChair.id} AND priceid=#{price.id}
+	</select>
+	
+	<select id="findByPrice" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM pricepackages WHERE priceid=#{id}
+	</select>
+	
+	<select id="findByChair" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM pricepackages WHERE chairid=#{id}
+	</select>
+	
+	<delete id="delete" parameterType="com.sitv.skyshop.massagechair.domain.device.PricePackage" statementType="PREPARED">
+	    DELETE FROM pricepackages WHERE chairid=#{massageChair.id} AND priceid=#{price.id}
+	</delete>
+	
+	<delete id="deleteByChair" parameterType="long" statementType="PREPARED">
+	    DELETE FROM pricepackages WHERE chairid=#{id} 
+	</delete>
+	
+	<delete id="deleteByPrice" parameterType="long" statementType="PREPARED">
+	    DELETE FROM pricepackages WHERE priceid=#{id}
+	</delete>
+
+	
+</mapper>

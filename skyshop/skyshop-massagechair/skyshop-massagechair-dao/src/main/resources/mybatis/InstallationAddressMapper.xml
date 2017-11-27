@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.device.InstallationAddress">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="fullAddress" jdbcType="VARCHAR" property="fullAddress" />
+		<result column="location" jdbcType="VARCHAR" property="location" />
+		<result column="contact" jdbcType="VARCHAR" property="contact" />
+		<result column="contactNumber" jdbcType="VARCHAR" property="contactNumber" />
+		<result column="createTime" property="createTime" />
+		<result column="updateTime" property="updateTime" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.InstallationAddress" statementType="PREPARED">
+		INSERT INTO installationaddresses
+			(fulladdress, location, contact, contactNumber) 
+		VALUES 
+			(#{fullAddress}, #{location}, #{contact}, #{contactNumber})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM installationaddresses WHERE id=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.device.InstallationAddress" statementType="PREPARED" >
+		UPDATE installationaddresses 
+		SET fullAddress=#{fullAddress}, 
+		 	location=#{location},
+		 	contact=#{contact},
+		 	contactNumber=#{contactNumber},
+		 	updateTime=#{updateTime}
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM installationaddresses WHERE id=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT m.*
+		FROM installationaddresses m
+		WHERE 1 = 1 
+		<if test="param != null and param.fullAddress != null">
+			AND fullAddress LIKE CONCAT('%', #{param.fullAddress}, '%')
+		</if>
+		<if test="param != null and param.contact != null">
+			AND contact like CONCAT('%', #{param.contact}, '%')
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+	
+</mapper>

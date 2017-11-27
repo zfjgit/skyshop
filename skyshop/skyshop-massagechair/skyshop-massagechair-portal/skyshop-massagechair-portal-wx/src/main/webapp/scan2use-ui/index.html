@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>选择费率 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		<script type="text/javascript" src="plugins/jquery-3.2.1.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+			    $("<link/>", {
+					   rel: "shortcut icon",
+						type: "image/png",
+					   href: "images/logo.png"
+					}).appendTo("head");
+			    
+			    $('.btn > img').click(function(){
+			        // 请求后台，检测设备
+					var imei = 123456;
+			        var chair = '第123456号按摩椅';
+			        var price = $(this).attr('title');
+			        
+			        // 发起支付
+			        var out_trade_no = new Date().getTime();
+			        var body = chair + '_' + price;
+			        var total_fee = 1;
+			        var notify_url = 'http://www.tba-taobao.com/chair-wx/working.html';
+			        var backUrl = 'http://www.tba-taobao.com/chair-wx/working.html';
+			        var openid = '';
+			        
+			        var url = 'http://kehu.tba-taobao.com/WXPayAPI_QQT/PayJsAPIOpenid.aspx?out_trade_no=' + out_trade_no + '&body=' 
+			            + body + '&total_fee=' + total_fee + '&backUrl=' + backUrl + '&notify_url=' + notify_url;
+			        
+			        window.location.href = url;
+			        //window.location.href = 'pay.html';
+			    });
+			});
+		</script>
+	</head>
+	<body>
+		<div class="header" >
+		</div>
+		<div class="content">
+			<div class="btn"><img mins="5" title="5分钟套餐" src="images/f1.png" /></div>
+			<div class="btn"><img mins="10" title="10分钟套餐" src="images/f2.png" /></div>
+			<div class="btn"><img mins="15" title="15分钟套餐" src="images/f3.png" /></div>
+			<div class="btn"><img mins="20" title="20分钟套餐" src="images/f4.png" /></div>
+		</div>
+	</body>
+</html>

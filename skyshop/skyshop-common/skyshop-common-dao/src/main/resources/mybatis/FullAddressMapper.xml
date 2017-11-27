@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.common.dao.IFullAddressDao" >
+
+    <resultMap id="AddressResultMap" type="com.sitv.skyshop.common.domain.Address">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<association property="parent" column="parentid" select="getAddress"/>
+	</resultMap>
+	
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.common.domain.FullAddress">
+		<id column="id" property="id" />
+		<result column="detailaddress" property="detailAddress"/>
+		<result column="fullAddress" property="fullAddress"/>
+		<association column="provinceid" property="province" select="getAddress" />
+		<association column="cityid" property="city" select="getAddress" />
+		<association column="districtid" property="district" select="getAddress" />
+	</resultMap>
+	
+	<select id="getAddress" resultMap="AddressResultMap" parameterType="long">
+		SELECT * FROM address WHERE id=#{id}
+	</select>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.common.domain.FullAddress" statementType="PREPARED">
+		INSERT INTO fulladdresses(provinceid, cityid, districtid, detailaddress, fulladdress) VALUES (#{province.id}, #{city.id}, #{district.id}, #{detailaddress}, #{fulladdress})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM fulladdresses WHERE id=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.common.domain.FullAddress" statementType="PREPARED" >
+		UPDATE fulladdresses 
+		SET provinceid=#{province.id}, 
+			cityid=#{city.id},
+			districtid=#{district.id},
+			detailaddress=#{detailaddress},
+			fulladdress=#{fulladdress}
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM fulladdresses WHERE id=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT *
+		FROM fulladdresses  
+		WHERE 1 = 1 
+		<if test="param != null and param.fullAddress != null">
+			AND fullAddress LIKE CONCAT('%', #{param.fullAddress}, '%')
+		</if>
+		<if test="param != null and param.provinceId != null">
+			AND provinceId = #{param.provinceId}
+		</if>
+		<if test="param != null and param.cityId != null">
+			AND cityId = #{param.cityId}
+		</if>
+		<if test="param != null and param.districtId != null">
+			AND districtId = #{param.districtId}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+	
+</mapper>

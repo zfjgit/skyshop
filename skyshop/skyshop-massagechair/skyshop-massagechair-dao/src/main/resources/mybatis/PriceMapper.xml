@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.price.IPriceDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.price.Price">
+		<id column="id" jdbcType="BIGINT" property="id" />
+		<result column="price" jdbcType="DECIMAL" property="price" />
+		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="createTime" property="createTime" />
+		<result column="updateTime" property="updateTime" />
+		<discriminator javaType="java.lang.String" column="type">
+		    <case value="FixedPrice" resultType="com.sitv.skyshop.massagechair.domain.price.FixedPrice">
+		    </case>
+		    <case value="MinutePrice" resultType="com.sitv.skyshop.massagechair.domain.price.MinutePrice">
+		    </case>
+		    <case value="PromotionPrice" resultType="com.sitv.skyshop.massagechair.domain.price.PromotionPrice">
+		        <result column="earlieron" jdbcType="INTEGER" property="earlierOn" />
+				<result column="earlierMoney" jdbcType="DECIMAL" property="earlierMoney" />
+		    </case>
+		</discriminator>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.price.Price" statementType="PREPARED">
+		INSERT INTO prices
+			(name, price, type) 
+		VALUES 
+			(#{name},#{price}, #{type})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM prices WHERE id=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.price.Price" statementType="PREPARED" >
+		UPDATE prices 
+		SET price=#{price}, 
+		 	updateTime=#{updateTime}
+		WHERE id=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM prices WHERE id=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT m.*
+		FROM prices m
+		WHERE 1 = 1 
+		<if test="param != null and param.name != null">
+			AND name LIKE CONCAT('%', #{param.name}, '%')
+		</if>
+		<if test="param != null and param.price != null">
+			AND price &lt;= #{param.price}
+		</if>
+		<if test="param != null and param.type != null">
+			AND type = #{param.type}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+</mapper>
