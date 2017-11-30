@@ -21,11 +21,11 @@
 			<scope>test</scope>
 		</dependency>
 		
-		<dependency>
-			<groupId>com.sitv</groupId>
-			<artifactId>skyshop-massagechair-portal-api</artifactId>
-			<version>${massagechair.version}</version>
-		</dependency>
+<!-- 		<dependency> -->
+<!-- 			<groupId>com.sitv</groupId> -->
+<!-- 			<artifactId>skyshop-massagechair-portal-api</artifactId> -->
+<!-- 			<version>${massagechair.version}</version> -->
+<!-- 		</dependency> -->
 		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
