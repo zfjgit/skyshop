@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>代理商管理 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+		<link rel="stylesheet" type="text/css" href="../../../plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../plugins/jqweui/css/jquery-weui.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
+
+		
+		<script type="text/javascript" src="../../../plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../plugins/jqweui/js/jquery-weui.js"></script>
+		<script type="text/javascript" src="../../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../js/admin.js"></script>
+		<script type="text/javascript">
+		$(function(){
+		    $('#item-agents').click(function(){
+		        $.showLoading();
+		        
+		        $('#item-content').load('agents_list.html', function(){
+		            $.hideLoading();
+		        });
+		        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
+		        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
+		        
+		        sessionStorage.agents_tab = 'item-agents';
+		    });
+		    $('#item-chair').click(function(){
+		        $.showLoading();
+		        $('#item-content').load('agents_chair_list.html', function(){
+		            $.hideLoading();
+		        });
+		        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
+		        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
+		        
+		        sessionStorage.agents_tab = 'item-chair';
+		    });
+		    $('#item-addr').click(function(){
+		        $.showLoading();
+		        $('#item-content').load('agents_addr_list.html', function(){
+		            $.hideLoading();
+		        });
+		        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
+		        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
+		        
+		        sessionStorage.agents_tab = 'item-addr';
+		    });
+		    $('#item-income').click(function(){
+		        $.showLoading();
+		        $('#item-content').load('agents_income_list.html', function(){
+		            $.hideLoading();
+		        });
+		        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
+		        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
+		        
+		        sessionStorage.agents_tab = 'item-income';
+		    });
+		    
+		    if(!sessionStorage.agents_tab) {
+			    $('#item-agents').click();
+		    } else {
+		        $('#' + sessionStorage.agents_tab).click();
+		    }
+		    
+		    $("#sub-picker").select({
+		        title: "请选择下级",
+		        multi: true,
+		        items: [
+		          {
+		            title: "代理商--1",
+		            value: '1'
+		          },
+		          {
+		            title: "代理商--2",
+		            value: '2'
+		          },
+		          {
+		            title: "代理商--3",
+		            value: '3'
+		          },
+		          {
+		            title: "代理商--4",
+		            value: '4'
+		          }
+		        ]
+		      });
+		    
+		});
+		</script>
+	</head>
+	<body>
+		<div class="h_nav" >
+			<div class="h_back">&lt;</div>
+			<div class="h_title">代理商管理</div>
+		</div>
+		<div class="content">
+			<table class="t_table">
+				<tr>
+					<td class="t_fieldname">代理商名称</td>
+					<td class=" t_bg_white t_fieldvalue">沃尔玛</td>
+				</tr>
+				<tr>
+					<td class="t_fieldname">代理商级别</td>
+					<td class=" t_bg_white t_fieldvalue">区域总代</td>
+				</tr>
+			</table>
+			
+			<div style="margin-bottom: 10px;">
+				<div class="weui-btn weui-btn_mini weui-btn_primary" onclick="window.location.href='agents_detail.html?id=1';">查看详情</div> 
+				<div id="sub-picker" class="weui-btn weui-btn_mini weui-btn_primary" style="margin-left: 20px;">新增下级</div>
+			</div>
+			
+			<div class="weui-tab">
+				<div class="weui-navbar" style="position: inherit;">
+				  <div id="item-agents" class="weui-navbar__item weui-bar__item--on weui-tab__bd-item--active">
+				    	下级
+				  </div>
+				  <div id="item-addr" class="weui-navbar__item" >
+				    	场所
+				  </div>
+				  <div id="item-chair" class="weui-navbar__item" >
+				    	设备
+				  </div>
+				  <div id="item-income" class="weui-navbar__item" >
+				    	收益
+				  </div>
+				</div>
+		        <div id="item-content">
+				
+				</div>
+			</div>	
+		</div>
+		
+	</body>
+</html>

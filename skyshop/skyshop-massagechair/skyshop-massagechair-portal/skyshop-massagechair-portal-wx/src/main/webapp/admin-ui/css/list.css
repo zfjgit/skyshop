@@ -1,0 +1,132 @@
+@CHARSET "UTF-8";
+
+.h_nav {
+	padding: 10px 0;
+	width: 100%;
+	background-color: #64afdc;
+	color: white;
+	font-size: 20px;
+}
+.h_back {
+	color: white;
+	position: absolute;
+	left: 0px;
+	width: 40px;
+	height: 25px;
+	line-height: 25px;
+	font-size: 25px;
+}
+.t_nav_btn {
+	position: absolute;
+	right: 10px;
+	top:10px;
+}
+.h_title {
+	
+}
+
+.search {
+	width: 100%;
+}
+.t_search{
+	color:gray;
+	font-size: 14px;
+	text-align: left;
+	padding: 10px;
+}
+.t_table {
+	width: 100%;
+	border-collapse: separate;
+	table-layout:fixed;
+}
+.t_field {
+	margin-top: 1px;
+	width: 100%;
+}
+.t_fieldname {
+	background-color: white;
+	padding: 10px;
+	text-align: left;
+	width: 40%;
+	font-size: 15px;
+}
+.t_fieldvalue {
+	background-color: #ddd;
+	padding: 10px;
+	text-align: left;
+	font-size: 15px;
+	width: 60%;
+}
+.t_text {
+	font-size: 15px;
+	border: none;
+	background: none;
+	width: 100%;
+	outline: none;
+}
+.t_area_btn {
+	text-align: left;
+	padding: 20px 10px;
+}
+.t_table_title {
+	color: #ff8040;
+	font-size: 20px;
+	display: inline-block;
+}
+.t_btn {
+	color:#ff8040;
+	font-size: 20px;
+	border: solid 1px #ff8040;
+	float: right;
+	border-radius: 5px;
+	width: 80px;
+}
+
+.t_check_btn {
+	float: none;
+	display: inline-block;
+	width: 100px;
+	padding: 5px 10px;
+}
+.t_search_results {
+	
+}
+.t_search_total {
+	text-align:left;
+	padding: 15px 10px;
+	background-color: white;
+	font-size: 15px;
+}
+.money {
+	color: #ff8040;
+	font-size: 20px;
+}
+.t_table_head {
+	background-color: #ddd;
+}
+.t_table_head td {
+	padding:10px;
+}
+.t_table_body {
+	background-color: white;
+}
+.t_table_body td {
+	padding:10px;
+	word-wrap:break-word;
+}
+.t_order_no {
+	width: 15%;
+}
+.serialno {
+	width:40px;
+}
+.t_exit_btn {
+	padding: 10px;
+	border: solid 1px #1e98e1;
+	background-color: #1e98e1;
+	border-radius: 5px;
+	color: white;
+}
+.tb_search_table {
+	overflow: auto;
+}

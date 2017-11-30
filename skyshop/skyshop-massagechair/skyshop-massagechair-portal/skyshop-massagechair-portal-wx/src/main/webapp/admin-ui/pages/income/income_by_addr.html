@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>场所收益列表 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+<!-- 		<link rel="stylesheet" type="text/css" href="css/style.css"/> -->
+<!-- 		<link rel="stylesheet" type="text/css" href="css/list.css"/> -->
+<!-- 		<script type="text/javascript" src="../plugins/jquery-3.2.1.min.js"></script> -->
+<!-- 		<script type="text/javascript" src="js/admin.js"></script> -->
+		<script type="text/javascript">
+			$(function(){
+			    $('.t_date').calendar();
+			});
+		</script>
+	</head>
+	<body>
+		<div class="h_nav" style="display: none;">
+			<div class="h_back">&lt;</div>
+			<div class="h_title">场所收益列表</div>
+		</div>
+		<div class="content">
+			<div class="search">
+				<div class="t_search">选择查询时段，最多查询30天或自然月内的收益情况。</div>
+				<table class="t_table">
+					<tr>
+						<td class="t_fieldname">选择开始时间</td>
+						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-21" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">选择结束时间</td>
+						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-22" readonly="readonly"/></td>
+					</tr>
+				</table>
+				<div class="t_area_btn">
+					<div class="t_table_title">场所收益明细</div><div class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+				</div>
+			</div>
+			<div class="t_search_results">
+				<div class="t_search_total">查询总收益：<span class="money">100.00</span> 元</div>
+				<div class="tb_search_table">
+					<table class="t_table" style="width: 650px;">
+						<thead class="t_table_head">
+							<tr>
+								<td>场所</td>
+								<td>设备</td>
+								<td>订单数</td>
+								<td>收益（元）</td>
+								<td>均收（元）</td>
+								<td>详情</td>
+							</tr>
+						</thead>
+						<tbody class="t_table_body">
+							<tr>
+								<td>电影院</td>
+								<td>15</td>
+								<td>20</td>
+								<td>300.00</td>
+								<td>20.00</td>
+								<td><a href="income_by_addr_detail.html">&gt;</a></td>
+							</tr>
+							<tr>
+								<td>沃尔玛</td>
+								<td>10</td>
+								<td>20</td>
+								<td>300.00</td>
+								<td>20.00</td>
+								<td><a href="income_by_addr_detail.html">&gt;</a></td>
+							</tr>
+							<tr>
+								<td>公园</td>
+								<td>15</td>
+								<td>20</td>
+								<td>300.00</td>
+								<td>20.00</td>
+								<td><a href="income_by_addr_detail.html">&gt;</a></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>代理商详细情况 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+		<link rel="stylesheet" type="text/css" href="../../../plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../plugins/jqweui/css/jquery-weui.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
+
+		
+		<script type="text/javascript" src="../../../plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../plugins/jqweui/js/jquery-weui.js"></script>
+		<script type="text/javascript" src="../../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../js/admin.js"></script>
+		<script type="text/javascript">
+			$(function(){
+			    var search = window.location.search;
+			    if(!search) {
+			        
+			    }
+			    
+			    $("#lv-picker").select({
+			        title: "请选择级别",
+			        multi: false,
+			        items: [
+			          {
+			            title: "平台/公司",
+			            value: 'A'
+			          },
+			          {
+			            title: "区域总代",
+			            value: 'C'
+			          },
+			          {
+			            title: "代理商-E",
+			            value: 'E'
+			          },
+			          {
+			            title: "代理商-M",
+			            value: 'M'
+			          }
+			        ]
+			      });
+			    
+			    $("#parent-picker").select({
+			        title: "请选择上级",
+			        multi: false,
+			        items: [
+			          {
+			            title: "系统",
+			            value: 'A'
+			          },
+			          {
+			            title: "区域总代--1",
+			            value: '1'
+			          },
+			          {
+			            title: "区域总代--2",
+			            value: '2'
+			          }
+			        ]
+			      });
+			});
+			
+		</script>
+	</head>
+	<body>
+		<div class="h_nav" >
+			<div class="h_back">&lt;</div>
+			<div class="h_title">场所详情</div>
+<!-- 			<div class=" t_nav_btn" onclick="">保存</div> -->
+		</div>
+		<div class="content">
+			<div class="t_search_results">
+				<table class="t_table">
+					<tr>
+						<td class="t_fieldname">请输入名称</td>
+						<td class="t_fieldvalue">
+							<input class="t_text" value="" placeholder="名称" />
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">请选择级别</td>
+						<td class="t_fieldvalue">
+							<input id="lv-picker" class="t_text" value="" placeholder="级别" />
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">分成比例</td>
+						<td class="t_fieldvalue"><input type="number" class="t_text" value="" placeholder="分成比例" /></td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">余额</td>
+						<td class="t_fieldvalue"><input type="number" class="t_text" value="" placeholder="余额" /></td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">上级</td>
+						<td class="t_fieldvalue"><input id="parent-picker" class="t_text" value="" placeholder="上级" /></td>
+					</tr>
+				</table>
+			</div>
+			<div style="margin-top: 10px;">
+				<div id="btn_save" class="weui-btn weui-btn_primary" style="width: 80%">保存</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>设备详细情况 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+		<link rel="stylesheet" type="text/css" href="../../../plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../plugins/jqweui/css/jquery-weui.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
+
+		
+		<script type="text/javascript" src="../../../plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../plugins/jqweui/js/jquery-weui.js"></script>
+		<script type="text/javascript" src="../../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../js/admin.js"></script>
+		<script type="text/javascript">
+			$(function(){
+			    var search = window.location.search;
+			    if(!search) {
+			        $('.h_title').text('新增按摩椅');
+			        $('#btn_delete').hide();
+			        $('#btn_fault').hide();
+			    }
+			    
+			    $("#addr-picker").picker({
+			        title: "请选择场所",
+			        cols: [
+			          {
+			            textAlign: 'center',
+			            values: ['无', '沃尔玛', '电影院', '公园']
+			          }
+			        ]
+			    });
+			    
+			    $("#gsm-picker").picker({
+			        title: "请选择模块",
+			        cols: [
+			          {
+			            textAlign: 'center',
+			            values: ['模块-1', '模块-2', '模块-3']
+			          }
+			        ]
+			    });
+			    
+			    $("#status-picker").picker({
+			        title: "请选择状态",
+			        cols: [
+			          {
+			            textAlign: 'center',
+			            values: ['正常', '故障']
+			          }
+			        ]
+			    });
+			    
+			    $("#price-picker").select({
+			        title: "请选择价格",
+			        multi: true,
+			        items: [
+			          {
+			            title: "5元10分钟",
+			            value: 1
+			          },
+			          {
+			            title: "10元20分钟",
+			            value: 2
+			          }
+			        ]
+			      });
+			    
+			    $('#btn_delete').click(function(){
+			        $.confirm("确认删除这个设备？", function() {
+			            //点击确认后的回调函数
+			        }, function() {
+			            //点击取消后的回调函数
+			        });
+			    });
+			    
+			    $('#btn_fault').click(function() {
+			        $.prompt({
+			            title: '报告故障',
+			            text: '',
+			            input: '输入故障描述',
+			            empty: false, // 是否允许为空
+			            onOK: function (input) {
+			              //点击确认
+			            },
+			            onCancel: function () {
+			              //点击取消
+			            }
+			          });
+			    });
+			    
+			    
+				$('#btn_qrcode').click(function() {
+				    $("#popup-qrcode").popup();
+			    });
+			});
+			
+		</script>
+	</head>
+	<body>
+		<div class="h_nav" >
+			<div class="h_back">&lt;</div>
+			<div class="h_title">按摩椅详情</div>
+		</div>
+		<div class="content">
+			<div class="t_search_results">
+				<table class="t_table">
+					<tr>
+						<td class="t_fieldname">输入编号</td>
+						<td class="t_fieldvalue">
+							<input id="" class="t_text" value="" placeholder="编号" />
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">设备品牌</td>
+						<td class="t_fieldvalue">
+							<input id="" class="t_text" value="" placeholder="设备品牌" />
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">选择场所</td>
+						<td class="t_fieldvalue">
+							<input id="addr-picker" class="t_text" value="" placeholder="场所" />
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">选择模块</td>
+						<td class="t_fieldvalue"><input id="gsm-picker" class="t_text" value="" placeholder="模块" /></td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">选择状态</td>
+						<td class="t_fieldvalue"><input id="status-picker" class="t_text" value="" placeholder="状态" /></td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">选择价格</td>
+						<td class="t_fieldvalue"><input id="price-picker" class="t_text" value="" placeholder="价格" /></td>
+					</tr>
+				</table>
+			</div>
+			<div style="margin-top: 10px;">
+				<div id="btn_save" class="weui-btn weui-btn_primary" style="width: 80%">保存</div>
+				<div id="btn_delete" class="weui-btn weui-btn_warn" style="width: 80%">删除</div>
+				<div id="btn_fault" class="weui-btn weui-btn_default" style="width: 80%">报告故障</div>
+				<div id="btn_qrcode" class="weui-btn weui-btn_default" style="width: 80%">生成二维码</div>
+			</div>
+			
+			<div id="popup-qrcode" class="weui-popup__container popup-bottom">
+			  <div class="weui-popup__overlay"></div>
+			  <div class="weui-popup__modal">
+			  	<div style="padding: 10px;"><img src="../../images/qr.png" style="width: 60%"/></div>
+			  	<div class="weui-btn weui-btn_mini weui-btn_primary">下载</div>
+			  </div>
+			</div>
+		</div>
+	</body>
+</html>

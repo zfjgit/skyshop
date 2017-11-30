@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>场所收益详情 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+		<link rel="stylesheet" type="text/css" href="../../../plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../../plugins/jqweui/css/jquery-weui.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
+
+		
+		<script type="text/javascript" src="../../../plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../../plugins/jqweui/js/jquery-weui.js"></script>
+		<script type="text/javascript" src="../../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../js/admin.js"></script>
+		<script type="text/javascript">
+			$(function(){
+			    $('.t_date').calendar();
+			});
+		</script>
+	</head>
+	<body>
+		<div class="h_nav" >
+			<div class="h_back">&lt;</div>
+			<div class="h_title">场所收益详细情况</div>
+		</div>
+		<div class="content">
+			<table class="t_table">
+				<tr>
+					<td class="t_fieldname">场所名称</td>
+					<td class=" t_bg_white t_fieldvalue">沃尔玛</td>
+				</tr>
+				<tr>
+					<td class="t_fieldname">场所编号</td>
+					<td class=" t_bg_white t_fieldvalue">A231939</td>
+				</tr>
+			</table>
+				
+			<div class="search">
+				<div class="t_search">选择查询时段，最多查询30天或自然月内的收益情况。</div>
+				<table class="t_table">
+					<tr>
+						<td class="t_fieldname">选择开始时间</td>
+						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-21" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">选择结束时间</td>
+						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-22" readonly="readonly"/></td>
+					</tr>
+				</table>
+				<div class="t_area_btn">
+					<div class="t_table_title">场所设备收益详情</div><div class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+				</div>
+			</div>
+			<div class="t_search_results">
+				<div class="t_search_total">场所总收益：<span class="money">100.00</span> 元</div>
+				<div class="tb_search_table">
+					<table class="t_table" style="">
+						<thead class="t_table_head">
+							<tr>
+								<td>设备编号</td>
+								<td>订单数</td>
+								<td>收益（元）</td>
+							</tr>
+						</thead>
+						<tbody class="t_table_body">
+							<tr>
+								<td><a href="income_by_chair_detail.html">C121223</a></td>
+								<td>15</td>
+								<td>300.00</td>
+							</tr>
+							<tr>
+								<td><a href="income_by_chair_detail.html">C121224</a></td>
+								<td>12</td>
+								<td>200.00</td>
+							</tr>
+							<tr>
+								<td><a href="income_by_chair_detail.html">C121225</a></td>
+								<td>25</td>
+								<td>500.00</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

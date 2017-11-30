@@ -1,0 +1,176 @@
+@CHARSET "UTF-8";
+body {
+	margin: 0px;
+	background-color: #eee;
+}
+a {
+	text-decoration: none;
+}
+.header {
+	background-image: url('../images/bg.jpg');
+	width: 100%;
+	height: 240px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-color: #0080ff;
+}
+.content {
+	margin-top: 10px;
+}
+div{
+	text-align: center;
+}
+.title {
+	color:white;
+	font-size: 25px;
+	font-weight: bold;
+	padding: 10px;
+}
+.t_white{
+	color:white;
+}
+.t_bg_white {
+	background-color: white!important;
+}
+.t_black {
+	color: black;
+}
+.t_orange {
+	color: #ff8040;
+}
+.t_right {
+	text-align: right;
+}
+.row_btn {
+	text-align: left;
+	margin-top: 5px;
+}
+.t_href {
+	font-size: 15px;
+}
+.t_today_income {
+	text-align:left;
+	margin-top: 60px;
+	padding-left: 10px;
+	font-size: 15px;
+}
+.today_income {
+	text-align:left;
+	color: white;
+	font-size: 30px;
+	font-weight: bold;
+	margin: 10px;
+	padding-bottom: 10px;
+	border-bottom: solid 1px white;
+}
+.btn {
+	padding: 15px 0;
+	margin: auto;
+	width: 32.2%;
+	background-color: white;
+	font-size: 18px;
+	display: inline-block;
+}
+.number {
+	font-size: 16px;
+	padding: 3px;
+}
+.btn > img {
+	width: 30%;
+}
+
+.footer {
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+}
+.menu {
+	width: 49%;
+	display: inline-block;
+	background-color: white;
+	padding: 5px 0;
+	font-size: 15px;
+}
+.t_menu {
+	font-size: 13px;
+}
+.menu > img {
+	width: 10%;
+}
+
+.float_right {
+	float: right;
+}
+
+.login_body{
+	background-image: url('../images/bg5.jpg');
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+.login_header {
+	margin-top: 60px;
+	margin-bottom: 70px;
+}
+.logo {
+	width: 80px;
+}
+.t_login {
+	font-size: 25px;
+	padding: 5px;
+	color: #ce000a;
+	font-weight: bold;
+}
+.t_login_ad {
+	font-size: 18px;
+	font-family: '隶书';
+	color: #ce000a;
+}
+.login_form {
+	width: 100%;
+	border:none;
+}
+.login_field_name {
+	width: 20%;
+	padding: 10px 0;
+	color: white;
+	text-align: right;
+	font-size: 20px;
+}
+.login_field_value {
+	width: 80%;
+	padding: 10px 0px 10px 10px;
+	text-align: left;
+}
+.login_field {
+	width: 90%;
+	border: none;
+	height: 30px;
+	color: #ce000a!important;
+	font-size: 20px;
+	background: none;
+	outline: none;
+	border-bottom: solid 1px;
+	background-color: transparent!important;
+}
+.t_login_btn {
+	width: 60%;
+	font-size: 20px;
+	margin: 20px auto;
+}
+@media screen and (min-width:720px) {
+	body {
+		max-width: 500px;
+		margin: auto;
+		background-size: 30%;
+		background-position-x: 50%;
+	}
+	.login_body{
+		background-size: 30%;
+	}
+	.header {
+		height: 240px;
+	}
+	.footer {
+		max-width: 500px;
+	}
+}

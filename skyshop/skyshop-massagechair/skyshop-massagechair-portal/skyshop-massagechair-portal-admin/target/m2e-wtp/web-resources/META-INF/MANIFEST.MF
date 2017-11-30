@@ -1,7 +1,7 @@
 Manifest-Version: 1.0
 Implementation-Title: skyshop-massagechair-portal-admin Maven Webapp
 Implementation-Version: 1.0.0-SNAPSHOT
-Built-By: zfj-home
+Built-By: zfj20
 Implementation-Vendor-Id: com.sitv
 Build-Jdk: 1.8.0_101
 Implementation-URL: http://maven.apache.org
