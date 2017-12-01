@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>登录 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+		<link rel="stylesheet" type="text/css" href="plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="plugins/jqweui/css/jquery-weui.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="css/style.css"/>
+		
+		<script type="text/javascript" src="plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="plugins/jqweui/js/jquery-weui.js"></script>
+		<script type="text/javascript" src="plugins/ukulelejs/dist/uku.js"></script>
+		<script type="text/javascript" src="js/ui.js"></script>
+		<script type="text/javascript" src="js/ctx.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+		
+		<script type="text/javascript">
+			$(function(){
+			    if(localStorage.username) {
+			        $('#account').val(localStorage.username);
+			    }
+			    if(localStorage.password) {
+			        $('#pwd').val(localStorage.password);
+			    }
+			});
+		</script>
+	</head>
+	<body class="login_body">
+		<div class="login_header">
+			<img src="images/logo.png" class="logo"/>
+			<div class="t_white t_login">三网通-按摩椅</div>
+			<div class="t_white t_login_ad">随时随地查收益</div>
+		</div>
+		<div>
+			<table class="login_form">
+				<tr>
+					<td class="login_field_name">账号</td>
+					<td class="login_field_value"><input id="account" class="login_field" value="admin" maxlength="10"/></td>
+				</tr>
+				<tr>
+					<td class="login_field_name">密码</td>
+					<td class="login_field_value"><input id="pwd" type="password" value="123456" class="login_field" maxlength="10"/></td>
+				</tr>
+				<tr>
+					<td class="login_field_name"></td>
+					<td class="login_field_value">
+						<div class=" weui-cells_checkbox">
+							<label class="weui-cell weui-check__label" for="rememberme" style="padding: 0;width: 70%;color: #ce000a;">
+						        <div class="weui-cell__hd">
+						            <input type="checkbox" class="weui-check" name="checkbox1" id="rememberme" checked="checked">
+						            <i class="weui-icon-checked"></i>
+						        </div>
+						        <div class="weui-cell__bd" style="text-align: left;">
+						            <p>记住登录信息</p>
+						        </div>
+						    </label>
+					    </div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+						<div>
+							<div id="login" class=" weui-btn weui-btn_primary t_login_btn" style="width: 60%;">登录</div>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" class="t_white">
+						忘记密码？
+					</td>
+				</tr>
+			</table>
+		</div>
+	</body>
+</html>

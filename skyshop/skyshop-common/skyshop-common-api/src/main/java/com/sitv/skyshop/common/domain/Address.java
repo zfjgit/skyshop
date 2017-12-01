@@ -2,9 +2,18 @@ package com.sitv.skyshop.common.domain;
 
 import com.sitv.skyshop.domain.DomainObject;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class Address extends DomainObject {
 
 	private Address parent;
+
+	private int level;
 
 	protected Address() {
 	}
@@ -19,14 +28,6 @@ public class Address extends DomainObject {
 
 	public Address(String name) {
 		this.setName(name);
-	}
-
-	public Address getParent() {
-		return parent;
-	}
-
-	public void setParent(Address parent) {
-		this.parent = parent;
 	}
 
 }

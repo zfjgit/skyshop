@@ -4,49 +4,79 @@
 <mapper namespace="com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao" >
 
 	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.device.InstallationAddress">
-		<id column="id" jdbcType="BIGINT" property="id" />
-		<result column="fullAddress" jdbcType="VARCHAR" property="fullAddress" />
-		<result column="location" jdbcType="VARCHAR" property="location" />
-		<result column="contact" jdbcType="VARCHAR" property="contact" />
-		<result column="contactNumber" jdbcType="VARCHAR" property="contactNumber" />
-		<result column="createTime" property="createTime" />
-		<result column="updateTime" property="updateTime" />
+		<id property="id" jdbcType="BIGINT" column="install_sno" />
+		<result property="detailAddress" jdbcType="VARCHAR" column="install_detailAddress" />
+		<result property="fullAddress" jdbcType="VARCHAR" column="install_fullAddress" />
+		<result property="location" jdbcType="VARCHAR" column="install_location" />
+		<result property="contact" jdbcType="VARCHAR" column="install_contact" />
+		<result property="contactNumber" jdbcType="VARCHAR" column="install_contactNumber" />
+		<result property="description" jdbcType="VARCHAR" column="description" />
+		<result property="createTime" column="install_createTime" />
+		<result property="updateTime" column="install_updateTime" />
+		<result property="deleteStatus" jdbcType="INTEGER" column="is_del" />
+		<association property="agency" column="user3_sno" select="com.sitv.skyshop.massagechair.dao.agency.IAgencyDao.get"/>
+		<association property="province" column="install_provinceid" select="com.sitv.skyshop.common.dao.IAddressDao.get"/>
+		<association property="city" column="install_cityid" select="com.sitv.skyshop.common.dao.IAddressDao.get"/>
+		<association property="district" column="install_districtid" select="com.sitv.skyshop.common.dao.IAddressDao.get"/>
 	</resultMap>
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.InstallationAddress" statementType="PREPARED">
-		INSERT INTO installationaddresses
-			(fulladdress, location, contact, contactNumber) 
+		INSERT INTO tab_installationaddresses
+			(install_fulladdress, install_provinceid, install_cityid, install_districtid, install_detailAddress, description, install_location, install_contact, install_contactNumber,install_createTime, user3_sno) 
 		VALUES 
-			(#{fullAddress}, #{location}, #{contact}, #{contactNumber})    
+			(#{fullAddress}, #{province.id}, #{city.id}, #{district.id}, #{detailAddress}, #{description}, #{location}, #{contact}, #{contactNumber}, #{createTime}, #{agency.id})    
 	</insert>
 	
-	<select id="get" resultMap="BaseResultMap" parameterType="long">
-		SELECT * FROM installationaddresses WHERE id=#{id}
+	<select id="findByAgency" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_installationaddresses WHERE user3_sno=#{agencyId}
 	</select>
 	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_installationaddresses WHERE install_sno=#{id}
+	</select>
+	
+	<select id="getCountByAgency" resultType="int" parameterType="long">
+		SELECT count(1) FROM tab_installationaddresses WHERE user3_sno=#{id}
+	</select>
+	
+	<update id="updateDeleteStatus"  parameterType="com.sitv.skyshop.massagechair.domain.device.InstallationAddress" statementType="PREPARED" >
+		UPDATE tab_installationaddresses 
+		SET is_del=#{deleteStatus.code},
+		WHERE install_sno=#{id}
+	</update>
+	
 	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.device.InstallationAddress" statementType="PREPARED" >
-		UPDATE installationaddresses 
-		SET fullAddress=#{fullAddress}, 
-		 	location=#{location},
-		 	contact=#{contact},
-		 	contactNumber=#{contactNumber},
-		 	updateTime=#{updateTime}
-		WHERE id=#{id}
+		UPDATE tab_installationaddresses 
+		SET install_fulladdress=#{fullAddress}, 
+		 	install_provinceid=#{province.id}, 
+		 	user3_sno=#{agency.id}, 
+		 	install_cityid=#{city.id}, 
+		 	install_districtid=#{district.id}, 
+		 	install_detailAddress=#{detailAddress}, 
+		 	description=#{description}, 
+		 	install_location=#{location},
+		 	install_contact=#{contact},
+		 	install_contactNumber=#{contactNumber},
+		 	install_updateTime=#{updateTime}
+		WHERE install_sno=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="long" statementType="PREPARED">
-	    DELETE FROM installationaddresses WHERE id=#{id}
+	    DELETE FROM tab_installationaddresses WHERE install_sno=#{id}
 	</delete>
 
 	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
 		SELECT m.*
-		FROM installationaddresses m
+		FROM tab_installationaddresses m
 		WHERE 1 = 1 
+		<if test="param != null and param.agency != null">
+			AND user3_sno = #{param.agency.id}
+		</if>
 		<if test="param != null and param.fullAddress != null">
-			AND fullAddress LIKE CONCAT('%', #{param.fullAddress}, '%')
+			AND install_fullAddress LIKE CONCAT('%', #{param.fullAddress}, '%')
 		</if>
 		<if test="param != null and param.contact != null">
-			AND contact like CONCAT('%', #{param.contact}, '%')
+			AND install_contact like CONCAT('%', #{param.contact}, '%')
 		</if>
 		<if test="sortField != null and sortDir != null">
 			ORDER BY ${sortField} ${sortDir}

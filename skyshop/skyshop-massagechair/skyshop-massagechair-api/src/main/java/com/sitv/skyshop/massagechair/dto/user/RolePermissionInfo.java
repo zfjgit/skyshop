@@ -9,9 +9,16 @@ import java.util.List;
 import com.sitv.skyshop.dto.info.SimpleInfoDto;
 import com.sitv.skyshop.massagechair.domain.user.RolePermission;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class RolePermissionInfo extends SimpleInfoDto {
 
 	/**
@@ -47,21 +54,6 @@ public class RolePermissionInfo extends SimpleInfoDto {
 	private PermissionInfo permission;
 
 	/**
-	 * @return the role
-	 */
-	public RoleInfo getRole() {
-		return role;
-	}
-
-	/**
-	 * @param role
-	 *            the role to set
-	 */
-	public void setRole(RoleInfo role) {
-		this.role = role;
-	}
-
-	/**
 	 * @param rolePermission
 	 * @return
 	 */
@@ -86,11 +78,4 @@ public class RolePermissionInfo extends SimpleInfoDto {
 		return infos;
 	}
 
-	public PermissionInfo getPermission() {
-		return permission;
-	}
-
-	public void setPermission(PermissionInfo permission) {
-		this.permission = permission;
-	}
 }

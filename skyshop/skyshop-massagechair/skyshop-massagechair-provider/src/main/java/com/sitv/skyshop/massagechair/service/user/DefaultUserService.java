@@ -40,11 +40,19 @@ public abstract class DefaultUserService<D extends ICrudDao<T>, I extends UserIn
 		u.setMobile(t.getMobile());
 		u.setName(t.getName());
 		u.setDescription(t.getDescription());
+		u.setPassword(t.getPassword());
 		update(u);
+	}
+
+	public void deleteOne(Long id) {
+		throw new UnsupportedOperationException("不能删除");
 	}
 
 	public void createOne(I t) {
 		throw new UnsupportedOperationException("不能创建");
 	}
 
+	public I login(String code, String pwd) {
+		return null;
+	}
 }

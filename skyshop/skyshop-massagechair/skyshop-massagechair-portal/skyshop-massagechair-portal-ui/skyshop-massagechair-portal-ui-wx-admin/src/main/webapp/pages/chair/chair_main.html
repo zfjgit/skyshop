@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>设备管理 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/css/jquery-weui.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
+
+		
+		<script type="text/javascript" src="../../plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
+		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../js/ui.js"></script>
+		<script type="text/javascript">
+			$(function(){
+			    $('#item-chair').click(function(){
+			        $('#item-content').load('chair_list.html');
+			        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
+			        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
+			        $('.t_nav_btn').on('click', function(){
+			            window.location.href = 'chair_detail.html';
+			        });
+			        
+			        sessionStorage.chair_tab = 'item-chair';
+			    });
+			    $('#item-sim').click(function(){
+			        $('#item-content').load('sim_list.html');
+			        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
+			        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
+			        $('.t_nav_btn').on('click', function(){
+			            window.location.href = 'sim_detail.html';
+			        });
+			        
+			        sessionStorage.chair_tab = 'item-sim';
+			    });
+			    $('#item-gsm').click(function(){
+			        $('#item-content').load('gsm_list.html');
+			        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
+			        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
+			        $('.t_nav_btn').on('click', function(){
+			            window.location.href = 'gsm_detail.html';
+			        });
+			        
+			        sessionStorage.chair_tab = 'item-gsm';
+			    });
+			    
+			    if(!sessionStorage.chair_tab) {
+				    $('#item-chair').click();
+			    } else {
+			        $('#' + sessionStorage.chair_tab).click();
+			    }
+			    
+			});
+		</script>
+	</head>
+	<body>
+		<div class="h_nav" >
+			<div class="h_back">&lt;</div>
+			<div class="h_title">设备管理</div>
+			<div class="t_nav_btn weui-btn weui-btn_mini weui-btn_primary">新增</div>
+		</div>
+		<div class="content" style="margin-top: 0;">
+			<div class="weui-tab">
+				<div class="weui-navbar" style="position: inherit;">
+				  <div id="item-chair" class="weui-navbar__item weui-bar__item--on weui-tab__bd-item--active">
+				    	按摩椅
+				  </div>
+				  <div id="item-gsm" class="weui-navbar__item" >
+				    	GSM模块
+				  </div>
+				  <div id="item-sim" class="weui-navbar__item" >
+				    	SIM卡
+				  </div>
+				</div>
+		        <div id="item-content">
+				
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

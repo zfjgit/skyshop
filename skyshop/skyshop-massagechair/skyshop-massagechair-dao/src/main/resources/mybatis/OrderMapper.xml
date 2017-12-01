@@ -4,61 +4,100 @@
 <mapper namespace="com.sitv.skyshop.massagechair.dao.order.IOrderDao" >
 
 	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.order.Order">
-		<id column="id" jdbcType="BIGINT" property="id" />
-		<result column="code" jdbcType="VARCHAR" property="code" />
-		<result column="description" jdbcType="VARCHAR" property="description" />
-		<result column="minutes" jdbcType="INTEGER" property="minutes" />
-		<result column="money" jdbcType="DECIMAL" property="money" />
-		<result column="payStatus" jdbcType="VARCHAR" property="paystatus" />
-		<result column="orderStatus" jdbcType="VARCHAR" property="orderStatus" />
-		<result column="realMins" jdbcType="DECIMAL" property="realmins" />
-		<result column="createTime" javaType="java.util.Calendar" property="createTime"/>
-		<result column="completeTime" javaType="java.util.Calendar" property="completetime"/>
-		<result column="updateTime" javaType="java.util.Calendar" property="updateTime"/>
-		<association property="price" column="priceid" select="com.sitv.skyshop.massagechair.dao.price.IPriceDao.get"/>
-		<association property="chair" column="chairid" select="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao.get"/>
+		<id property="id" jdbcType="BIGINT" column="orders_sno" />
+		<result property="code" jdbcType="VARCHAR" column="orders_code" />
+		<result property="minutes" jdbcType="INTEGER" column="orders_minutes" />
+		<result property="money" jdbcType="DECIMAL" column="orders_money" />
+		<result property="payStatus" jdbcType="VARCHAR" column="orders_paystatus" />
+		<result property="payType" jdbcType="VARCHAR" column="orders_paytype" />
+		<result property="createTime" javaType="java.util.Calendar" column="orders_createTime"/>
+		<result property="checkCode" jdbcType="VARCHAR" column="orders_checkCode"/>
+		<result property="deleteStatus" jdbcType="INTEGER" column="is_del" />
+		<association property="installationAddress" column="install_sno" select="com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao.get"/>
+		<association property="chair" column="chairs_sno" select="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao.get"/>
+		<association property="agency" column="user3_sno" select="com.sitv.skyshop.massagechair.dao.agency.IAgencyDao.get"/>
 	</resultMap>
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.order.Order" statementType="PREPARED">
-		INSERT INTO orders
-			(code, minutes, money, payStatus, orderStatus, realMins, description, priceid, chairid) 
+		INSERT INTO tab_orders
+			(orders_code, orders_minutes, orders_money, orders_payStatus, orders_paytype, orders_createTime, orders_checkCode, description, user3_sno, chairs_sno,install_sno) 
 		VALUES 
-			(#{code},#{minutes},#{money},#{payStatus.code},#{orderStatus.code},#{realMins}, #{description}, #{price.id}, #{chair.id})    
+			(#{code},#{minutes},#{money},#{payStatus.code},#{payType.code},#{createTime}, #{checkCode}, #{description}, #{agency.id}, #{chair.id}}, #{installationAddress.id})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
-		SELECT * FROM orders WHERE id=#{id}
+		SELECT * FROM tab_orders WHERE orders_sno=#{id}
+	</select>
+	
+	<select id="getCountByAgency" resultType="int" parameterType="long">
+		SELECT count(1) FROM tab_orders WHERE user3_sno=#{id}
+	</select>
+	
+	<select id="getTotalMoney" resultType="java.math.BigDecimal" parameterType="long">
+		SELECT ISNULL(sum(orders_money),0)
+		FROM tab_orders 
+		WHERE 	orders_createtime &gt;= #{startTime} 
+			AND orders_createtime &lt;  #{endTime} 
+			AND user3_sno=#{id}
+	</select>
+	
+	<select id="findByChair" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_orders WHERE chairs_sno=#{id}
+	</select>
+	
+	<select id="findByAgency" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_orders WHERE user3_sno=#{id}
 	</select>
 	
 	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.order.Order" statementType="PREPARED" >
-		UPDATE orders 
-		SET payStatus=#{payStatus.code}, 
-		 	orderStatus=#{orderStatus.code},
-		 	realMins=#{realMins},
-		 	completeTime=#{completeTime},
+		UPDATE tab_orders 
+		SET orders_payStatus=#{payStatus.code}, 
+		 	orders_paytype=#{payType.code},
+		 	orders_minutes=#{minutes},
+		 	orders_money=#{money},
+		 	orders_checkCode=#{checkCode},
+		 	user3_sno=#{agency.id},
+		 	chairs_sno=#{chair.id},
+		 	description=#{description},
+		 	install_sno=#{installationAddress.id},
 		 	updateTime=#{updateTime}
-		WHERE id=#{id}
+		WHERE orders_sno=#{id}
+	</update>
+	
+	<update id="updateDeleteStatus" parameterType="com.sitv.skyshop.massagechair.domain.order.Order" statementType="PREPARED" >
+		UPDATE tab_orders 
+		SET is_del=#{deleteStatus.code},
+		WHERE orders_sno=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="long" statementType="PREPARED">
-	    DELETE FROM orders WHERE id=#{id}
+	    DELETE FROM tab_orders WHERE orders_sno=#{id}
 	</delete>
 
 	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
 		SELECT m.*
-		FROM orders m
+		FROM tab_orders m
 		WHERE 1 = 1 
-		<if test="param != null and param.payStatus != null">
-			AND payStatus= #{param.payStatus}
+		<if test="param != null and param.agency != null">
+			AND user3_sno=#{param.agency.id}
 		</if>
-		<if test="param != null and param.orderStatus != null">
-			AND orderStatus= #{param.orderStatus}
+		<if test="param != null and param.startDate != null">
+			AND orders_createtime &gt; #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.installationAddress != null">
+			AND install_sno= #{param.installationAddress.id}
+		</if>
+		<if test="param != null and param.payStatus != null">
+			AND orders_payStatus= #{param.payStatus.code}
+		</if>
+		<if test="param != null and param.payType != null">
+			AND orders_paytype= #{param.payType.code}
 		</if>
 		<if test="param != null and param.chair != null ">
-			AND chairid=#{param.chair.id}
-		</if>
-		<if test="param != null and param.price != null">
-			AND priceid=#{param.price.id}
+			AND chairs_sno=#{param.chair.id}
 		</if>
 		<if test="sortField != null and sortDir != null">
 			ORDER BY ${sortField} ${sortDir}

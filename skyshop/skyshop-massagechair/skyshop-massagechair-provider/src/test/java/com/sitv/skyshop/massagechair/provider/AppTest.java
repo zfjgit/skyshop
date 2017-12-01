@@ -7,32 +7,32 @@ import junit.framework.TestSuite;
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-    extends TestCase
-{
-    /**
-     * Create the test case
-     *
-     * @param testName name of the test case
-     */
-    public AppTest( String testName )
-    {
-        super( testName );
-    }
+public class AppTest extends TestCase {
+	private String name = "";
 
-    /**
-     * @return the suite of tests being tested
-     */
-    public static Test suite()
-    {
-        return new TestSuite( AppTest.class );
-    }
+	public AppTest(String testName) {
+		super(testName);
+	}
 
-    /**
-     * Rigourous Test :-)
-     */
-    public void testApp()
-    {
-        assertTrue( true );
-    }
+	public static Test suite() {
+		return new TestSuite(AppTest.class);
+	}
+
+	public void testApp() {
+		assertTrue(true);
+
+		name = "123";
+
+		assertTrue(getName(), getName().equals(resetName()));
+		assertEquals(getName(), "234");
+	}
+
+	public String resetName() {
+		this.name = "234";
+		return name;
+	}
+
+	public String getName() {
+		return name;
+	}
 }

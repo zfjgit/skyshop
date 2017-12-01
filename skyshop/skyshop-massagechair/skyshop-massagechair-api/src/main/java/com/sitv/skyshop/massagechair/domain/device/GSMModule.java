@@ -3,85 +3,68 @@
  */
 package com.sitv.skyshop.massagechair.domain.device;
 
+import java.util.Calendar;
+
+import com.sitv.skyshop.domain.BaseEnum;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class GSMModule extends Device {
-
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 */
-	public GSMModule(Long id, String name, String description) {
-		super(id, name, description);
-	}
-
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param imei
-	 * @param module
-	 * @param simCard
-	 */
-	public GSMModule(Long id, String name, String description, String imei, String module, SIMCard simCard) {
-		this(id, name, description);
-		this.imei = imei;
-		this.module = module;
-		this.simCard = simCard;
-	}
 
 	private String imei;
 
 	private SIMCard simCard;
 
-	// 型号
 	private String module;
 
-	/**
-	 * @return the imei
-	 */
-	public String getImei() {
-		return imei;
+	private GSMModuleStatus status;
+
+	protected GSMModule() {
 	}
 
-	/**
-	 * @param imei
-	 *            the imei to set
-	 */
-	public void setImei(String imei) {
+	public GSMModule(Long id, String imei, String module, GSMModuleStatus status, SIMCard simCard, String description, Calendar createTime, Calendar updateTime,
+	                DeleteStatus deleteStatus) {
+		super(id, null, description, deleteStatus);
 		this.imei = imei;
-	}
-
-	/**
-	 * @return the simCard
-	 */
-	public SIMCard getSimCard() {
-		return simCard;
-	}
-
-	/**
-	 * @param simCard
-	 *            the simCard to set
-	 */
-	public void setSimCard(SIMCard simCard) {
-		this.simCard = simCard;
-	}
-
-	/**
-	 * @return the module
-	 */
-	public String getModule() {
-		return module;
-	}
-
-	/**
-	 * @param module
-	 *            the module to set
-	 */
-	public void setModule(String module) {
 		this.module = module;
+		this.simCard = simCard;
+		this.status = status;
+		setCreateTime(createTime);
+		setUpdateTime(updateTime);
+	}
+
+	public enum GSMModuleStatus implements BaseEnum<GSMModuleStatus, String> {
+		USING("A", "使用中"), UNUSED("B", "未使用");
+
+		private String code;
+		private String name;
+
+		private GSMModuleStatus(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		/**
+		 * @return the code
+		 */
+		public String getCode() {
+			return code;
+		}
+
+		/**
+		 * @return the name
+		 */
+		public String getName() {
+			return name;
+		}
 	}
 
 }

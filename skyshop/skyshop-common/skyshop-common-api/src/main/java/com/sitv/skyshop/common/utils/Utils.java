@@ -1,4 +1,5 @@
-/* com.xilincy.xilincyapp.utils
+/*
+ * com.xilincy.xilincyapp.utils
  * copyright (c) xilincy
  * Zhou - 2011-3-24
  */
@@ -24,6 +25,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.crypto.Cipher;
@@ -36,12 +39,13 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.dom4j.Document;
+import org.dom4j.DocumentHelper;
+import org.dom4j.Element;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-
 
 /**
  * 工具类
@@ -83,6 +87,27 @@ public class Utils implements Serializable {
 		return false;
 	}
 
+	public static Map<String, String> parseXml(String str) {
+		Map<String, String> map = new HashMap<>();
+
+		try {
+			Document document = DocumentHelper.parseText(str);
+
+			Element root = document.getRootElement();
+
+			List<?> elementList = root.elements();
+
+			for (Object o : elementList) {
+				Element e = (Element) o;
+				map.put(e.getName(), e.getText());
+			}
+		} catch (Exception e) {
+			throw new RuntimeException(e);
+		}
+
+		return map;
+	}
+
 	public static Calendar getMaxDate() {
 		Calendar c = Calendar.getInstance();
 		c.set(Calendar.YEAR, 9999);
@@ -108,18 +133,43 @@ public class Utils implements Serializable {
 		return startTime;
 	}
 
+	public static Calendar getDayEndTime(Calendar day) {
+		day.set(Calendar.HOUR_OF_DAY, 23);
+		day.set(Calendar.MINUTE, 59);
+		day.set(Calendar.SECOND, 59);
+		day.set(Calendar.MILLISECOND, 1000);
+		return day;
+	}
+
+	public static Calendar getTodayEndTime() {
+		return getDayEndTime(Calendar.getInstance());
+	}
+
+	public static Calendar getDayStartTime(Calendar day) {
+		day.set(Calendar.HOUR_OF_DAY, 0);
+		day.set(Calendar.MINUTE, 0);
+		day.set(Calendar.SECOND, 0);
+		day.set(Calendar.MILLISECOND, 0);
+		return day;
+	}
+
+	public static Calendar getTodayStartTime() {
+		return getDayStartTime(Calendar.getInstance());
+	}
+
 	/**
 	 * 默认格式：'yyyy-MM-dd HH:mm:ss' 如果参数为空则格式化当前日期
 	 *
-	 * @param c Calendar
+	 * @param c
+	 *            Calendar
 	 * @param pattern
 	 *            格式
 	 * @return string
 	 * @author Zhou 2010-4-27
 	 */
 	public static String time2String(Calendar c, String pattern) {
-		SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_FORMAT);
-		
+		SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_FORMAT_1);
+
 		if (!Utils.isNull(pattern)) {
 			formatter.applyPattern(pattern);
 		}
@@ -129,22 +179,28 @@ public class Utils implements Serializable {
 		return formatter.format(c.getTime());
 	}
 
-
 	/**
 	 * 默认格式：'yyyy-MM-dd HH:mm:ss' 如果参数为空则格式化当前日期
-	 * @param time	 
+	 *
+	 * @param time
 	 * @param pattern
 	 *            格式
 	 * @return
 	 */
-	public static Calendar toCalendar(String time, String pattern) {
-		if(isNull(time)) {
+	public static Calendar toCalendar(String... params) {
+		if (isNull(params)) {
 			return null;
 		}
-		
-		SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_FORMAT);
-		
-		if(!isNull(pattern)) {
+
+		String time = params[0];
+		String pattern = null;
+		if (params.length > 1) {
+			pattern = params[1];
+		}
+
+		SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_FORMAT_1);
+
+		if (!isNull(pattern)) {
 			formatter.applyPattern(pattern);
 		}
 		try {
@@ -178,7 +234,7 @@ public class Utils implements Serializable {
 		}
 		return fileName;
 	}
-	
+
 	/**
 	 * 文件上传
 	 *
@@ -198,8 +254,7 @@ public class Utils implements Serializable {
 		OutputStream out = null;
 		try {
 			in = new BufferedInputStream(new FileInputStream(src), BUFFER_SIZE);
-			out = new BufferedOutputStream(new FileOutputStream(dst),
-					BUFFER_SIZE);
+			out = new BufferedOutputStream(new FileOutputStream(dst), BUFFER_SIZE);
 			byte[] buffer = new byte[BUFFER_SIZE];
 			int len = 0;
 			while ((len = in.read(buffer)) > 0) {
@@ -230,7 +285,6 @@ public class Utils implements Serializable {
 		return result;
 	}
 
-
 	/**
 	 * 将16进制转换为二进制
 	 *
@@ -244,8 +298,7 @@ public class Utils implements Serializable {
 		byte[] result = new byte[hexStr.length() / 2];
 		for (int i = 0; i < hexStr.length() / 2; i++) {
 			int high = Integer.parseInt(hexStr.substring(i * 2, i * 2 + 1), 16);
-			int low = Integer.parseInt(hexStr.substring(i * 2 + 1, i * 2 + 2),
-					16);
+			int low = Integer.parseInt(hexStr.substring(i * 2 + 1, i * 2 + 2), 16);
 			result[i] = (byte) (high * 16 + low);
 		}
 		return result;
@@ -268,7 +321,7 @@ public class Utils implements Serializable {
 		}
 		return sb.toString();
 	}
-	
+
 	/**
 	 * 加密 AES/CBC/PKCS5Padding
 	 *
@@ -277,8 +330,8 @@ public class Utils implements Serializable {
 	 */
 	public static String encrypt(String pwd, String... encryptPwd) {
 		try {
-			if(isNull(encryptPwd) || isNull(encryptPwd[0])) {
-				encryptPwd = new String[]{ ENCRYPT_PWD };
+			if (isNull(encryptPwd) || isNull(encryptPwd[0])) {
+				encryptPwd = new String[] { ENCRYPT_PWD };
 			}
 			SecretKeySpec key = new SecretKeySpec(encryptPwd[0].getBytes("UTF-8"), "AES");
 
@@ -303,8 +356,8 @@ public class Utils implements Serializable {
 	 */
 	public static String decrypt(String pwd, String... decryptPwd) {
 		try {
-			if(isNull(decryptPwd) || isNull(decryptPwd[0])) {
-				decryptPwd = new String[]{ ENCRYPT_PWD };
+			if (isNull(decryptPwd) || isNull(decryptPwd[0])) {
+				decryptPwd = new String[] { ENCRYPT_PWD };
 			}
 			SecretKeySpec key = new SecretKeySpec(decryptPwd[0].getBytes("UTF-8"), "AES");
 
@@ -322,30 +375,30 @@ public class Utils implements Serializable {
 	}
 
 	public static String toUnicode(String str) {
-		if(str == null) {
+		if (str == null) {
 			return null;
 		}
 
 		StringBuilder result = new StringBuilder();
 		for (Character ch : str.toCharArray()) {
 			if (ch < '\020') {
-				result.append( "\\u000" + Integer.toHexString(ch));
+				result.append("\\u000" + Integer.toHexString(ch));
 			}
 			if (ch < '?') {
-				result.append( "\\u00" + Integer.toHexString(ch));
+				result.append("\\u00" + Integer.toHexString(ch));
 			}
 			if (ch < '?') {
-				result.append( "\\u0" + Integer.toHexString(ch));
+				result.append("\\u0" + Integer.toHexString(ch));
 			}
-			result.append( "\\u" + Integer.toHexString(ch));
+			result.append("\\u" + Integer.toHexString(ch));
 		}
 		return result.toString();
 	}
 
 	/**
-	 * 
 	 * @param str
-	 * @param method MD5/SHA-1/SHA-256
+	 * @param method
+	 *            MD5/SHA-1/SHA-256
 	 * @return hex string
 	 */
 	public static String digest(String str, String method) {
@@ -359,21 +412,21 @@ public class Utils implements Serializable {
 		}
 	}
 
-	public static String UUID(){
+	public static String UUID() {
 		return java.util.UUID.randomUUID().toString().replaceAll("-", "").toUpperCase();
 	}
 
 	public static String request(String host, String action, String params, String method) {
 		BufferedReader reader = null;
 		try {
-			log.debug("调用接口：" + host+action);
-			//			log.debug("参数：" + params);
+			log.debug("调用接口：" + host + action);
+			// log.debug("参数：" + params);
 
 			trustAllHosts();
 
 			HttpURLConnection connection = (HttpURLConnection) new URL(host + action).openConnection();
-			if(host.startsWith("https")) {
-				((HttpsURLConnection)connection).setHostnameVerifier(new HostnameVerifier() {
+			if (host.startsWith("https")) {
+				((HttpsURLConnection) connection).setHostnameVerifier(new HostnameVerifier() {
 					public boolean verify(String paramString, SSLSession paramSSLSession) {
 						return true;
 					}
@@ -398,14 +451,14 @@ public class Utils implements Serializable {
 				response.append(line);
 			}
 
-			//			log.debug("返回：" + response.toString());
+			// log.debug("返回：" + response.toString());
 
 			return response.toString();
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
 			throw new RuntimeException(e);
 		} finally {
-			if(reader != null) {
+			if (reader != null) {
 				try {
 					reader.close();
 				} catch (IOException e) {
@@ -421,8 +474,10 @@ public class Utils implements Serializable {
 			public java.security.cert.X509Certificate[] getAcceptedIssuers() {
 				return new java.security.cert.X509Certificate[] {};
 			}
+
 			public void checkClientTrusted(java.security.cert.X509Certificate[] paramArrayOfX509Certificate, String paramString) throws java.security.cert.CertificateException {
 			}
+
 			public void checkServerTrusted(java.security.cert.X509Certificate[] paramArrayOfX509Certificate, String paramString) throws java.security.cert.CertificateException {
 			}
 		} };

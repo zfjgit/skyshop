@@ -5,42 +5,25 @@ package com.sitv.skyshop.massagechair.domain.user;
 
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class Manager extends User {
 
 	private List<Role> roles;
 
-	/**
-	 * @param code
-	 * @param name
-	 * @param description
-	 * @param password
-	 * @param email
-	 * @param mobile
-	 * @param status
-	 */
-	public Manager(String code, String name, String description, String password, String email, String mobile, String status) {
-		super(code, name, description, password, email, mobile, status);
+	protected Manager() {
 	}
 
-	/**
-	 *
-	 */
-	public Manager() {
-		super();
+	public Manager(String code, String name, String description, String password, String email, String mobile, UserStatus status, UserType type, DeleteStatus deleteStatus) {
+		super(code, name, description, password, email, mobile, status, type, deleteStatus);
 	}
 
-	public List<Role> getRoles() {
-		return roles;
-	}
-
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-
-	public String getType() {
-		return getClass().getSimpleName();
-	}
 }

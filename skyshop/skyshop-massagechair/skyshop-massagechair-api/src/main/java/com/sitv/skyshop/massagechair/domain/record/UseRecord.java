@@ -3,11 +3,19 @@
  */
 package com.sitv.skyshop.massagechair.domain.record;
 
+import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class UseRecord extends DomainObject {
 
 	private String from;
@@ -15,122 +23,54 @@ public class UseRecord extends DomainObject {
 	private String imei;
 	private String sim;
 	private String price;
+	private String minutes;
+
 	private String chair;
 
-	/**
-	 *
-	 */
-	public UseRecord() {
+	private String openid;
+
+	private String nickName;
+
+	private String addr;
+	private UseRecordType type;
+
+	protected UseRecord() {
 	}
 
-	/**
-	 * @param name
-	 * @param description
-	 * @param from
-	 * @param chair
-	 * @param imei
-	 * @param sim
-	 * @param response
-	 * @param price
-	 */
-	public UseRecord(String name, String description, String from, String chair, String imei, String sim, String response, String price) {
-		super(null, name, description);
+	public UseRecord(Long id, String from, String response, UseRecordType type, String imei, String sim, String price, String minutes, String chair, String openid, String nickName,
+	                String addr) {
+		super(id, "");
+		this.type = type;
 		this.from = from;
 		this.response = response;
 		this.imei = imei;
 		this.sim = sim;
 		this.price = price;
+		this.minutes = minutes;
 		this.chair = chair;
+		this.openid = openid;
+		this.nickName = nickName;
+		this.addr = addr;
 	}
 
-	/**
-	 * @return the from
-	 */
-	public String getFrom() {
-		return from;
-	}
+	public enum UseRecordType implements BaseEnum<UseRecordType, String> {
+		CHECK("A", "设备检测"), OPEN("B", "开机"), CLOSE("C", "关机"), URL("D", "设置接口地址");
 
-	/**
-	 * @param from
-	 *            the from to set
-	 */
-	public void setFrom(String from) {
-		this.from = from;
-	}
+		private String code;
+		private String name;
 
-	/**
-	 * @return the response
-	 */
-	public String getResponse() {
-		return response;
-	}
+		private UseRecordType(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
 
-	/**
-	 * @param response
-	 *            the response to set
-	 */
-	public void setResponse(String response) {
-		this.response = response;
-	}
+		public String getCode() {
+			return code;
+		}
 
-	/**
-	 * @return the imei
-	 */
-	public String getImei() {
-		return imei;
-	}
+		public String getName() {
+			return name;
+		}
 
-	/**
-	 * @param imei
-	 *            the imei to set
-	 */
-	public void setImei(String imei) {
-		this.imei = imei;
 	}
-
-	/**
-	 * @return the sim
-	 */
-	public String getSim() {
-		return sim;
-	}
-
-	/**
-	 * @param sim
-	 *            the sim to set
-	 */
-	public void setSim(String sim) {
-		this.sim = sim;
-	}
-
-	/**
-	 * @return the chair
-	 */
-	public String getChair() {
-		return chair;
-	}
-
-	/**
-	 * @param chair
-	 *            the chair to set
-	 */
-	public void setChair(String chair) {
-		this.chair = chair;
-	}
-
-	/**
-	 * @return the price
-	 */
-	public String getPrice() {
-		return price;
-	}
-
-	/**
-	 * @param price
-	 *            the price to set
-	 */
-	public void setPrice(String price) {
-		this.price = price;
-	}
-
 }

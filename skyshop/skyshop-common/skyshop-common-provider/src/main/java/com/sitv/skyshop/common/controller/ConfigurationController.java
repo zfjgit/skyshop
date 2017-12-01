@@ -16,7 +16,7 @@ import com.sitv.skyshop.common.dto.CommonResponseInfo;
 import com.sitv.skyshop.common.dto.ConfigurationInfo;
 import com.sitv.skyshop.common.service.IConfigurationService;
 import com.sitv.skyshop.common.utils.Utils;
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
@@ -35,7 +35,7 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "基础数据接口")
 @RestController
 @RequestMapping("/configuration")
-public class ConfigurationController extends BaseController<IConfigurationService, ConfigurationInfo> {
+public class ConfigurationController extends BaseRestController<IConfigurationService, ConfigurationInfo> {
 
 	private final static Logger log = LoggerFactory.getLogger(ConfigurationController.class);
 

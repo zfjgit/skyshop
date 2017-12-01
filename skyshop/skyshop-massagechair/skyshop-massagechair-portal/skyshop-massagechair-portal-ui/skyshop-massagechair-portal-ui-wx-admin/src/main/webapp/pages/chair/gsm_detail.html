@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>GSM模块详细情况 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/css/jquery-weui.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
+
+		
+		<script type="text/javascript" src="../../plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
+		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../js/ui.js"></script>
+		<script type="text/javascript">
+			$(function(){
+			    var search = window.location.search;
+			    if(!search) {
+			        $('.h_title').text('新增GSM模块');
+			        $('#btn_delete').hide();
+			        $('#btn_fault').hide();
+			    }
+			    
+			    $("#sim-picker").picker({
+			        title: "请选择SIM卡",
+			        cols: [
+			          {
+			            textAlign: 'center',
+			            values: ['SIM-100122', 'SIM-100123', 'SIM-100124']
+			          }
+			        ]
+			    });
+			    
+			    $("#status-picker").picker({
+			        title: "请选择状态",
+			        cols: [
+			          {
+			            textAlign: 'center',
+			            values: ['未使用', '已使用']
+			          }
+			        ]
+			    });
+			    
+			    
+			    $('#btn_delete').click(function(){
+			        $.confirm("确认删除这个设备？", function() {
+			            //点击确认后的回调函数
+			        }, function() {
+			            //点击取消后的回调函数
+			        });
+			    });
+			    
+			    $('#btn_fault').click(function() {
+			        $.prompt({
+			            title: '报告故障',
+			            text: '',
+			            input: '输入故障描述',
+			            empty: false, // 是否允许为空
+			            onOK: function (input) {
+			              //点击确认
+			            },
+			            onCancel: function () {
+			              //点击取消
+			            }
+			          });
+			    });
+			    
+			});
+			
+		</script>
+	</head>
+	<body>
+		<div class="h_nav" >
+			<div class="h_back">&lt;</div>
+			<div class="h_title">GSM模块详情</div>
+		</div>
+		<div class="content">
+			<div class="t_search_results">
+				<table class="t_table">
+					<tr>
+						<td class="t_fieldname">输入IMEI号</td>
+						<td class="t_fieldvalue">
+							<input id="" type="number" class="t_text" value="" placeholder="IMEI号" />
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">型号</td>
+						<td class="t_fieldvalue">
+							<input id="" class="t_text" value="" placeholder="型号" />
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">选择SIM卡</td>
+						<td class="t_fieldvalue"><input id="sim-picker" class="t_text" value="" placeholder="SIM卡" /></td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">选择状态</td>
+						<td class="t_fieldvalue"><input id="status-picker" class="t_text" value="" placeholder="状态" /></td>
+					</tr>
+				</table>
+			</div>
+			<div style="margin-top: 10px;">
+				<div id="btn_save" class="weui-btn weui-btn_primary" style="width: 80%">保存</div>
+				<div id="btn_delete" class="weui-btn weui-btn_warn" style="width: 80%">删除</div>
+				<div id="btn_fault" class="weui-btn weui-btn_default" style="width: 80%">报告故障</div>
+			</div>
+			
+		</div>
+	</body>
+</html>

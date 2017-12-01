@@ -6,20 +6,22 @@ package com.sitv.skyshop.massagechair.service.order;
 import java.util.Calendar;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.sitv.skyshop.common.utils.Utils;
+import com.sitv.skyshop.domain.BaseEnum;
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
+import com.sitv.skyshop.massagechair.dao.agency.IAgencyDao;
 import com.sitv.skyshop.massagechair.dao.device.IMassageChairDao;
 import com.sitv.skyshop.massagechair.dao.order.IOrderDao;
-import com.sitv.skyshop.massagechair.dao.price.IPriceDao;
 import com.sitv.skyshop.massagechair.domain.device.MassageChair;
 import com.sitv.skyshop.massagechair.domain.order.Order;
-import com.sitv.skyshop.massagechair.domain.order.Order.OrderStatus;
 import com.sitv.skyshop.massagechair.domain.order.Order.PayStatus;
-import com.sitv.skyshop.massagechair.domain.price.Price;
+import com.sitv.skyshop.massagechair.domain.order.Order.PayType;
 import com.sitv.skyshop.massagechair.dto.order.OrderInfo;
 import com.sitv.skyshop.service.CrudService;
 
@@ -28,9 +30,11 @@ import com.sitv.skyshop.service.CrudService;
  */
 @Service
 public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> implements IOrderService {
-
+	@Autowired
 	private IMassageChairDao massageChairDao;
-	private IPriceDao<?> priceDao;
+
+	@Autowired
+	private IAgencyDao agencyDao;
 
 	public OrderInfo getOne(Long id) {
 		return OrderInfo.create(get(id));
@@ -50,31 +54,34 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 
 	public void updateOne(OrderInfo t) {
 		MassageChair chair = massageChairDao.get(t.getChair().getId());
-		Price price = priceDao.get(t.getId());
 
 		Order order = get(t.getId());
 		order.setChair(chair);
-		order.setCompleteTime(t.getCompleteTime());
-		order.setCreateTime(t.getCreateTime());
 		order.setDescription(t.getDescription());
 		order.setMinutes(t.getMinutes());
 		order.setMoney(t.getMoney());
-		order.setOrderStatus(OrderStatus.valueOf(t.getOrderStatus()));
-		order.setPayStatus(PayStatus.valueOf(t.getPayStatus()));
-		order.setPrice(price);
-		order.setRealMins(t.getRealMins());
+		order.setPayStatus(BaseEnum.valueOf(PayStatus.class, t.getPayStatus().getCode()));
+		order.setPayType(BaseEnum.valueOf(PayType.class, t.getPayType().getCode()));
+		order.setAgency(agencyDao.get(t.getAgency().getId()));
 
 		update(order);
 	}
 
 	public void createOne(OrderInfo t) {
 		MassageChair chair = massageChairDao.get(t.getChair().getId());
-		Price price = priceDao.get(t.getId());
 
 		Calendar c = Calendar.getInstance();
 		String code = Utils.time2String(c, "yyyyMMddHHmmss") + c.get(Calendar.MILLISECOND);
-		Order order = new Order(code, t.getDescription(), t.getMinutes(), t.getMoney(), t.getRealMins(), t.getCompleteTime(), t.getOrderStatus(), t.getPayStatus(), price, chair);
+
+		Order order = new Order(code, t.getMinutes(), t.getMoney(), BaseEnum.valueOf(PayStatus.class, t.getPayStatus().getCode()),
+		                BaseEnum.valueOf(PayType.class, t.getPayType().getCode()), chair, agencyDao.get(t.getAgency().getId()), DeleteStatus.NORMAL);
 		create(order);
+	}
+
+	public void updateDeleteStatus(OrderInfo t) {
+		Order order = get(t.getId());
+		order.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus().getCode()));
+		dao.updateDeleteStatus(order);
 	}
 
 }

@@ -2,15 +2,14 @@ package com.sitv.skyshop.domain;
 
 import java.util.Calendar;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString(callSuper = true)
 public abstract class DomainObject extends SimpleType {
-
-	private Long id;
-
-	private String name;
-
-	private String code;
 
 	private int serialNumber;
 
@@ -23,125 +22,54 @@ public abstract class DomainObject extends SimpleType {
 	private Calendar updateTime;
 
 	protected DomainObject() {
-		super();
 	}
 
 	public DomainObject(String name, String code) {
-		this();
-		this.name = name;
-		this.code = code;
+		super(name, code);
 	}
 
 	public DomainObject(String name, String code, int serialNumber, int version, String description, Calendar createTime) {
-		this(name, code);
+		super(name, code);
 		this.serialNumber = serialNumber;
 		this.version = version;
 		this.description = description;
 	}
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 */
 	public DomainObject(Long id, String name, String description) {
-		this(id, name);
+		super(id, name, null);
 		this.description = description;
 	}
 
-	/**
-	 * @param id
-	 * @param name
-	 */
 	public DomainObject(Long id, String name) {
-		this(id);
-		this.name = name;
+		super(id, name, null);
 	}
 
-	/**
-	 * @param id
-	 */
 	public DomainObject(Long id) {
-		this.id = id;
+		super(id);
 	}
 
-	/**
-	 * @param id
-	 * @param code
-	 * @param name
-	 * @param description
-	 */
 	public DomainObject(Long id, String code, String name, String description) {
-		this(id, name);
-		this.code = code;
+		super(id, name, code);
 		this.description = description;
 	}
 
-	public Long getId() {
-		return id;
-	}
+	public enum DeleteStatus implements BaseEnum<DeleteStatus, Integer> {
+		DELETED(1, "已删除"), NORMAL(0, "未删除");
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+		private int code;
+		private String name;
 
-	public String getName() {
-		return name;
-	}
+		DeleteStatus(int code, String name) {
+			this.code = code;
+			this.name = name;
+		}
 
-	public void setName(String name) {
-		this.name = name;
-	}
+		public Integer getCode() {
+			return code;
+		}
 
-	public String getCode() {
-		return code;
-	}
-
-	public void setCode(String code) {
-		this.code = code;
-	}
-
-	public int getSerialNumber() {
-		return serialNumber;
-	}
-
-	public void setSerialNumber(int serialNumber) {
-		this.serialNumber = serialNumber;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Calendar getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Calendar createTime) {
-		this.createTime = createTime;
-	}
-
-	public Calendar getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Calendar updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
+		public String getName() {
+			return name;
+		}
 	}
 }

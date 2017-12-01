@@ -8,11 +8,15 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.sitv.skyshop.domain.BaseEnum;
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.massagechair.dao.user.IManagerDao;
 import com.sitv.skyshop.massagechair.dao.user.IRoleDao;
 import com.sitv.skyshop.massagechair.dao.user.IUserRoleDao;
 import com.sitv.skyshop.massagechair.domain.user.Manager;
 import com.sitv.skyshop.massagechair.domain.user.Role;
+import com.sitv.skyshop.massagechair.domain.user.User.UserStatus;
+import com.sitv.skyshop.massagechair.domain.user.User.UserType;
 import com.sitv.skyshop.massagechair.domain.user.UserRole;
 import com.sitv.skyshop.massagechair.dto.user.ManagerInfo;
 
@@ -29,7 +33,9 @@ public class ManagerService extends DefaultUserService<IManagerDao, ManagerInfo,
 	private IUserRoleDao userRoleDao;
 
 	public void createOne(ManagerInfo t) {
-		Manager m = new Manager(t.getCode(), t.getName(), t.getDescription(), t.getPassword(), t.getEmail(), t.getMobile(), t.getStatus());
+		Manager m = new Manager(t.getCode(), t.getName(), t.getDescription(), t.getPassword(), t.getEmail(), t.getMobile(),
+		                BaseEnum.valueOf(UserStatus.class, t.getStatus().getCode()), BaseEnum.valueOf(UserType.class, t.getType().getCode()),
+		                BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus().getCode()));
 		create(m);
 	}
 

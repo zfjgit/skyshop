@@ -8,10 +8,12 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
 import com.sitv.skyshop.massagechair.dao.userecord.IUseRecordDao;
 import com.sitv.skyshop.massagechair.domain.record.UseRecord;
+import com.sitv.skyshop.massagechair.domain.record.UseRecord.UseRecordType;
 import com.sitv.skyshop.massagechair.dto.record.UseRecordInfo;
 import com.sitv.skyshop.service.CrudService;
 
@@ -41,8 +43,13 @@ public class UseRecordService extends CrudService<IUseRecordDao, UseRecord, UseR
 		throw new UnsupportedOperationException("不能修改");
 	}
 
+	public void deleteOne(Long id) {
+		throw new UnsupportedOperationException("不能删除");
+	}
+
 	public void createOne(UseRecordInfo t) {
-		UseRecord r = new UseRecord(t.getName(), t.getDescription(), t.getFrom(), t.getChair(), t.getImei(), t.getSim(), t.getResponse(), t.getPrice());
+		UseRecord r = new UseRecord(null, t.getFrom(), t.getResponse(), BaseEnum.valueOf(UseRecordType.class, t.getType().getCode()), t.getImei(), t.getSim(), t.getPrice(),
+		                t.getMinutes(), t.getChair(), t.getOpenid(), t.getNickName(), t.getAddr());
 		create(r);
 	}
 

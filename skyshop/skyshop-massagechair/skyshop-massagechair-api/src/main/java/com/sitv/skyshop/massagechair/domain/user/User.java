@@ -5,96 +5,83 @@ package com.sitv.skyshop.massagechair.domain.user;
 
 import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject;
+import com.sitv.skyshop.domain.ICheckCodeType;
+import com.sitv.skyshop.domain.IDeleteStatus;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
-public abstract class User extends DomainObject {
+@Getter
+@Setter
+@ToString(callSuper = true)
+public abstract class User extends DomainObject implements ICheckCodeType, IDeleteStatus {
 
 	private String password;
 	private String email;
 	private String mobile;
 	private UserStatus status;
+	private UserType type;
+	private String checkCode;
+	private DeleteStatus deleteStatus;
 
-	/**
-	 * @param code
-	 * @param name
-	 * @param description
-	 * @param status
-	 * @param mobile
-	 * @param email
-	 * @param password
-	 */
-	public User(String code, String name, String description, String password, String email, String mobile, String status) {
+	public User(String code, String name, String description, String password, String email, String mobile, UserStatus status, UserType type, DeleteStatus deleteStatus) {
 		super(name, code);
 		setDescription(description);
 		this.email = email;
 		this.mobile = mobile;
 		this.password = password;
-		this.status = UserStatus.valueOf(status);
+		this.status = status;
+		this.type = type;
+		this.deleteStatus = deleteStatus;
 	}
 
-	/**
-	 *
-	 */
-	public User() {
+	public User(Long id, String code, String name, String description, String password, String email, String mobile, UserStatus status, UserType type, DeleteStatus deleteStatus) {
+		super(name, code);
+		this.email = email;
+		this.mobile = mobile;
+		this.password = password;
+		this.status = status;
+		this.type = type;
+		this.deleteStatus = deleteStatus;
+		setDescription(description);
+
+		calcCheckCode();
 	}
 
-	/**
-	 * @return the password
-	 */
-	public String getPassword() {
-		return password;
+	protected User() {
 	}
 
-	/**
-	 * @param password
-	 *            the password to set
-	 */
-	public void setPassword(String password) {
+	public User(Long id, String code, String name, String password) {
+		super(id, code, name, null);
 		this.password = password;
 	}
 
-	/**
-	 * @return the email
-	 */
-	public String getEmail() {
-		return email;
-	}
+	public enum UserType implements BaseEnum<UserType, String> {
+		SYSTEM("A", "平台"), AGENCY("B", "区域总代");
 
-	/**
-	 * @param email
-	 *            the email to set
-	 */
-	public void setEmail(String email) {
-		this.email = email;
-	}
+		private String code;
+		private String name;
 
-	/**
-	 * @return the mobile
-	 */
-	public String getMobile() {
-		return mobile;
-	}
+		private UserType(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
 
-	/**
-	 * @param mobile
-	 *            the mobile to set
-	 */
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+		public String getCode() {
+			return code;
+		}
 
-	public UserStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(UserStatus status) {
-		this.status = status;
+		public String getName() {
+			return name;
+		}
 	}
 
 	public enum UserStatus implements BaseEnum<UserStatus, String> {
-		ENABLED("ENABLED", ""), DISABLED("DISABLED", "");
+		UNUSED("A", "未启用"), NORMAL("B", "正常"), CLOSED("C", "关闭");
 
 		private String code;
 		private String name;
@@ -111,8 +98,10 @@ public abstract class User extends DomainObject {
 		public String getName() {
 			return name;
 		}
-
 	}
 
-	public abstract String getType();
+	public String calcCheckCode() {
+		setCheckCode("");
+		return "";
+	}
 }

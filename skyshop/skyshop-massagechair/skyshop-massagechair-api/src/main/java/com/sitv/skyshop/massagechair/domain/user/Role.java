@@ -19,7 +19,7 @@ public class Role extends DomainObject {
 	/**
 	 *
 	 */
-	public Role() {
+	protected Role() {
 	}
 
 	/**

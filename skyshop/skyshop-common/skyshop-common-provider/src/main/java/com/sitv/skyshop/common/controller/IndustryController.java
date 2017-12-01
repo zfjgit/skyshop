@@ -17,7 +17,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.sitv.skyshop.common.dto.IndustryInfo;
 import com.sitv.skyshop.common.service.IIndustryService;
 import com.sitv.skyshop.common.utils.Utils;
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
@@ -31,7 +31,7 @@ import io.swagger.annotations.Api;
 @Api("行业数据接口")
 @RestController
 @RequestMapping("/industry")
-public class IndustryController extends BaseController<IIndustryService, IndustryInfo> {
+public class IndustryController extends BaseRestController<IIndustryService, IndustryInfo> {
 
 	private static final Logger log = LoggerFactory.getLogger(IndustryController.class);
 

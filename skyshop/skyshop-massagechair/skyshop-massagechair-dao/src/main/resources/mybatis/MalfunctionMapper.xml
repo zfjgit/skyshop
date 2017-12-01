@@ -4,58 +4,60 @@
 <mapper namespace="com.sitv.skyshop.massagechair.dao.device.malfunction.IMalfunctionDao" >
 
 	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.device.malfunction.Malfunction">
-		<id column="id" jdbcType="BIGINT" property="id" />
-		<result column="name" jdbcType="VARCHAR" property="name" />
-		<result column="description" jdbcType="VARCHAR" property="description" />
-		<result column="status" jdbcType="VARCHAR" property="status" />
-		<result column="createTime" property="createTime" />
-		<result column="updateTime" property="updateTime" />
-		<discriminator javaType="java.lang.String" column="type" >
-		    <case value="GSMModuleMalfunction" resultType="com.sitv.skyshop.massagechair.domain.device.malfunction.GSMModuleMalfunction">
-				<association property="device" column="deviceid" select="com.sitv.skyshop.massagechair.dao.device.IGSMModuleDao.get"/>
-		    </case>
-		    <case value="SIMCardMalfunction" resultType="com.sitv.skyshop.massagechair.domain.device.malfunction.SIMCardMalfunction">
-				<association property="device" column="deviceid" select="com.sitv.skyshop.massagechair.dao.device.ISIMCardDao.get"/>
-		    </case>
-		    <case value="MassageChairMalfunction" resultType="com.sitv.skyshop.massagechair.domain.device.malfunction.MassageChairMalfunction">
-				<association property="device" column="deviceid" select="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao.get"/>
-		    </case>
-		</discriminator>
+		<id property="id" jdbcType="BIGINT" column="mal_sno" />
+		<result property="description" jdbcType="VARCHAR" column="description" />
+		<result property="status" jdbcType="VARCHAR" column="mal_status" />
+		<result property="type" jdbcType="VARCHAR" column="mal_type" />
+		<result property="createTime" column="mal_createTime" />
+		<result property="updateTime" column="mal_updateTime" />
+		<association property="chair" column="chairs_sno" select="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao.get"/>
 	</resultMap>
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.malfunction.Malfunction" statementType="PREPARED">
-		INSERT INTO malfunctions
-			(name, description, status, deviceid, type) 
+		INSERT INTO tab_malfunctions
+			(mal_type, description, mal_status, chairs_sno, mal_createTime) 
 		VALUES 
-			(#{name}, #{description}, #{status}, #{device.id}, #{type})    
+			(#{type.code}, #{description}, #{status.code}, #{chair.id}, #{createTime})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
-		SELECT * FROM malfunctions WHERE id=#{id}
+		SELECT * FROM tab_malfunctions WHERE mal_sno=#{id}
 	</select>
 	
 	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.device.malfunction.Malfunction" statementType="PREPARED" >
-		UPDATE malfunctions 
-		SET name=#{name}, 
+		UPDATE tab_malfunctions 
+		SET mal_type=#{type.code}, 
 		 	description=#{description},
-		 	status=#{status},
-		 	deviceid=#{device.id},
-		 	updateTime=#{updateTime}
-		WHERE id=#{id}
+		 	mal_status=#{status.code},
+		 	chairs_sno=#{chair.id},
+		 	mal_updateTime=#{updateTime}
+		WHERE mal_sno=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="long" statementType="PREPARED">
-	    DELETE FROM malfunctions WHERE id=#{id}
+	    DELETE FROM tab_malfunctions WHERE mal_sno=#{id}
 	</delete>
 
 	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
 		SELECT m.*
-		FROM malfunctions m
+		FROM tab_malfunctions m 
+		LEFT JOIN tab_massagechairs c ON m.chairs_sno=c.chairs_sno
 		WHERE 1 = 1 
-		<if test="param != null and param.type != null">
-			AND type = #{param.type}
+		<if test="param != null and param.chair != null and param.chair.agency != null">
+			AND c.user3_sno = #{param.chair.agency.id}
 		</if>
-		
+		<if test="param != null and param.type != null">
+			AND m.mal_type = #{param.type.code}
+		</if>
+		<if test="param != null and param.status != null">
+			AND m.mal_status = #{param.status.code}
+		</if>
+		<if test="param != null and param.chair != null">
+			AND c.name LIKE CONCAT('%', #{param.chair.name}, '%')
+		</if>
+		<if test="param != null and param.description != null">
+			AND m.description LIKE CONCAT('%', #{param.description}, '%')
+		</if>
 		<if test="sortField != null and sortDir != null">
 			ORDER BY ${sortField} ${sortDir}
 		</if>

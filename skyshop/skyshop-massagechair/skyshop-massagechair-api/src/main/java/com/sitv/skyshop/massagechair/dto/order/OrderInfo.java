@@ -8,128 +8,77 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
+import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.dto.info.FullInfoDto;
 import com.sitv.skyshop.massagechair.domain.order.Order;
+import com.sitv.skyshop.massagechair.domain.order.Order.PayStatus;
+import com.sitv.skyshop.massagechair.domain.order.Order.PayType;
+import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
+import com.sitv.skyshop.massagechair.dto.device.InstallationAddressInfo;
 import com.sitv.skyshop.massagechair.dto.device.MassageChairInfo;
-import com.sitv.skyshop.massagechair.dto.price.PriceInfo;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月20日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class OrderInfo extends FullInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1970592130500769199L;
 
+	@Min(1)
 	private int minutes;
+
+	@Min(1)
 	private BigDecimal money;
+
+	@NotNull
 	private MassageChairInfo chair;
-	private String payStatus;
-	private Calendar completeTime;
-	private String orderStatus;
 
-	private BigDecimal realMins;
+	private EnumInfo<PayStatus, String> payStatus;
 
-	private PriceInfo price;
+	private AgencyInfo agency;
 
-	/**
-	 * @param id
-	 * @param minutes
-	 * @param money
-	 * @param payStatus
-	 * @param orderStatus
-	 * @param createTime
-	 * @param completeTime
-	 * @param realMins
-	 * @param description
-	 */
-	public OrderInfo(Long id, String code, int minutes, BigDecimal money, String payStatus, String orderStatus, Calendar createTime, Calendar completeTime, Calendar updateTime,
-	                BigDecimal realMins, String description, MassageChairInfo massageChairInfo, PriceInfo priceInfo) {
+	private EnumInfo<PayType, String> payType;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Calendar startDate;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Calendar endDate;
+
+	private InstallationAddressInfo installationAddress;
+
+	public OrderInfo(Long id, String code, int minutes, BigDecimal money, EnumInfo<PayStatus, String> payStatus, EnumInfo<PayType, String> payType, Calendar createTime,
+	                Calendar updateTime, String description, MassageChairInfo massageChairInfo, AgencyInfo agency, EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode) {
 		super(id, code, null, description, createTime, updateTime);
 		this.minutes = minutes;
-		this.completeTime = completeTime;
 		this.money = money;
-		this.orderStatus = orderStatus;
 		this.payStatus = payStatus;
-		this.realMins = realMins;
 		this.chair = massageChairInfo;
-		this.price = priceInfo;
+		this.agency = agency;
+		this.payType = payType;
+		setCheckCode(checkCode);
+		setDeleteStatus(deleteStatus);
 	}
 
-	public int getMinutes() {
-		return minutes;
-	}
-
-	public void setMinutes(int minutes) {
-		this.minutes = minutes;
-	}
-
-	public BigDecimal getMoney() {
-		return money;
-	}
-
-	public void setMoney(BigDecimal money) {
-		this.money = money;
-	}
-
-	public MassageChairInfo getChair() {
-		return chair;
-	}
-
-	public void setChair(MassageChairInfo chair) {
-		this.chair = chair;
-	}
-
-	public String getPayStatus() {
-		return payStatus;
-	}
-
-	public void setPayStatus(String payStatus) {
-		this.payStatus = payStatus;
-	}
-
-	public Calendar getCompleteTime() {
-		return completeTime;
-	}
-
-	public void setCompleteTime(Calendar completeTime) {
-		this.completeTime = completeTime;
-	}
-
-	public String getOrderStatus() {
-		return orderStatus;
-	}
-
-	public void setOrderStatus(String orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-
-	public BigDecimal getRealMins() {
-		return realMins;
-	}
-
-	public void setRealMins(BigDecimal realMins) {
-		this.realMins = realMins;
-	}
-
-	public PriceInfo getPrice() {
-		return price;
-	}
-
-	public void setPrice(PriceInfo price) {
-		this.price = price;
-	}
-
-	/**
-	 * @param order
-	 * @return
-	 */
 	public static OrderInfo create(Order order) {
-		return new OrderInfo(order.getId(), order.getCode(), order.getMinutes(), order.getMoney(), order.getPayStatus().getCode(), order.getOrderStatus().getCode(),
-		                order.getCreateTime(), order.getCompleteTime(), order.getUpdateTime(), order.getRealMins(), order.getDescription(),
-		                MassageChairInfo.create(order.getChair()), PriceInfo.create(order.getPrice()));
+		if (order == null) {
+			return null;
+		}
+		return new OrderInfo(order.getId(), order.getCode(), order.getMinutes(), order.getMoney(), new EnumInfo<>(order.getPayStatus()), new EnumInfo<>(order.getPayType()),
+		                order.getCreateTime(), order.getUpdateTime(), order.getDescription(), MassageChairInfo.create(order.getChair()), AgencyInfo.create(order.getAgency()),
+		                new EnumInfo<>(order.getDeleteStatus()), order.getCheckCode());
 	}
 
 	public static List<OrderInfo> creates(List<Order> orders) {
@@ -141,4 +90,5 @@ public class OrderInfo extends FullInfoDto {
 		}
 		return orderInfos;
 	}
+
 }

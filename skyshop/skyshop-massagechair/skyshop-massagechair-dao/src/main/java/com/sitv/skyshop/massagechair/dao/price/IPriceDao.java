@@ -13,4 +13,6 @@ import com.sitv.skyshop.massagechair.domain.price.Price;
 @MyBatisDao
 public interface IPriceDao<T extends Price> extends ICrudDao<T> {
 
+	int getCountByAgency(Long id);
+
 }

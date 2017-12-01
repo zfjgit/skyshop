@@ -3,25 +3,23 @@
  */
 package com.sitv.skyshop.service;
 
-import java.lang.reflect.Method;
-import java.util.Date;
+import java.util.Calendar;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.sitv.skyshop.dao.ICrudDao;
+import com.sitv.skyshop.domain.DomainObject;
 import com.sitv.skyshop.domain.IBaseType;
+import com.sitv.skyshop.domain.ICheckCodeType;
 import com.sitv.skyshop.dto.Dto;
+import com.sitv.skyshop.exception.CheckCodeVerificationFailedException;
 
 /**
  * Service基类
  */
 @Transactional
 public abstract class CrudService<D extends ICrudDao<T>, T extends IBaseType, I extends Dto> implements IBaseService<I> {
-
-	private static final Logger log = LoggerFactory.getLogger(CrudService.class);
 
 	/**
 	 * 持久层对象
@@ -35,7 +33,14 @@ public abstract class CrudService<D extends ICrudDao<T>, T extends IBaseType, I 
 	 * @return
 	 */
 	public T get(Long id) {
-		return dao.get(id);
+		T t = dao.get(id);
+		if (t instanceof ICheckCodeType) {
+			ICheckCodeType checkCodeType = (ICheckCodeType) t;
+			if (!checkCodeType.verifyCheckCode()) {
+				throw new CheckCodeVerificationFailedException(checkCodeType);
+			}
+		}
+		return t;
 	}
 
 	/**
@@ -45,11 +50,8 @@ public abstract class CrudService<D extends ICrudDao<T>, T extends IBaseType, I 
 	 */
 	@Transactional(readOnly = false)
 	public void create(T entity) {
-		try {
-			Method m = entity.getClass().getDeclaredMethod("setCreateTime", java.util.Calendar.class);
-			m.invoke(entity, new Date(System.currentTimeMillis()));
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		if (entity instanceof DomainObject) {
+			((DomainObject) entity).setCreateTime(Calendar.getInstance());
 		}
 		dao.insert(entity);
 	}
@@ -61,11 +63,8 @@ public abstract class CrudService<D extends ICrudDao<T>, T extends IBaseType, I 
 	 */
 	@Transactional(readOnly = false)
 	public void update(T entity) {
-		try {
-			Method m = entity.getClass().getDeclaredMethod("setUpdateTime", java.util.Calendar.class);
-			m.invoke(entity, new Date(System.currentTimeMillis()));
-		} catch (Throwable e) {
-			log.error(e.getMessage(), e);
+		if (entity instanceof DomainObject) {
+			((DomainObject) entity).setUpdateTime(Calendar.getInstance());
 		}
 		dao.update(entity);
 	}
@@ -88,5 +87,4 @@ public abstract class CrudService<D extends ICrudDao<T>, T extends IBaseType, I 
 	public void setDao(D dao) {
 		this.dao = dao;
 	}
-
 }

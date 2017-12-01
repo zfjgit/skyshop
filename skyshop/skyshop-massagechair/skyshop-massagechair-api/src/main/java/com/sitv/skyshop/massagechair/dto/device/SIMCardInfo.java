@@ -12,20 +12,28 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
+import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.massagechair.domain.device.SIMCard;
+import com.sitv.skyshop.massagechair.domain.device.SIMCard.SIMCardOperator;
+import com.sitv.skyshop.massagechair.domain.device.SIMCard.SIMCardStatus;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class SIMCardInfo extends DeviceInfo {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -4372937544847496856L;
 
 	@NotNull
-	private SIMCardOperatorInfo operator;
+	private EnumInfo<SIMCardOperator, String> operator;
 
 	@NotBlank
 	private String sim;
@@ -36,97 +44,25 @@ public class SIMCardInfo extends DeviceInfo {
 
 	private Calendar dueDate;
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param sim
-	 * @param dataFlow
-	 * @param dueDate
-	 * @param createTime
-	 * @param updateTime
-	 */
-	public SIMCardInfo(Long id, String name, String description, String sim, int dataFlow, Calendar dueDate, SIMCardOperatorInfo operatorInfo, Calendar createTime,
-	                Calendar updateTime) {
-		super(id, name, description, null, createTime, updateTime);
+	private EnumInfo<SIMCardStatus, String> status;
+
+	public SIMCardInfo(Long id, String description, String sim, int dataFlow, Calendar dueDate, EnumInfo<SIMCardOperator, String> operator, EnumInfo<SIMCardStatus, String> status,
+	                Calendar createTime, Calendar updateTime, EnumInfo<DeleteStatus, Integer> deleteStatus) {
+		super(id, null, description, createTime, updateTime, deleteStatus);
 		this.dataFlow = dataFlow;
 		this.dueDate = dueDate;
-		this.operator = operatorInfo;
-		this.sim = sim;
-	}
-
-	/**
-	 * @return the operator
-	 */
-	public SIMCardOperatorInfo getOperator() {
-		return operator;
-	}
-
-	/**
-	 * @param operator
-	 *            the operator to set
-	 */
-	public void setOperator(SIMCardOperatorInfo operator) {
 		this.operator = operator;
-	}
-
-	/**
-	 * @return the sim
-	 */
-	public String getSim() {
-		return sim;
-	}
-
-	/**
-	 * @param sim
-	 *            the sim to set
-	 */
-	public void setSim(String sim) {
 		this.sim = sim;
+		this.setStatus(status);
 	}
 
-	/**
-	 * @return the dataFlow
-	 */
-	public int getDataFlow() {
-		return dataFlow;
-	}
-
-	/**
-	 * @param dataFlow
-	 *            the dataFlow to set
-	 */
-	public void setDataFlow(int dataFlow) {
-		this.dataFlow = dataFlow;
-	}
-
-	/**
-	 * @return the dueDate
-	 */
-	public Calendar getDueDate() {
-		return dueDate;
-	}
-
-	/**
-	 * @param dueDate
-	 *            the dueDate to set
-	 */
-	public void setDueDate(Calendar dueDate) {
-		this.dueDate = dueDate;
-	}
-
-	/**
-	 * @param simCard
-	 * @return
-	 */
 	public static SIMCardInfo create(SIMCard simCard) {
 		if (simCard == null) {
 			return null;
 		}
 
-		SIMCardOperatorInfo operatorInfo = SIMCardOperatorInfo.create(simCard.getOperator());
-		return new SIMCardInfo(simCard.getId(), simCard.getName(), simCard.getDescription(), simCard.getSim(), simCard.getDataFlow(), simCard.getDueDate(), operatorInfo,
-		                simCard.getCreateTime(), simCard.getUpdateTime());
+		return new SIMCardInfo(simCard.getId(), simCard.getDescription(), simCard.getSim(), simCard.getDataFlow(), simCard.getDueDate(), new EnumInfo<>(simCard.getOperator()),
+		                new EnumInfo<>(simCard.getStatus()), simCard.getCreateTime(), simCard.getUpdateTime(), new EnumInfo<>(simCard.getDeleteStatus()));
 	}
 
 	public static List<SIMCardInfo> creates(List<SIMCard> list) {
@@ -138,4 +74,5 @@ public class SIMCardInfo extends DeviceInfo {
 		}
 		return simCardInfos;
 	}
+
 }

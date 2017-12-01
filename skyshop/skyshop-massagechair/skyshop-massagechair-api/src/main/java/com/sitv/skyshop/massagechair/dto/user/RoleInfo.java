@@ -10,9 +10,16 @@ import java.util.List;
 import com.sitv.skyshop.dto.info.FullInfoDto;
 import com.sitv.skyshop.massagechair.domain.user.Role;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class RoleInfo extends FullInfoDto {
 
 	/**
@@ -38,21 +45,6 @@ public class RoleInfo extends FullInfoDto {
 	}
 
 	/**
-	 * @return the isSuper
-	 */
-	public boolean isSuper() {
-		return isSuper;
-	}
-
-	/**
-	 * @param isSuper
-	 *            the isSuper to set
-	 */
-	public void setSuper(boolean isSuper) {
-		this.isSuper = isSuper;
-	}
-
-	/**
 	 * @param role
 	 * @return
 	 */
@@ -73,11 +65,4 @@ public class RoleInfo extends FullInfoDto {
 		return infos;
 	}
 
-	public List<PermissionInfo> getPermissions() {
-		return permissions;
-	}
-
-	public void setPermissions(List<PermissionInfo> permissions) {
-		this.permissions = permissions;
-	}
 }

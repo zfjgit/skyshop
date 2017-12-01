@@ -6,90 +6,52 @@ package com.sitv.skyshop.massagechair.dto.device.malfunction;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.dto.info.FullInfoDto;
-import com.sitv.skyshop.massagechair.domain.device.malfunction.GSMModuleMalfunction;
 import com.sitv.skyshop.massagechair.domain.device.malfunction.Malfunction;
-import com.sitv.skyshop.massagechair.domain.device.malfunction.MassageChairMalfunction;
-import com.sitv.skyshop.massagechair.domain.device.malfunction.SIMCardMalfunction;
-import com.sitv.skyshop.massagechair.dto.device.DeviceInfo;
+import com.sitv.skyshop.massagechair.domain.device.malfunction.Malfunction.MalfunctionStatus;
+import com.sitv.skyshop.massagechair.domain.device.malfunction.Malfunction.MalfunctionType;
+import com.sitv.skyshop.massagechair.dto.device.MassageChairInfo;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
-public abstract class MalfunctionInfo extends FullInfoDto {
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class MalfunctionInfo extends FullInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -3609147158554661001L;
 
-	private DeviceInfo device;
+	private MassageChairInfo chair;
 
-	private String status;
+	private EnumInfo<MalfunctionStatus, String> status;
 
-	/**
-	 *
-	 */
+	private EnumInfo<MalfunctionType, String> type;
+
 	public MalfunctionInfo() {
 	}
 
 	public MalfunctionInfo(Malfunction malfunction) {
-		super(malfunction.getId(), malfunction.getName(), malfunction.getDescription(), malfunction.getCreateTime(), malfunction.getUpdateTime());
-		this.status = malfunction.getStatus().getCode();
+		super(malfunction.getId(), malfunction.getDescription(), malfunction.getCreateTime(), malfunction.getUpdateTime());
+		this.status = new EnumInfo<>(malfunction.getStatus());
+		this.type = new EnumInfo<>(malfunction.getType());
+		this.chair = MassageChairInfo.create(malfunction.getChair());
 	}
 
-	/**
-	 * @return the device
-	 */
-	public DeviceInfo getDevice() {
-		return device;
-	}
-
-	/**
-	 * @param device
-	 *            the device to set
-	 */
-	public void setDevice(DeviceInfo device) {
-		this.device = device;
-	}
-
-	/**
-	 * @return the status
-	 */
-	public String getStatus() {
-		return status;
-	}
-
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public abstract String getType();
-
-	/**
-	 * @param malfunction
-	 * @return
-	 */
-	@SuppressWarnings("unchecked")
-	public static <I extends MalfunctionInfo> I create(Malfunction malfunction) {
-		if (malfunction != null) {
-			if (malfunction instanceof GSMModuleMalfunction) {
-				return (I) GSMModuleMalfunctionInfo.create((GSMModuleMalfunction) malfunction);
-			} else if (malfunction instanceof SIMCardMalfunction) {
-				return (I) SIMCardMalfunctionInfo.create((SIMCardMalfunction) malfunction);
-			} else if (malfunction instanceof MassageChairMalfunction) {
-				return (I) MassageChairMalfunctionInfo.create((MassageChairMalfunction) malfunction);
-			}
+	public static MalfunctionInfo create(Malfunction malfunction) {
+		if (malfunction == null) {
+			return null;
 		}
-		return null;
+		return new MalfunctionInfo(malfunction);
 	}
 
-	public static <I extends MalfunctionInfo, T extends Malfunction> List<I> creates(List<T> malfunctions) {
-		List<I> list = new ArrayList<>();
+	public static List<MalfunctionInfo> creates(List<Malfunction> malfunctions) {
+		List<MalfunctionInfo> list = new ArrayList<>();
 		if (malfunctions != null) {
 			for (Malfunction malfunction : malfunctions) {
 				list.add(create(malfunction));
@@ -97,4 +59,5 @@ public abstract class MalfunctionInfo extends FullInfoDto {
 		}
 		return list;
 	}
+
 }

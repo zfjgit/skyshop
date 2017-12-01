@@ -7,81 +7,65 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.sitv.skyshop.common.dto.AddressInfo;
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
+import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.dto.info.FullInfoDto;
 import com.sitv.skyshop.massagechair.domain.device.InstallationAddress;
+import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月16日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class InstallationAddressInfo extends FullInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -1280255241361323611L;
+
 	private String fullAddress;
 	private String location;
 	private String contact;
 	private String contactNumber;
 
-	/**
-	 * @param id
-	 * @param description
-	 * @param fullAddress
-	 * @param location
-	 * @param contact
-	 * @param contactNumber
-	 * @param createTime
-	 */
-	public InstallationAddressInfo(Long id, String description, String fullAddress, String location, String contact, String contactNumber, Calendar createTime,
-	                Calendar updateTime) {
+	private AddressInfo province;
+	private AddressInfo city;
+	private AddressInfo district;
+	private String detailAddress;
+
+	private AgencyInfo agency;
+
+	public InstallationAddressInfo(Long id, String description, AddressInfo province, AddressInfo city, AddressInfo district, String detailAddress, AgencyInfo agency,
+	                String location, String contact, String contactNumber, Calendar createTime, Calendar updateTime, EnumInfo<DeleteStatus, Integer> deleteStatus) {
 		super(id, description, createTime, updateTime);
 
-		this.fullAddress = fullAddress;
 		this.location = location;
 		this.contact = contact;
 		this.contactNumber = contactNumber;
+		this.province = province;
+		this.city = city;
+		this.district = district;
+		this.detailAddress = detailAddress;
+		this.agency = agency;
+		setDeleteStatus(deleteStatus);
+		this.fullAddress = province.getName() + city.getName() + (district == null ? "" : district.getName()) + detailAddress;
 	}
 
-	public String getFullAddress() {
-		return fullAddress;
-	}
-
-	public void setFullAddress(String fullAddress) {
-		this.fullAddress = fullAddress;
-	}
-
-	public String getLocation() {
-		return location;
-	}
-
-	public void setLocation(String location) {
-		this.location = location;
-	}
-
-	public String getContact() {
-		return contact;
-	}
-
-	public void setContact(String contact) {
-		this.contact = contact;
-	}
-
-	public String getContactNumber() {
-		return contactNumber;
-	}
-
-	public void setContactNumber(String contactNumber) {
-		this.contactNumber = contactNumber;
-	}
-
-	/**
-	 * @param installationAddress
-	 * @return
-	 */
 	public static InstallationAddressInfo create(InstallationAddress addr) {
-		return new InstallationAddressInfo(addr.getId(), addr.getDescription(), addr.getFullAddress(), addr.getLocation(), addr.getContact(), addr.getContactNumber(),
-		                addr.getCreateTime(), addr.getUpdateTime());
+		if (addr == null) {
+			return null;
+		}
+		AddressInfo province = AddressInfo.create(addr.getProvince());
+		AddressInfo city = AddressInfo.create(addr.getCity());
+		AddressInfo district = AddressInfo.create(addr.getDistrict());
+		AgencyInfo agencyInfo = AgencyInfo.create(addr.getAgency());
+		return new InstallationAddressInfo(addr.getId(), addr.getDescription(), province, city, district, addr.getDetailAddress(), agencyInfo, addr.getLocation(),
+		                addr.getContact(), addr.getContactNumber(), addr.getCreateTime(), addr.getUpdateTime(), new EnumInfo<>(addr.getDeleteStatus()));
 	}
 
 	public static List<InstallationAddressInfo> creates(List<InstallationAddress> addrs) {
@@ -93,4 +77,5 @@ public class InstallationAddressInfo extends FullInfoDto {
 		}
 		return addressInfos;
 	}
+
 }

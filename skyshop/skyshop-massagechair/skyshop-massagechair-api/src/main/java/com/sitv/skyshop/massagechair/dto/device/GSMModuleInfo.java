@@ -11,16 +11,23 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
+import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.massagechair.domain.device.GSMModule;
+import com.sitv.skyshop.massagechair.domain.device.GSMModule.GSMModuleStatus;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class GSMModuleInfo extends DeviceInfo {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1510842333944062983L;
 
 	@NotBlank
@@ -29,82 +36,26 @@ public class GSMModuleInfo extends DeviceInfo {
 	@NotNull
 	private SIMCardInfo simCard;
 
-	// 型号
 	private String module;
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param module
-	 * @param imei
-	 * @param sim
-	 * @param createTime
-	 * @param updateTime
-	 */
-	public GSMModuleInfo(Long id, String name, String description, String module, String imei, SIMCardInfo sim, Calendar createTime, Calendar updateTime) {
-		super(id, name, description, null, createTime, updateTime);
+	private EnumInfo<GSMModuleStatus, String> status;
+
+	public GSMModuleInfo(Long id, String description, String module, String imei, SIMCardInfo sim, EnumInfo<GSMModuleStatus, String> status, Calendar createTime,
+	                Calendar updateTime, EnumInfo<DeleteStatus, Integer> deleteStatus) {
+		super(id, null, description, createTime, updateTime, deleteStatus);
 		this.imei = imei;
 		this.module = module;
 		this.simCard = sim;
+		this.status = status;
 	}
 
-	/**
-	 * @return the imei
-	 */
-	public String getImei() {
-		return imei;
-	}
-
-	/**
-	 * @param imei
-	 *            the imei to set
-	 */
-	public void setImei(String imei) {
-		this.imei = imei;
-	}
-
-	/**
-	 * @return the simCard
-	 */
-	public SIMCardInfo getSimCard() {
-		return simCard;
-	}
-
-	/**
-	 * @param simCard
-	 *            the simCard to set
-	 */
-	public void setSimCard(SIMCardInfo simCard) {
-		this.simCard = simCard;
-	}
-
-	/**
-	 * @return the module
-	 */
-	public String getModule() {
-		return module;
-	}
-
-	/**
-	 * @param module
-	 *            the module to set
-	 */
-	public void setModule(String module) {
-		this.module = module;
-	}
-
-	/**
-	 * @param gsmModule
-	 * @return
-	 */
 	public static GSMModuleInfo create(GSMModule gsmModule) {
 		if (gsmModule == null) {
 			return null;
 		}
 		SIMCardInfo sim = SIMCardInfo.create(gsmModule.getSimCard());
-		return new GSMModuleInfo(gsmModule.getId(), gsmModule.getName(), gsmModule.getDescription(), gsmModule.getModule(), gsmModule.getImei(), sim, gsmModule.getCreateTime(),
-		                gsmModule.getUpdateTime());
+		return new GSMModuleInfo(gsmModule.getId(), gsmModule.getDescription(), gsmModule.getModule(), gsmModule.getImei(), sim, new EnumInfo<>(gsmModule.getStatus()),
+		                gsmModule.getCreateTime(), gsmModule.getUpdateTime(), new EnumInfo<>(gsmModule.getDeleteStatus()));
 	}
 
 	public static List<GSMModuleInfo> creates(List<GSMModule> list) {
@@ -116,4 +67,5 @@ public class GSMModuleInfo extends DeviceInfo {
 		}
 		return gsmModuleInfos;
 	}
+
 }

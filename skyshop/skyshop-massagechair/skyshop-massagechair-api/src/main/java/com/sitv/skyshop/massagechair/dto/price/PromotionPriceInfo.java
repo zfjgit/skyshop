@@ -6,10 +6,18 @@ package com.sitv.skyshop.massagechair.dto.price;
 import java.math.BigDecimal;
 
 import com.sitv.skyshop.massagechair.domain.price.PromotionPrice;
+import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class PromotionPriceInfo extends PriceInfo {
 
 	/**
@@ -27,39 +35,9 @@ public class PromotionPriceInfo extends PriceInfo {
 	}
 
 	public PromotionPriceInfo(PromotionPrice price) {
-		super(price.getId(), price.getName(), price.getPrice(), price.getCreateTime(), price.getUpdateTime());
+		super(price.getId(), price.getName(), price.getPrice(), price.getImg(), AgencyInfo.create(price.getAgency()), price.getCreateTime(), price.getUpdateTime());
 		this.earlierOn = price.getEarlierOn();
 		this.earlierOnMoney = price.getEarlierOnMoney();
-	}
-
-	/**
-	 * @return the earlierOn
-	 */
-	public int getEarlierOn() {
-		return earlierOn;
-	}
-
-	/**
-	 * @param earlierOn
-	 *            the earlierOn to set
-	 */
-	public void setEarlierOn(int earlierOn) {
-		this.earlierOn = earlierOn;
-	}
-
-	/**
-	 * @return the earlierOnMoney
-	 */
-	public BigDecimal getEarlierOnMoney() {
-		return earlierOnMoney;
-	}
-
-	/**
-	 * @param earlierOnMoney
-	 *            the earlierOnMoney to set
-	 */
-	public void setEarlierOnMoney(BigDecimal earlierOnMoney) {
-		this.earlierOnMoney = earlierOnMoney;
 	}
 
 	public String getType() {

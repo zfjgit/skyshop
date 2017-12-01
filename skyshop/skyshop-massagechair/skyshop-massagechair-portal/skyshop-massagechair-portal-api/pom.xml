@@ -1,7 +1,5 @@
-<?xml version="1.0"?>
-<project
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.sitv</groupId>
@@ -9,28 +7,12 @@
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>skyshop-massagechair-portal-api</artifactId>
-	<packaging>war</packaging>
+	<packaging>pom</packaging>
 	<name>Maven Portlet Archetype</name>
 	<url>http://maven.apache.org</url>
 	
-	<dependencies>
-		<dependency>
-			<groupId>com.sitv</groupId>
-			<artifactId>skyshop-massagechair-provider</artifactId>
-			<version>${massagechair.version}</version>
-		</dependency>
-		
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger2</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>io.springfox</groupId>
-			<artifactId>springfox-swagger-ui</artifactId>
-		</dependency>
-	</dependencies>
-	
-	<build>
-		<finalName>massagechair-api</finalName>
-	</build>
+  <modules>
+    <module>skyshop-massagechair-portal-api-wx-admin</module>
+    <module>skyshop-massagechair-portal-api-wx-scan2use</module>
+  </modules>
 </project>

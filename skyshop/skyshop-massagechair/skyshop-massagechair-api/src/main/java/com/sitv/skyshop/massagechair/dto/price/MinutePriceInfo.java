@@ -5,9 +5,16 @@ package com.sitv.skyshop.massagechair.dto.price;
 
 import com.sitv.skyshop.massagechair.domain.price.MinutePrice;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年11月16日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class MinutePriceInfo extends PriceInfo {
 
 	/**

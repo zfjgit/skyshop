@@ -4,68 +4,109 @@
 <mapper namespace="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao" >
 
 	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.device.MassageChair">
-		<id column="id" jdbcType="BIGINT" property="id" />
-		<result column="name" jdbcType="VARCHAR" property="name" />
-		<result column="brand" jdbcType="VARCHAR" property="brand" />
-		<result column="description" jdbcType="VARCHAR" property="description" />
-		<result column="status" jdbcType="VARCHAR" property="status" />
-		<result column="isPromotionPrice" jdbcType="TINYINT" property="isPromotionPrice" />
-		<result column="createtime" property="createTime" />
-		<result column="updatetime" property="updateTime" />
-		<association property="gsmModule" column="gsmmoduleid" select="com.sitv.skyshop.massagechair.dao.device.IGSMModuleDao.get"/>
-		<association property="installationAddress" column="installationAddressid" select="com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao.get"/>
-		<collection property="prices" column="id" select="getPrices" ofType="com.sitv.skyshop.massagechair.domain.price.Price"/>
+		<id property="id" jdbcType="BIGINT" column="chairs_sno" />
+		<result property="name" jdbcType="VARCHAR" column="chairs_name" />
+		<result property="brand" jdbcType="VARCHAR" column="chairs_brand" />
+		<result property="description" jdbcType="VARCHAR" column="description" />
+		<result property="status" jdbcType="VARCHAR" column="chairs_status" />
+		<result property="createtime" column="chairs_createTime" />
+		<result property="updatetime" column="chairs_updateTime" />
+		<result property="deleteStatus" jdbcType="INTEGER" column="is_del" />
+		<association property="gsmModule" column="gsm_sno" select="com.sitv.skyshop.massagechair.dao.device.IGSMModuleDao.get"/>
+		<association property="installationAddress" column="install_sno" select="com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao.get"/>
+		<association property="agency" column="user3_sno" select="com.sitv.skyshop.massagechair.dao.agency.IAgencyDao.get"/>
+		<collection property="prices" column="chairs_sno" select="getPrices" ofType="com.sitv.skyshop.massagechair.domain.price.Price"/>
 	</resultMap>
 	
 	<select id="getPrices" resultMap="com.sitv.skyshop.massagechair.dao.price.IPriceDao.BaseResultMap" parameterType="long">
 		SELECT p.* 
-		FROM pricepackages pp 
-		LEFT JOIN prices p ON pp.priceid=p.id
-		WHERE pp.chairid=#{id}
+		FROM tab_pricepackages pp 
+		LEFT JOIN tab_prices p ON pp.price_sno=p.price_sno
+		WHERE pp.chairs_sno=#{id}
 	</select>
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED">
-		INSERT INTO massagechairs
-			(name, brand, description, ispromotionprice, gsmmoduleid, status) 
+		INSERT INTO tab_massagechairs
+			(chairs_name, chairs_brand, install_sno, user3_sno, description, gsm_sno, chairs_status, chairs_createTime) 
 		VALUES 
-			(#{name}, #{brand}, #{description}, #{isPromotionPrice}, #{gsmModule.id}, #{status})    
+			(#{name}, #{brand}, #{installationAddress.id}, #{agency.id}, #{description}, #{gsmModule.id}, #{status.code}, #{createTime})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
-		SELECT * FROM massagechairs WHERE id=#{id}
+		SELECT * FROM tab_massagechairs WHERE chairs_sno=#{id}
+	</select>
+	
+	<select id="getCountByAgency" resultType="int" parameterType="long">
+		SELECT count(1) FROM tab_massagechairs WHERE user3_sno=#{id}
+	</select>
+	
+	<select id="findByAddr" resultMap="BaseResultMap" parameterType="long">
+		SELECT m.* 
+		FROM tab_massagechairs m 
+		WHERE m.install_sno=#{id}
+	</select>
+	
+	<select id="getByIMEI" resultMap="BaseResultMap" parameterType="String">
+		SELECT m.* 
+		FROM tab_massagechairs m 
+		LEFT JOIN tab_gsmmodules g 
+			ON m.gsm_sno=g.gsm_sno 
+		WHERE g.gsm_imei=#{imei}
+	</select>
+	
+	<select id="getBySIM" resultMap="BaseResultMap" parameterType="String">
+		SELECT m.* 
+		FROM tab_massagechairs m 
+		LEFT JOIN tab_gsmmodules g 
+			ON m.gsm_sno=g.gsm_sno 
+		LEFT JOIN tab_simcards s 
+			ON s.simcard_sno=g.simcard_sno
+		WHERE s.sim=#{sim}
 	</select>
 	
 	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" >
-		UPDATE massagechairs 
-		SET name=#{name}, 
-		 	brand=#{brand},
+		UPDATE tab_massagechairs 
+		SET chairs_name=#{name}, 
+		 	chairs_brand=#{brand},
 		 	description=#{description},
-		 	isPromotionPrice=#{isPromotionPrice},
-		 	gsmmoduleid=#{gsmModule.id},
-		 	status=#{status}
-		WHERE id=#{id}
+		 	install_sno=#{installationAddress.id},
+		 	user3_sno=#{agency.id},
+		 	gsm_sno=#{gsmModule.id},
+		 	chairs_status=#{status.code},
+		 	chairs_updateTime=#{updateTime}
+		WHERE chairs_sno=#{id}
+	</update>
+	
+	<update id="updateDeleteStatus" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" >
+		UPDATE tab_massagechairs 
+		SET is_del=#{deleteStatus.code},
+		WHERE chairs_sno=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="long" statementType="PREPARED">
-	    DELETE FROM massagechairs WHERE id=#{id}
+	    DELETE FROM tab_massagechairs WHERE chairs_sno=#{id}
 	</delete>
 
 	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
 		SELECT m.*
-		FROM massagechairs m
-		LEFT JOIN installationaddresses a ON m.installationAddressid = a.id
+		FROM tab_massagechairs m 
+		LEFT JOIN tab_gsmmodules g ON m.gsm_sno=g.gsm_sno
+		LEFT JOIN tab_simcards s ON g.simcard_sno=s.simcard_sno
 		WHERE 1 = 1 
+		<if test="param != null and param.agency != null">
+			AND user3_sno = #{param.agency.id}
+		</if>
 		<if test="param != null and param.gsmModule != null">
-			AND gsmModuleid = #{param.gsmModule.id}
+			AND m.gsm_sno = #{param.gsmModule.id}
+		</if>
+		<if test="param != null and param.gsmModule.simcard != null">
+			AND s.sim LIKE CONCAT('%', #{param.gsmModule.simCard.sim}, '%')
 		</if>
 		<if test="param != null and param.name != null">
-			AND name LIKE CONCAT('%', #{param.name}, '%')
+			AND m.chairs_name LIKE CONCAT('%', #{param.name}, '%')
 		</if>
 		<if test="param != null and param.installationAddress != null and param.installationAddress.fullAddress != null">
-			AND a.fulladdress like CONCAT('%', #{param.installationAddress.fullAddress}, '%')
-		</if>
-		<if test="param != null and param.installationAddress != null and param.installationAddress.contact != null">
-			AND a.contact like CONCAT('%', #{param.installationAddress.contact}, '%')
+			AND m.install_sno=#{param.installationAddress.id}
 		</if>
 		<if test="sortField != null and sortDir != null">
 			ORDER BY ${sortField} ${sortDir}

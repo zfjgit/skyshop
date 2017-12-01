@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.agency.IAgencyBankAccountDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.agency.AgencyBankAccount">
+		<id property="id" jdbcType="BIGINT" column="bank_sno" />
+		<result property="bank" jdbcType="VARCHAR" column="bank_name" />
+		<result property="account" jdbcType="VARCHAR" column="bank_card_number" />
+		<result property="accountName" jdbcType="VARCHAR" column="bank_user_name" />
+		<result property="checkCode" jdbcType="VARCHAR" column="bank_check" />
+		<result property="createTime" column="cdate" />
+		<association property="agency" column="user3_sno" select="com.sitv.skyshop.massagechair.dao.agency.IAgencyDao.get" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.agency.AgencyBankAccount" statementType="PREPARED">
+		INSERT INTO tab_user3_bank
+			(bank_name, bank_card_number, bank_user_name, bank_check, cdate, user3_sno) 
+		VALUES 
+			(#{bank}, #{account}, #{accountName}, #{checkCode}, #{createTime}, #{agency.id})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_user3_bank WHERE bank_sno=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.agency.AgencyBankAccount" statementType="PREPARED" >
+		UPDATE tab_user3_bank 
+		SET bank_name=#{bank}, 
+			bank_card_number=#{account}, 
+			bank_user_name=#{accountName}, 
+			bank_check=#{checkCode}, 
+			cdate=#{createTime}, 
+			<if test="agency != null">
+				user3_sno=#{agency.id} 
+			</if>
+		WHERE bank_sno=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM tab_user3_bank WHERE bank_sno=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT *
+		FROM tab_user3_bank  
+		WHERE 1 = 1 
+			AND user3_sno = #{param.agency.id}
+		<if test="param != null and param.bank != null">
+			AND bank_name LIKE CONCAT('%', #{param.bank}, '%')
+		</if>
+		<if test="param != null and param.accountName != null">
+			AND bank_user_name LIKE CONCAT('%', #{param.accountName}, '%')
+		</if>
+		<if test="param != null and param.account != null">
+			AND bank_card_number = #{param.account}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+	
+</mapper>

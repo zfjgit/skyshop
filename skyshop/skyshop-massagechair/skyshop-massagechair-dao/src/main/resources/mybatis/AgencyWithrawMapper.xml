@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.agency.IAgencyWithrawDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.agency.AgencyWithraw">
+		<id property="id" jdbcType="BIGINT" column="record_sno" />
+		<result property="status" jdbcType="VARCHAR" column="record_status" />
+		<result property="money" jdbcType="DECIMAL" column="record_money" />
+		<result property="bank" jdbcType="VARCHAR" column="bank_name" />
+		<result property="account" jdbcType="VARCHAR" column="bank_num" />
+		<result property="accountName" jdbcType="VARCHAR" column="bank_user" />
+		<result property="checkCode" jdbcType="VARCHAR" column="record_check" />
+		<result property="createTime" column="cdate" />
+		<association property="agency" column="user3_sno" select="com.sitv.skyshop.massagechair.dao.agency.IAgencyDao.get" />
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.agency.AgencyWithraw" statementType="PREPARED">
+		INSERT INTO tab_present_record
+			(bank_name, bank_num, bank_user, record_check, cdate, user3_sno, record_money, record_status) 
+		VALUES 
+			(#{bank}, #{account}, #{accountName}, #{checkCode}, #{createTime}, #{agency.id}, #{money}, #{status.code})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_present_record WHERE record_sno=#{id}
+	</select>
+	
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT *
+		FROM tab_present_record  
+		WHERE 1 = 1 
+			AND user3_sno = #{param.agency.id}
+		<if test="param != null and param.bank != null">
+			AND bank_name LIKE CONCAT('%', #{param.bank}, '%')
+		</if>
+		<if test="param != null and param.accountName != null">
+			AND bank_user LIKE CONCAT('%', #{param.accountName}, '%')
+		</if>
+		<if test="param != null and param.account != null">
+			AND bank_num = #{param.account}
+		</if>
+		<if test="param != null and param.status != null">
+			AND record_status = #{param.status.code}
+		</if>
+		
+		<if test="param != null and param.endDate != null">
+			AND cdate &lt; #{param.endDate}
+		</if>
+		
+		<if test="param != null and param.startDate != null">
+			AND cdate &gt; #{param.startDate}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+	
+</mapper>

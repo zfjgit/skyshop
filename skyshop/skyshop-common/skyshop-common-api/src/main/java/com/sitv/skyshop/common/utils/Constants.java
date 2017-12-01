@@ -28,11 +28,11 @@ public final class Constants {
 
 	public static final String ISO = "ISO-8859-1";
 
-	public static final String DATETIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATETIME_FORMAT_1 = "yyyy-MM-dd HH:mm:ss";
+	public static final String DATETIME_FORMAT_2 = "yyyy/MM/dd HH:mm:ss";
 
-	public static final String DATE_FORMAT1 = "yyyy-MM-dd";
-
-	public static final String DATE_FORMAT2 = "dd/MM/yyyy";
+	public static final String DATE_FORMAT_1 = "yyyy-MM-dd";
+	public static final String DATE_FORMAT_2 = "yyyy/MM/dd";
 
 	public static final String GMT_FORMAT = "EEE, dd MMM yyyy HH:mm:ss z";
 
@@ -50,4 +50,8 @@ public final class Constants {
 
 	public static final String KUAIDI_KEY = "";
 	public static final String KUAIDI_URL = "http://api.kuaidi.com/openapi.html?id={0}&com={1}&nu={2}&show={3}&muti={4}&order={5}";
+
+	public static final String TOKEN_HEADER = "Token-Header";
+	public static final long TOKEN_LIFETIME = 30 * 60 * 1000;
+
 }

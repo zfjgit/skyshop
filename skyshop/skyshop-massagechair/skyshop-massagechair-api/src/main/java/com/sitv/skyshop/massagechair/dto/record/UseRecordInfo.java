@@ -7,153 +7,74 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.dto.info.FullInfoDto;
 import com.sitv.skyshop.massagechair.domain.record.UseRecord;
+import com.sitv.skyshop.massagechair.domain.record.UseRecord.UseRecordType;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class UseRecordInfo extends FullInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -6483246768896565446L;
+
 	private String from;
 	private String response;
 	private String imei;
 	private String sim;
 	private String price;
+	private String minutes;
 	private String chair;
 
-	/**
-	 *
-	 */
+	private String openid;
+
+	private String nickName;
+
+	private String addr;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Calendar startDate;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
+	private Calendar endDate;
+
+	private EnumInfo<UseRecordType, String> type;
+
 	public UseRecordInfo() {
 	}
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param createTime
-	 * @param from
-	 * @param response
-	 * @param imei
-	 * @param sim
-	 * @param price
-	 * @param chair
-	 */
-	public UseRecordInfo(Long id, String name, String description, Calendar createTime, String from, String response, String imei, String sim, String price, String chair) {
-		super(id, name, description);
-		setCreateTime(createTime);
-		this.chair = chair;
+	public UseRecordInfo(Long id, EnumInfo<UseRecordType, String> type, String from, String response, String imei, String sim, String price, String minutes, String chair,
+	                String openid, String nickName, String addr, Calendar createTime) {
+		super(id, "");
 		this.from = from;
-		this.imei = imei;
-		this.price = price;
-		this.response = price;
-		this.sim = sim;
-	}
-
-	/**
-	 * @return the from
-	 */
-	public String getFrom() {
-		return from;
-	}
-
-	/**
-	 * @param from
-	 *            the from to set
-	 */
-	public void setFrom(String from) {
-		this.from = from;
-	}
-
-	/**
-	 * @return the response
-	 */
-	public String getResponse() {
-		return response;
-	}
-
-	/**
-	 * @param response
-	 *            the response to set
-	 */
-	public void setResponse(String response) {
 		this.response = response;
-	}
-
-	/**
-	 * @return the imei
-	 */
-	public String getImei() {
-		return imei;
-	}
-
-	/**
-	 * @param imei
-	 *            the imei to set
-	 */
-	public void setImei(String imei) {
 		this.imei = imei;
-	}
-
-	/**
-	 * @return the sim
-	 */
-	public String getSim() {
-		return sim;
-	}
-
-	/**
-	 * @param sim
-	 *            the sim to set
-	 */
-	public void setSim(String sim) {
 		this.sim = sim;
-	}
-
-	/**
-	 * @return the price
-	 */
-	public String getPrice() {
-		return price;
-	}
-
-	/**
-	 * @param price
-	 *            the price to set
-	 */
-	public void setPrice(String price) {
 		this.price = price;
-	}
-
-	/**
-	 * @return the chair
-	 */
-	public String getChair() {
-		return chair;
-	}
-
-	/**
-	 * @param chair
-	 *            the chair to set
-	 */
-	public void setChair(String chair) {
+		this.minutes = minutes;
 		this.chair = chair;
+		this.openid = openid;
+		this.nickName = nickName;
+		this.addr = addr;
+		this.type = type;
+		setCreateTime(createTime);
 	}
 
-	/**
-	 * @param useRecord
-	 * @return
-	 */
 	public static UseRecordInfo create(UseRecord r) {
 		if (r == null) {
 			return null;
 		}
-		return new UseRecordInfo(r.getId(), r.getName(), r.getDescription(), r.getCreateTime(), r.getFrom(), r.getResponse(), r.getImei(), r.getSim(), r.getPrice(), r.getChair());
+		return new UseRecordInfo(r.getId(), new EnumInfo<>(r.getType()), r.getFrom(), r.getResponse(), r.getImei(), r.getSim(), r.getPrice(), r.getMinutes(), r.getChair(),
+		                r.getOpenid(), r.getNickName(), r.getAddr(), r.getCreateTime());
 	}
 
 	public static List<UseRecordInfo> creates(List<UseRecord> rs) {
@@ -165,4 +86,5 @@ public class UseRecordInfo extends FullInfoDto {
 		}
 		return infos;
 	}
+
 }

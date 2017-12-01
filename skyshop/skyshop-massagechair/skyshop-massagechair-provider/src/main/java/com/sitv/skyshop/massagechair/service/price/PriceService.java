@@ -25,6 +25,6 @@ public class PriceService extends DefaultPriceService<IPriceDao<Price>, Price, P
 	}
 
 	public void updateOne(PriceInfo t) {
-		throw new UnsupportedOperationException("不能修改");
+		super.updateOne(t);
 	}
 }

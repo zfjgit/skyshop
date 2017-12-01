@@ -18,7 +18,7 @@ import com.sitv.skyshop.common.dto.AddressInfo;
 import com.sitv.skyshop.common.dto.CommonResponseInfo;
 import com.sitv.skyshop.common.service.IAddressService;
 import com.sitv.skyshop.common.utils.Utils;
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
@@ -37,7 +37,7 @@ import io.swagger.annotations.ApiResponses;
 @Api(value = "地址信息接口")
 @RestController
 @RequestMapping("/address")
-public class AddressController extends BaseController<IAddressService, AddressInfo> {
+public class AddressController extends BaseRestController<IAddressService, AddressInfo> {
 
 	private final static Logger log = LoggerFactory.getLogger(AddressController.class);
 

@@ -5,99 +5,88 @@ package com.sitv.skyshop.massagechair.domain.device;
 
 import java.util.Calendar;
 
+import com.sitv.skyshop.domain.BaseEnum;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class SIMCard extends Device {
 
-	private SIMCardOperator operator;
 	private String sim;
 	private int dataFlow;
 	private Calendar dueDate;
+	private SIMCardStatus status;
+	private SIMCardOperator operator;
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 */
-	public SIMCard(Long id, String name, String description) {
-		super(id, name, description);
+	protected SIMCard() {
 	}
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param dataFlow
-	 * @param dueDate
-	 * @param sim
-	 * @param simCardOperator
-	 */
-	public SIMCard(Long id, String name, String description, int dataFlow, Calendar dueDate, String sim, SIMCardOperator simCardOperator) {
-		this(id, name, description);
-		this.dataFlow = dataFlow;
-		this.dueDate = dueDate;
+	public SIMCard(Long id, String description, int dataFlow, Calendar dueDate, String sim, SIMCardOperator simCardOperator, SIMCardStatus status, DeleteStatus deleteStatus) {
+		super(id, null, description, deleteStatus);
 		this.sim = sim;
+		this.status = status;
+		this.dueDate = dueDate;
+		this.dataFlow = dataFlow;
 		this.operator = simCardOperator;
 	}
 
-	/**
-	 * @return the operator
-	 */
-	public SIMCardOperator getOperator() {
-		return operator;
+	public enum SIMCardStatus implements BaseEnum<SIMCardStatus, String> {
+		USING("A", "使用中"), UNUSED("B", "未使用");
+
+		private String code;
+		private String name;
+
+		private SIMCardStatus(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		/**
+		 * @return the code
+		 */
+		public String getCode() {
+			return code;
+		}
+
+		/**
+		 * @return the name
+		 */
+		public String getName() {
+			return name;
+		}
 	}
 
-	/**
-	 * @param operator
-	 *            the operator to set
-	 */
-	public void setOperator(SIMCardOperator operator) {
-		this.operator = operator;
-	}
+	public enum SIMCardOperator implements BaseEnum<SIMCardOperator, String> {
 
-	/**
-	 * @return the sim
-	 */
-	public String getSim() {
-		return sim;
-	}
+		CHINAL_TELECOM("A", "电信"), CHINAL_MOBILE("B", "移动"), CHINAL_UNICOM("C", "联通");
 
-	/**
-	 * @param sim
-	 *            the sim to set
-	 */
-	public void setSim(String sim) {
-		this.sim = sim;
-	}
+		private String code;
+		private String name;
 
-	/**
-	 * @return the dataFlow
-	 */
-	public int getDataFlow() {
-		return dataFlow;
-	}
+		private SIMCardOperator(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
 
-	/**
-	 * @param dataFlow
-	 *            the dataFlow to set
-	 */
-	public void setDataFlow(int dataFlow) {
-		this.dataFlow = dataFlow;
-	}
+		/**
+		 * @return the code
+		 */
+		public String getCode() {
+			return code;
+		}
 
-	/**
-	 * @return the dueDate
-	 */
-	public Calendar getDueDate() {
-		return dueDate;
-	}
-
-	/**
-	 * @param dueDate
-	 *            the dueDate to set
-	 */
-	public void setDueDate(Calendar dueDate) {
-		this.dueDate = dueDate;
+		/**
+		 * @return the name
+		 */
+		public String getName() {
+			return name;
+		}
 	}
 }
