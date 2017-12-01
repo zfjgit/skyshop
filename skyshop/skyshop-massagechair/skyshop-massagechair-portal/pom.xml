@@ -13,8 +13,9 @@
 	
 	<packaging>pom</packaging>
 	<modules>
-		<module>skyshop-massagechair-portal-admin</module>
+		
     	<module>skyshop-massagechair-portal-api</module>
-    <module>skyshop-massagechair-portal-wx</module>
-  </modules>
+    
+    <module>skyshop-massagechair-portal-ui</module>
+	</modules>
 </project>
