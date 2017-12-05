@@ -19,13 +19,29 @@ import com.sitv.skyshop.massagechair.domain.device.SIMCard;
  */
 public class SIMCardInfo extends DeviceInfo {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -4372937544847496856L;
 
+	public static SIMCardInfo create(SIMCard simCard) {
+		if (simCard == null) {
+			return null;
+		}
+
+		return new SIMCardInfo(simCard.getId(), simCard.getDescription(), simCard.getSim(), simCard.getDataFlow(), simCard.getDueDate(), simCard.getOperator().getCode(),
+		                simCard.getStatus().getCode(), simCard.getCreateTime(), simCard.getUpdateTime());
+	}
+
+	public static List<SIMCardInfo> creates(List<SIMCard> list) {
+		List<SIMCardInfo> simCardInfos = new ArrayList<>();
+		if (list != null) {
+			for (SIMCard simCard : list) {
+				simCardInfos.add(create(simCard));
+			}
+		}
+		return simCardInfos;
+	}
+
 	@NotNull
-	private SIMCardOperatorInfo operator;
+	private String operator;
 
 	@NotBlank
 	private String sim;
@@ -36,38 +52,33 @@ public class SIMCardInfo extends DeviceInfo {
 
 	private Calendar dueDate;
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param sim
-	 * @param dataFlow
-	 * @param dueDate
-	 * @param createTime
-	 * @param updateTime
-	 */
-	public SIMCardInfo(Long id, String name, String description, String sim, int dataFlow, Calendar dueDate, SIMCardOperatorInfo operatorInfo, Calendar createTime,
-	                Calendar updateTime) {
-		super(id, name, description, null, createTime, updateTime);
+	private String status;
+
+	public SIMCardInfo(Long id, String description, String sim, int dataFlow, Calendar dueDate, String operator, String status, Calendar createTime, Calendar updateTime) {
+		super(id, null, description, createTime, updateTime);
 		this.dataFlow = dataFlow;
 		this.dueDate = dueDate;
-		this.operator = operatorInfo;
-		this.sim = sim;
-	}
-
-	/**
-	 * @return the operator
-	 */
-	public SIMCardOperatorInfo getOperator() {
-		return operator;
-	}
-
-	/**
-	 * @param operator
-	 *            the operator to set
-	 */
-	public void setOperator(SIMCardOperatorInfo operator) {
 		this.operator = operator;
+		this.sim = sim;
+		this.setStatus(status);
+	}
+
+	/**
+	 * @return the dataFlow
+	 */
+	public int getDataFlow() {
+		return dataFlow;
+	}
+
+	/**
+	 * @return the dueDate
+	 */
+	public Calendar getDueDate() {
+		return dueDate;
+	}
+
+	public String getOperator() {
+		return operator;
 	}
 
 	/**
@@ -77,19 +88,8 @@ public class SIMCardInfo extends DeviceInfo {
 		return sim;
 	}
 
-	/**
-	 * @param sim
-	 *            the sim to set
-	 */
-	public void setSim(String sim) {
-		this.sim = sim;
-	}
-
-	/**
-	 * @return the dataFlow
-	 */
-	public int getDataFlow() {
-		return dataFlow;
+	public String getStatus() {
+		return status;
 	}
 
 	/**
@@ -101,13 +101,6 @@ public class SIMCardInfo extends DeviceInfo {
 	}
 
 	/**
-	 * @return the dueDate
-	 */
-	public Calendar getDueDate() {
-		return dueDate;
-	}
-
-	/**
 	 * @param dueDate
 	 *            the dueDate to set
 	 */
@@ -115,27 +108,19 @@ public class SIMCardInfo extends DeviceInfo {
 		this.dueDate = dueDate;
 	}
 
-	/**
-	 * @param simCard
-	 * @return
-	 */
-	public static SIMCardInfo create(SIMCard simCard) {
-		if (simCard == null) {
-			return null;
-		}
-
-		SIMCardOperatorInfo operatorInfo = SIMCardOperatorInfo.create(simCard.getOperator());
-		return new SIMCardInfo(simCard.getId(), simCard.getName(), simCard.getDescription(), simCard.getSim(), simCard.getDataFlow(), simCard.getDueDate(), operatorInfo,
-		                simCard.getCreateTime(), simCard.getUpdateTime());
+	public void setOperator(String operator) {
+		this.operator = operator;
 	}
 
-	public static List<SIMCardInfo> creates(List<SIMCard> list) {
-		List<SIMCardInfo> simCardInfos = new ArrayList<>();
-		if (list != null) {
-			for (SIMCard simCard : list) {
-				simCardInfos.add(create(simCard));
-			}
-		}
-		return simCardInfos;
+	/**
+	 * @param sim
+	 *            the sim to set
+	 */
+	public void setSim(String sim) {
+		this.sim = sim;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

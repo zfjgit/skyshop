@@ -13,6 +13,10 @@ import java.math.BigDecimal;
  */
 public class PromotionPrice extends Price {
 
+	public PromotionPrice(Long id, String name, BigDecimal price, String img) {
+		super(id, name, price, img);
+	}
+
 	private int earlierOn;
 	private BigDecimal earlierOnMoney;
 

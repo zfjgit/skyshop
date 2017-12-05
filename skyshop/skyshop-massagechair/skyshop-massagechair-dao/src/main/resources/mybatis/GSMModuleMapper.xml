@@ -4,58 +4,72 @@
 <mapper namespace="com.sitv.skyshop.massagechair.dao.device.IGSMModuleDao" >
 
 	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.device.GSMModule">
-		<id column="id" jdbcType="BIGINT" property="id" />
-		<result column="name" jdbcType="VARCHAR" property="name" />
-		<result column="description" jdbcType="VARCHAR" property="description" />
-		<result column="imei" jdbcType="VARCHAR" property="imei" />
-		<result column="module" jdbcType="VARCHAR" property="module" />
-		<result column="createTime" javaType="java.util.Calendar" property="createTime"/>
-		<result column="updateTime" javaType="java.util.Calendar" property="updateTime"/>
-		<association property="simCard" column="simcardid" select="com.sitv.skyshop.massagechair.dao.device.ISIMCardDao.get"/>
+		<id property="id" jdbcType="BIGINT" column="gsm_sno" />
+		<result property="description" jdbcType="VARCHAR" column="description" />
+		<result property="imei" jdbcType="VARCHAR" column="gsm_imei" />
+		<result property="module" jdbcType="VARCHAR" column="gsm_module" />
+		<result property="status" jdbcType="VARCHAR" column="gsm_status" />
+		<result property="deleteStatus" jdbcType="INTEGER" column="is_del" />
+		<result property="createTime" javaType="java.util.Calendar" column="gsm_createTime"/>
+		<result property="updateTime" javaType="java.util.Calendar" column="gsm_updateTime"/>
+		<association property="simCard" column="simcard_sno" select="com.sitv.skyshop.massagechair.dao.device.ISIMCardDao.get"/>
 	</resultMap>
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.GSMModule" statementType="PREPARED">
-		INSERT INTO gsmmodules
-			(name, description, imei, module, simcardid) 
+		INSERT INTO tab_gsmmodules
+			(gsm_status, description, gsm_imei, gsm_module, simcard_sno, gsm_createTime) 
 		VALUES 
-			(#{name}, #{description}, #{imei}, #{module}, #{simCard.id})    
+			(#{status.code}, #{description}, #{imei}, #{module}, #{simCard.id}, #{createTime})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
-		SELECT * FROM gsmmodules WHERE id=#{id}
+		SELECT * FROM tab_gsmmodules WHERE gsm_sno=#{id}
+	</select>
+	
+	<select id="getBySIM" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_gsmmodules WHERE simcard_sno=#{id}
 	</select>
 	
 	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.device.GSMModule" statementType="PREPARED" >
-		UPDATE gsmmodules 
-		SET name=#{name}, 
-		 	description=#{description},
-		 	imei=#{imei},
-		 	module=#{module},
-		 	simcardid=#{simCard.id},
-		 	updateTime=#{updateTime}
-		WHERE id=#{id}
+		UPDATE tab_gsmmodules 
+		SET description=#{description},
+		 	gsm_imei=#{imei},
+		 	gsm_module=#{module},
+		 	simcard_sno=#{simCard.id},
+		 	gsm_status=#{status.code},
+		 	gsm_updateTime=#{updateTime}
+		WHERE gsm_sno=#{id}
+	</update>
+	
+	<update id="updateDeleteStatus" parameterType="com.sitv.skyshop.massagechair.domain.device.GSMModule" statementType="PREPARED" >
+		UPDATE tab_gsmmodules 
+		SET is_del=#{deleteStatus.code},
+		WHERE gsm_sno=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="long" statementType="PREPARED">
-	    DELETE FROM gsmmodules WHERE id=#{id}
+	    DELETE FROM tab_gsmmodules WHERE gsm_sno=#{id}
 	</delete>
 
 	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
 		SELECT m.*
-		FROM gsmmodules m
-		LEFT JOIN simcards s ON m.simcardid = s.id
+		FROM tab_gsmmodules m
+		LEFT JOIN tab_simcards s ON m.simcard_sno = s.simcard_sno
 		WHERE 1 = 1 
-		<if test="param != null and param.name != null">
-			AND name LIKE CONCAT('%', #{param.name}, '%')
+		<if test="param != null and param.description != null">
+			AND description LIKE CONCAT('%', #{param.description}, '%')
 		</if>
 		<if test="param != null and param.imei != null">
-			AND imei like CONCAT('%', #{param.imei}, '%')
+			AND gsm_imei like CONCAT('%', #{param.imei}, '%')
 		</if>
 		<if test="param != null and param.simCard != null and param.simCard.sim != null">
 			AND s.sim like CONCAT('%', #{param.simCard.sim}, '%')
 		</if>
 		<if test="param != null and param.module != null">
-			AND module like CONCAT('%', #{param.module}, '%')
+			AND gsm_module like CONCAT('%', #{param.module}, '%')
+		</if>
+		<if test="param != null and param.status != null">
+			AND gsm_status = #{param.status.code}
 		</if>
 		<if test="sortField != null and sortDir != null">
 			ORDER BY ${sortField} ${sortDir}

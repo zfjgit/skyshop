@@ -27,7 +27,7 @@ public class PromotionPriceInfo extends PriceInfo {
 	}
 
 	public PromotionPriceInfo(PromotionPrice price) {
-		super(price.getId(), price.getName(), price.getPrice(), price.getCreateTime(), price.getUpdateTime());
+		super(price.getId(), price.getName(), price.getPrice(), price.getImg(), price.getCreateTime(), price.getUpdateTime());
 		this.earlierOn = price.getEarlierOn();
 		this.earlierOnMoney = price.getEarlierOnMoney();
 	}

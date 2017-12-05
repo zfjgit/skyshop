@@ -38,6 +38,7 @@ public abstract class DefaultPriceService<D extends ICrudDao<T>, T extends Price
 		T price = get(t.getId());
 		price.setPrice(t.getPrice());
 		price.setName(t.getName());
+		price.setImg(t.getImg());
 		update(price);
 	}
 

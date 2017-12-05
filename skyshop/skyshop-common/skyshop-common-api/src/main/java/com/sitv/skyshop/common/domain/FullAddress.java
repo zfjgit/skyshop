@@ -23,6 +23,15 @@ public class FullAddress extends DomainObject {
 		this.fullAddress = fullAddress;
 	}
 
+	public FullAddress(Long id, Address province, Address city, Address district, String detailAddress) {
+		super(id);
+		this.province = province;
+		this.city = city;
+		this.district = district;
+		this.detailAddress = detailAddress;
+		this.fullAddress = province.getName() + city.getName() + (district != null ? district.getName() : "") + detailAddress;
+	}
+
 	/**
 	 * @param id
 	 * @param description

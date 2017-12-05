@@ -13,6 +13,13 @@ import com.sitv.skyshop.domain.DomainObject;
 public abstract class Price extends DomainObject {
 
 	private BigDecimal price;
+	private String img;
+
+	public Price(Long id, String name, BigDecimal price, String img) {
+		super(id, name);
+		this.price = price;
+		this.img = img;
+	}
 
 	public BigDecimal calcMoney(int minutes) {
 		return new BigDecimal(minutes).multiply(price);
@@ -34,4 +41,12 @@ public abstract class Price extends DomainObject {
 	}
 
 	public abstract String getType();
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
+	}
 }

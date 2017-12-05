@@ -11,10 +11,20 @@ public abstract class SimpleType implements IBaseType {
 	protected SimpleType() {
 	}
 
-	public SimpleType(String name, String code) {
+	public SimpleType(Long id) {
 		super();
+		this.id = id;
+	}
+
+	public SimpleType(Long id, String name, String code) {
+		super();
+		this.id = id;
 		this.name = name;
 		this.code = code;
+	}
+
+	public SimpleType(String name, String code) {
+		this(null, name, code);
 	}
 
 	public Long getId() {

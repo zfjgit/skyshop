@@ -3,17 +3,26 @@
  */
 package com.sitv.skyshop.massagechair.domain.device;
 
+import java.util.Calendar;
+
+import com.sitv.skyshop.common.domain.Address;
 import com.sitv.skyshop.common.domain.FullAddress;
+import com.sitv.skyshop.domain.IDeleteStatus;
+import com.sitv.skyshop.massagechair.domain.agency.Agency;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
-public class InstallationAddress extends FullAddress {
+public class InstallationAddress extends FullAddress implements IDeleteStatus {
 
 	private String contact;
 	private String contactNumber;
 
 	private String location;
+
+	private Agency agency;
+
+	private DeleteStatus deleteStatus;
 
 	/**
 	 * @param id
@@ -23,11 +32,16 @@ public class InstallationAddress extends FullAddress {
 	 * @param contact
 	 * @param contactNumber
 	 */
-	public InstallationAddress(Long id, String description, String fullAddress, String location, String contact, String contactNumber) {
-		super(id, description, fullAddress);
+	public InstallationAddress(Long id, Agency agency, Address province, Address city, Address district, String detailAddress, String description, String location, String contact,
+	                String contactNumber, Calendar createTime, Calendar updateTime) {
+		super(id, province, city, district, detailAddress);
 		this.contact = contact;
 		this.contactNumber = contactNumber;
 		this.location = location;
+		this.agency = agency;
+		setDescription(description);
+		setCreateTime(createTime);
+		setUpdateTime(updateTime);
 	}
 
 	/**
@@ -73,6 +87,22 @@ public class InstallationAddress extends FullAddress {
 	 */
 	public void setLocation(String location) {
 		this.location = location;
+	}
+
+	public Agency getAgency() {
+		return agency;
+	}
+
+	public void setAgency(Agency agency) {
+		this.agency = agency;
+	}
+
+	public DeleteStatus getDeleteStatus() {
+		return deleteStatus;
+	}
+
+	public void setDeleteStatus(DeleteStatus deleteStatus) {
+		this.deleteStatus = deleteStatus;
 	}
 
 }

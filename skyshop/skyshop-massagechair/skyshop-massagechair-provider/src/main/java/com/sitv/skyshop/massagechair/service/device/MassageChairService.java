@@ -10,20 +10,24 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.sitv.skyshop.domain.BaseEnum;
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
+import com.sitv.skyshop.massagechair.dao.agency.IAgencyDao;
 import com.sitv.skyshop.massagechair.dao.device.IGSMModuleDao;
 import com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao;
 import com.sitv.skyshop.massagechair.dao.device.IMassageChairDao;
 import com.sitv.skyshop.massagechair.dao.device.IPricePackageDao;
 import com.sitv.skyshop.massagechair.dao.price.IPriceDao;
+import com.sitv.skyshop.massagechair.domain.agency.Agency;
 import com.sitv.skyshop.massagechair.domain.device.GSMModule;
 import com.sitv.skyshop.massagechair.domain.device.InstallationAddress;
 import com.sitv.skyshop.massagechair.domain.device.MassageChair;
+import com.sitv.skyshop.massagechair.domain.device.MassageChair.ChairStatus;
 import com.sitv.skyshop.massagechair.domain.device.PricePackage;
 import com.sitv.skyshop.massagechair.domain.price.Price;
 import com.sitv.skyshop.massagechair.dto.device.MassageChairInfo;
-import com.sitv.skyshop.massagechair.service.device.IMassageChairService;
 import com.sitv.skyshop.service.CrudService;
 
 /**
@@ -44,6 +48,9 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 	@Autowired
 	private IPricePackageDao pricePackageDao;
 
+	@Autowired
+	private IAgencyDao agencyDao;
+
 	public MassageChairInfo getOne(Long id) {
 		MassageChair massageChair = get(id);
 		return MassageChairInfo.create(massageChair);
@@ -63,9 +70,24 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 
 	public void updateOne(MassageChairInfo t) {
 		GSMModule gsmModule = gsmModuleDao.get(t.getGsmModule().getId());
-		InstallationAddress installationAddress = installationAddressDao.get(t.getInstallationAddress().getId());
 
-		MassageChair massageChair = new MassageChair(t.getId(), t.getName(), t.getDescription(), t.getBrand(), t.isPromotionPrice(), t.getStatus(), gsmModule, installationAddress);
+		InstallationAddress installationAddress = null;
+		if (t.getInstallationAddress() != null) {
+			installationAddress = installationAddressDao.get(t.getInstallationAddress().getId());
+		}
+		Agency agency = null;
+		if (t.getAgency() != null) {
+			agencyDao.get(t.getAgency().getId());
+		}
+
+		MassageChair massageChair = get(t.getId());
+		massageChair.setAgency(agency);
+		massageChair.setBrand(t.getBrand());
+		massageChair.setDescription(t.getDescription());
+		massageChair.setGsmModule(gsmModule);
+		massageChair.setInstallationAddress(installationAddress);
+		massageChair.setStatus(ChairStatus.valueOf(t.getStatus()));
+		dao.update(massageChair);
 
 		pricePackageDao.deleteByChair(t.getId());
 
@@ -76,15 +98,21 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 			PricePackage pricePackage = new PricePackage(massageChair, price);
 			pricePackageDao.insert(pricePackage);
 		}
-
-		dao.update(massageChair);
 	}
 
 	public void createOne(MassageChairInfo t) {
 		GSMModule gsmModule = gsmModuleDao.get(t.getGsmModule().getId());
-		InstallationAddress installationAddress = installationAddressDao.get(t.getInstallationAddress().getId());
+		InstallationAddress installationAddress = null;
+		if (t.getInstallationAddress() != null) {
+			installationAddress = installationAddressDao.get(t.getInstallationAddress().getId());
+		}
+		Agency agency = null;
+		if (t.getAgency() != null) {
+			agencyDao.get(t.getAgency().getId());
+		}
 
-		MassageChair massageChair = new MassageChair(t.getId(), t.getName(), t.getDescription(), t.getBrand(), t.isPromotionPrice(), t.getStatus(), gsmModule, installationAddress);
+		MassageChair massageChair = new MassageChair(null, t.getName(), t.getDescription(), t.getBrand(), ChairStatus.valueOf(t.getStatus()), gsmModule, installationAddress,
+		                agency);
 
 		StringTokenizer priceIdTokenizer = new StringTokenizer(t.getPriceIds(), ",");
 		while (priceIdTokenizer.hasMoreTokens()) {
@@ -95,6 +123,16 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 		}
 
 		dao.insert(massageChair);
+	}
+
+	public MassageChairInfo getByIMEI(String imei) {
+		return MassageChairInfo.create(dao.getByIMEI(imei));
+	}
+
+	public void updateDeleteStatus(MassageChairInfo t) {
+		MassageChair chair = get(t.getId());
+		chair.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus()));
+		dao.updateDeleteStatus(chair);
 	}
 
 }

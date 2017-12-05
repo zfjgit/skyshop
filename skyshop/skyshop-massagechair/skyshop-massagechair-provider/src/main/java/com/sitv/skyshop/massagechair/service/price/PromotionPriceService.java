@@ -21,15 +21,14 @@ public class PromotionPriceService extends DefaultPriceService<IPromotionPriceDa
 		price.setEarlierOnMoney(t.getEarlierOnMoney());
 		price.setPrice(t.getPrice());
 		price.setName(t.getName());
+		price.setImg(t.getImg());
 		update(price);
 	}
 
 	public void createOne(PromotionPriceInfo t) {
-		PromotionPrice price = new PromotionPrice();
+		PromotionPrice price = new PromotionPrice(null, t.getName(), t.getPrice(), t.getImg());
 		price.setEarlierOn(t.getEarlierOn());
 		price.setEarlierOnMoney(t.getEarlierOnMoney());
-		price.setPrice(t.getPrice());
-		price.setName(t.getName());
 		create(price);
 	}
 

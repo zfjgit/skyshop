@@ -4,39 +4,39 @@
 <mapper namespace="com.sitv.skyshop.massagechair.dao.device.IPricePackageDao" >
 
 	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.device.PricePackage">
-		<association property="price" column="priceid" select="com.sitv.skyshop.massagechair.dao.price.IPriceDao.get"/>
-		<association property="massageChair" column="chairid" select="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao.get"/>
+		<association property="price" column="prices_sno" select="com.sitv.skyshop.massagechair.dao.price.IPriceDao.get"/>
+		<association property="massageChair" column="chairs_sno" select="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao.get"/>
 	</resultMap>
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.PricePackage" statementType="PREPARED">
-		INSERT INTO pricepackages
-			(chairid, priceid) 
+		INSERT INTO tab_pricepackages
+			(chairs_sno, prices_sno) 
 		VALUES 
-			(#{massageChair.id}, #{price.id})    
+			(#{massageChair.id}, #{chairs_sno})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.massagechair.domain.device.PricePackage">
-		SELECT * FROM pricepackages WHERE chairid=#{massageChair.id} AND priceid=#{price.id}
+		SELECT * FROM tab_pricepackages WHERE chairs_sno=#{massageChair.id} AND prices_sno=#{price.id}
 	</select>
 	
 	<select id="findByPrice" resultMap="BaseResultMap" parameterType="long">
-		SELECT * FROM pricepackages WHERE priceid=#{id}
+		SELECT * FROM tab_pricepackages WHERE prices_sno=#{id}
 	</select>
 	
 	<select id="findByChair" resultMap="BaseResultMap" parameterType="long">
-		SELECT * FROM pricepackages WHERE chairid=#{id}
+		SELECT * FROM tab_pricepackages WHERE chairs_sno=#{id}
 	</select>
 	
 	<delete id="delete" parameterType="com.sitv.skyshop.massagechair.domain.device.PricePackage" statementType="PREPARED">
-	    DELETE FROM pricepackages WHERE chairid=#{massageChair.id} AND priceid=#{price.id}
+	    DELETE FROM tab_pricepackages WHERE chairs_sno=#{massageChair.id} AND prices_sno=#{price.id}
 	</delete>
 	
 	<delete id="deleteByChair" parameterType="long" statementType="PREPARED">
-	    DELETE FROM pricepackages WHERE chairid=#{id} 
+	    DELETE FROM tab_pricepackages WHERE chairs_sno=#{id} 
 	</delete>
 	
 	<delete id="deleteByPrice" parameterType="long" statementType="PREPARED">
-	    DELETE FROM pricepackages WHERE priceid=#{id}
+	    DELETE FROM tab_pricepackages WHERE prices_sno=#{id}
 	</delete>
 
 	

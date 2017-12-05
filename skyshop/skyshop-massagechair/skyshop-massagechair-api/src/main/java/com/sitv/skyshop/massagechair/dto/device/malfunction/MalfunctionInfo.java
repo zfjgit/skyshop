@@ -7,50 +7,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.sitv.skyshop.dto.info.FullInfoDto;
-import com.sitv.skyshop.massagechair.domain.device.malfunction.GSMModuleMalfunction;
 import com.sitv.skyshop.massagechair.domain.device.malfunction.Malfunction;
-import com.sitv.skyshop.massagechair.domain.device.malfunction.MassageChairMalfunction;
-import com.sitv.skyshop.massagechair.domain.device.malfunction.SIMCardMalfunction;
-import com.sitv.skyshop.massagechair.dto.device.DeviceInfo;
+import com.sitv.skyshop.massagechair.dto.device.MassageChairInfo;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
-public abstract class MalfunctionInfo extends FullInfoDto {
+public class MalfunctionInfo extends FullInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -3609147158554661001L;
 
-	private DeviceInfo device;
+	private MassageChairInfo chair;
 
 	private String status;
 
-	/**
-	 *
-	 */
+	private String type;
+
 	public MalfunctionInfo() {
 	}
 
 	public MalfunctionInfo(Malfunction malfunction) {
-		super(malfunction.getId(), malfunction.getName(), malfunction.getDescription(), malfunction.getCreateTime(), malfunction.getUpdateTime());
+		super(malfunction.getId(), malfunction.getDescription(), malfunction.getCreateTime(), malfunction.getUpdateTime());
 		this.status = malfunction.getStatus().getCode();
-	}
-
-	/**
-	 * @return the device
-	 */
-	public DeviceInfo getDevice() {
-		return device;
-	}
-
-	/**
-	 * @param device
-	 *            the device to set
-	 */
-	public void setDevice(DeviceInfo device) {
-		this.device = device;
+		this.type = malfunction.getType().getCode();
+		this.chair = MassageChairInfo.create(malfunction.getChair());
 	}
 
 	/**
@@ -68,33 +48,40 @@ public abstract class MalfunctionInfo extends FullInfoDto {
 		this.status = status;
 	}
 
-	public abstract String getType();
-
 	/**
 	 * @param malfunction
 	 * @return
 	 */
-	@SuppressWarnings("unchecked")
-	public static <I extends MalfunctionInfo> I create(Malfunction malfunction) {
-		if (malfunction != null) {
-			if (malfunction instanceof GSMModuleMalfunction) {
-				return (I) GSMModuleMalfunctionInfo.create((GSMModuleMalfunction) malfunction);
-			} else if (malfunction instanceof SIMCardMalfunction) {
-				return (I) SIMCardMalfunctionInfo.create((SIMCardMalfunction) malfunction);
-			} else if (malfunction instanceof MassageChairMalfunction) {
-				return (I) MassageChairMalfunctionInfo.create((MassageChairMalfunction) malfunction);
-			}
+	public static MalfunctionInfo create(Malfunction malfunction) {
+		if (malfunction == null) {
+			return null;
 		}
-		return null;
+		return new MalfunctionInfo(malfunction);
 	}
 
-	public static <I extends MalfunctionInfo, T extends Malfunction> List<I> creates(List<T> malfunctions) {
-		List<I> list = new ArrayList<>();
+	public static List<MalfunctionInfo> creates(List<Malfunction> malfunctions) {
+		List<MalfunctionInfo> list = new ArrayList<>();
 		if (malfunctions != null) {
 			for (Malfunction malfunction : malfunctions) {
 				list.add(create(malfunction));
 			}
 		}
 		return list;
+	}
+
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
+
+	public MassageChairInfo getChair() {
+		return chair;
+	}
+
+	public void setChair(MassageChairInfo chair) {
+		this.chair = chair;
 	}
 }

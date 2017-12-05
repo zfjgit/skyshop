@@ -6,6 +6,8 @@ public class Address extends DomainObject {
 
 	private Address parent;
 
+	private int level;
+
 	protected Address() {
 	}
 
@@ -27,6 +29,14 @@ public class Address extends DomainObject {
 
 	public void setParent(Address parent) {
 		this.parent = parent;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 }

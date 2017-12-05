@@ -3,34 +3,15 @@
  */
 package com.sitv.skyshop.massagechair.domain.device;
 
+import java.util.Calendar;
+
+import com.sitv.skyshop.domain.BaseEnum;
+import com.sitv.skyshop.domain.IDeleteStatus;
+
 /**
  * @author zfj20 @ 2017年11月15日
  */
-public class GSMModule extends Device {
-
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 */
-	public GSMModule(Long id, String name, String description) {
-		super(id, name, description);
-	}
-
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param imei
-	 * @param module
-	 * @param simCard
-	 */
-	public GSMModule(Long id, String name, String description, String imei, String module, SIMCard simCard) {
-		this(id, name, description);
-		this.imei = imei;
-		this.module = module;
-		this.simCard = simCard;
-	}
+public class GSMModule extends Device implements IDeleteStatus {
 
 	private String imei;
 
@@ -38,6 +19,46 @@ public class GSMModule extends Device {
 
 	// 型号
 	private String module;
+
+	private GSMModuleStatus status;
+
+	private DeleteStatus deleteStatus;
+
+	public GSMModule(Long id, String imei, String module, GSMModuleStatus status, SIMCard simCard, String description, Calendar createTime, Calendar updateTime) {
+		super(id, null, description);
+		this.imei = imei;
+		this.module = module;
+		this.simCard = simCard;
+		this.status = status;
+		setCreateTime(createTime);
+		setUpdateTime(updateTime);
+	}
+
+	public enum GSMModuleStatus implements BaseEnum<GSMModuleStatus, String> {
+		USING("A", "使用中"), UNUSED("B", "未使用");
+
+		private String code;
+		private String name;
+
+		private GSMModuleStatus(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		/**
+		 * @return the code
+		 */
+		public String getCode() {
+			return code;
+		}
+
+		/**
+		 * @return the name
+		 */
+		public String getName() {
+			return name;
+		}
+	}
 
 	/**
 	 * @return the imei
@@ -82,6 +103,22 @@ public class GSMModule extends Device {
 	 */
 	public void setModule(String module) {
 		this.module = module;
+	}
+
+	public GSMModuleStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(GSMModuleStatus status) {
+		this.status = status;
+	}
+
+	public void setDeleteStatus(DeleteStatus deleteStatus) {
+		this.deleteStatus = deleteStatus;
+	}
+
+	public DeleteStatus getDeleteStatus() {
+		return deleteStatus;
 	}
 
 }

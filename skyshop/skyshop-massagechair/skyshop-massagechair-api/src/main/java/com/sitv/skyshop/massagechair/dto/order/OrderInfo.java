@@ -8,54 +8,51 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+
 import com.sitv.skyshop.dto.info.FullInfoDto;
 import com.sitv.skyshop.massagechair.domain.order.Order;
+import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
+import com.sitv.skyshop.massagechair.dto.device.InstallationAddressInfo;
 import com.sitv.skyshop.massagechair.dto.device.MassageChairInfo;
-import com.sitv.skyshop.massagechair.dto.price.PriceInfo;
 
 /**
  * @author zfj20 @ 2017年11月20日
  */
 public class OrderInfo extends FullInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1970592130500769199L;
 
+	@Min(1)
 	private int minutes;
+
+	@Min(1)
 	private BigDecimal money;
+
+	@NotNull
 	private MassageChairInfo chair;
+
 	private String payStatus;
-	private Calendar completeTime;
-	private String orderStatus;
 
-	private BigDecimal realMins;
+	private AgencyInfo agency;
 
-	private PriceInfo price;
+	private String payType;
 
-	/**
-	 * @param id
-	 * @param minutes
-	 * @param money
-	 * @param payStatus
-	 * @param orderStatus
-	 * @param createTime
-	 * @param completeTime
-	 * @param realMins
-	 * @param description
-	 */
-	public OrderInfo(Long id, String code, int minutes, BigDecimal money, String payStatus, String orderStatus, Calendar createTime, Calendar completeTime, Calendar updateTime,
-	                BigDecimal realMins, String description, MassageChairInfo massageChairInfo, PriceInfo priceInfo) {
+	private Calendar startDate;
+	private Calendar endDate;
+
+	private InstallationAddressInfo installationAddress;
+
+	public OrderInfo(Long id, String code, int minutes, BigDecimal money, String payStatus, String payType, Calendar createTime, Calendar updateTime, String description,
+	                MassageChairInfo massageChairInfo, AgencyInfo agency) {
 		super(id, code, null, description, createTime, updateTime);
 		this.minutes = minutes;
-		this.completeTime = completeTime;
 		this.money = money;
-		this.orderStatus = orderStatus;
 		this.payStatus = payStatus;
-		this.realMins = realMins;
 		this.chair = massageChairInfo;
-		this.price = priceInfo;
+		this.agency = agency;
+		this.payType = payType;
 	}
 
 	public int getMinutes() {
@@ -90,46 +87,12 @@ public class OrderInfo extends FullInfoDto {
 		this.payStatus = payStatus;
 	}
 
-	public Calendar getCompleteTime() {
-		return completeTime;
-	}
-
-	public void setCompleteTime(Calendar completeTime) {
-		this.completeTime = completeTime;
-	}
-
-	public String getOrderStatus() {
-		return orderStatus;
-	}
-
-	public void setOrderStatus(String orderStatus) {
-		this.orderStatus = orderStatus;
-	}
-
-	public BigDecimal getRealMins() {
-		return realMins;
-	}
-
-	public void setRealMins(BigDecimal realMins) {
-		this.realMins = realMins;
-	}
-
-	public PriceInfo getPrice() {
-		return price;
-	}
-
-	public void setPrice(PriceInfo price) {
-		this.price = price;
-	}
-
-	/**
-	 * @param order
-	 * @return
-	 */
 	public static OrderInfo create(Order order) {
-		return new OrderInfo(order.getId(), order.getCode(), order.getMinutes(), order.getMoney(), order.getPayStatus().getCode(), order.getOrderStatus().getCode(),
-		                order.getCreateTime(), order.getCompleteTime(), order.getUpdateTime(), order.getRealMins(), order.getDescription(),
-		                MassageChairInfo.create(order.getChair()), PriceInfo.create(order.getPrice()));
+		if (order == null) {
+			return null;
+		}
+		return new OrderInfo(order.getId(), order.getCode(), order.getMinutes(), order.getMoney(), order.getPayStatus().getCode(), order.getPayType().getCode(),
+		                order.getCreateTime(), order.getUpdateTime(), order.getDescription(), MassageChairInfo.create(order.getChair()), AgencyInfo.create(order.getAgency()));
 	}
 
 	public static List<OrderInfo> creates(List<Order> orders) {
@@ -140,5 +103,45 @@ public class OrderInfo extends FullInfoDto {
 			}
 		}
 		return orderInfos;
+	}
+
+	public AgencyInfo getAgency() {
+		return agency;
+	}
+
+	public void setAgency(AgencyInfo agency) {
+		this.agency = agency;
+	}
+
+	public String getPayType() {
+		return payType;
+	}
+
+	public void setPayType(String payType) {
+		this.payType = payType;
+	}
+
+	public Calendar getStartDate() {
+		return startDate;
+	}
+
+	public void setStartDate(Calendar startDate) {
+		this.startDate = startDate;
+	}
+
+	public Calendar getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(Calendar endDate) {
+		this.endDate = endDate;
+	}
+
+	public InstallationAddressInfo getInstallationAddress() {
+		return installationAddress;
+	}
+
+	public void setInstallationAddress(InstallationAddressInfo installationAddress) {
+		this.installationAddress = installationAddress;
 	}
 }

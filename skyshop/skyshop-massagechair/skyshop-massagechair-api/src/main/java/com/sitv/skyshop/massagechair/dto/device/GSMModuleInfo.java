@@ -18,9 +18,6 @@ import com.sitv.skyshop.massagechair.domain.device.GSMModule;
  */
 public class GSMModuleInfo extends DeviceInfo {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 1510842333944062983L;
 
 	@NotBlank
@@ -32,21 +29,14 @@ public class GSMModuleInfo extends DeviceInfo {
 	// 型号
 	private String module;
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param module
-	 * @param imei
-	 * @param sim
-	 * @param createTime
-	 * @param updateTime
-	 */
-	public GSMModuleInfo(Long id, String name, String description, String module, String imei, SIMCardInfo sim, Calendar createTime, Calendar updateTime) {
-		super(id, name, description, null, createTime, updateTime);
+	private String status;
+
+	public GSMModuleInfo(Long id, String description, String module, String imei, SIMCardInfo sim, String status, Calendar createTime, Calendar updateTime) {
+		super(id, null, description, createTime, updateTime);
 		this.imei = imei;
 		this.module = module;
 		this.simCard = sim;
+		this.status = status;
 	}
 
 	/**
@@ -103,8 +93,8 @@ public class GSMModuleInfo extends DeviceInfo {
 			return null;
 		}
 		SIMCardInfo sim = SIMCardInfo.create(gsmModule.getSimCard());
-		return new GSMModuleInfo(gsmModule.getId(), gsmModule.getName(), gsmModule.getDescription(), gsmModule.getModule(), gsmModule.getImei(), sim, gsmModule.getCreateTime(),
-		                gsmModule.getUpdateTime());
+		return new GSMModuleInfo(gsmModule.getId(), gsmModule.getDescription(), gsmModule.getModule(), gsmModule.getImei(), sim, gsmModule.getStatus().getCode(),
+		                gsmModule.getCreateTime(), gsmModule.getUpdateTime());
 	}
 
 	public static List<GSMModuleInfo> creates(List<GSMModule> list) {
@@ -115,5 +105,13 @@ public class GSMModuleInfo extends DeviceInfo {
 			}
 		}
 		return gsmModuleInfos;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

@@ -8,11 +8,13 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.sitv.skyshop.domain.BaseEnum;
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
 import com.sitv.skyshop.massagechair.dao.device.ISIMCardDao;
-import com.sitv.skyshop.massagechair.dao.device.ISIMCardOperatorDao;
 import com.sitv.skyshop.massagechair.domain.device.SIMCard;
+import com.sitv.skyshop.massagechair.domain.device.SIMCard.SIMCardStatus;
 import com.sitv.skyshop.massagechair.domain.device.SIMCardOperator;
 import com.sitv.skyshop.massagechair.dto.device.SIMCardInfo;
 import com.sitv.skyshop.service.CrudService;
@@ -22,8 +24,6 @@ import com.sitv.skyshop.service.CrudService;
  */
 @Service
 public class SIMCardService extends CrudService<ISIMCardDao, SIMCard, SIMCardInfo> implements ISIMCardService {
-
-	private ISIMCardOperatorDao simCardOperatorDao;
 
 	public SIMCardInfo getOne(Long id) {
 		return SIMCardInfo.create(get(id));
@@ -42,15 +42,27 @@ public class SIMCardService extends CrudService<ISIMCardDao, SIMCard, SIMCardInf
 	}
 
 	public void updateOne(SIMCardInfo t) {
-		SIMCardOperator simCardOperator = simCardOperatorDao.get(t.getOperator().getId());
-		SIMCard simCard = new SIMCard(t.getId(), t.getName(), t.getDescription(), t.getDataFlow(), t.getDueDate(), t.getSim(), simCardOperator);
+		SIMCard simCard = get(t.getId());
+		simCard.setDataFlow(t.getDataFlow());
+		simCard.setDueDate(t.getDueDate());
+		simCard.setOperator(SIMCardOperator.valueOf(t.getOperator()));
+		simCard.setSim(t.getSim());
+		simCard.setStatus(SIMCardStatus.valueOf(t.getStatus()));
+		simCard.setDescription(t.getDescription());
+
 		update(simCard);
 	}
 
 	public void createOne(SIMCardInfo t) {
-		SIMCardOperator simCardOperator = simCardOperatorDao.get(t.getOperator().getId());
-		SIMCard simCard = new SIMCard(t.getId(), t.getName(), t.getDescription(), t.getDataFlow(), t.getDueDate(), t.getSim(), simCardOperator);
+		SIMCard simCard = new SIMCard(null, t.getDescription(), t.getDataFlow(), t.getDueDate(), t.getSim(), SIMCardOperator.valueOf(t.getOperator()),
+		                SIMCardStatus.valueOf(t.getStatus()));
 		create(simCard);
+	}
+
+	public void updateDeleteStatus(SIMCardInfo t) {
+		SIMCard simCard = get(t.getId());
+		simCard.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus()));
+		dao.updateDeleteStatus(simCard);
 	}
 
 }

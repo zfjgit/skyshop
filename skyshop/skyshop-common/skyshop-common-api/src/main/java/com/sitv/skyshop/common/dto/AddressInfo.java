@@ -19,18 +19,21 @@ public class AddressInfo extends FullInfoDto {
 
 	private Long parentId;
 	private AddressInfo parent;
+	private int level;
 
 	protected AddressInfo() {
 		super();
 	}
 
-	public AddressInfo(Long id, String name, AddressInfo parent) {
+	public AddressInfo(Long id, String name, int level, Address parent) {
 		super(id, name);
-		this.parent = parent;
+		this.level = level;
+		this.parent = create(parent);
+		this.parentId = parent == null ? 0l : parent.getId();
 	}
 
 	protected AddressInfo(Address address) {
-		super(address.getId(), address.getName());
+		this(address.getId(), address.getName(), address.getLevel(), address.getParent());
 	}
 
 	public static AddressInfo create(Address address) {
@@ -39,12 +42,6 @@ public class AddressInfo extends FullInfoDto {
 		}
 
 		AddressInfo addressInfo = new AddressInfo(address);
-
-		if (address.getParent() != null) {
-			addressInfo.parent = new AddressInfo(address.getParent());
-		} else {
-			addressInfo.parentId = 0l;
-		}
 
 		return addressInfo;
 	}
@@ -76,5 +73,13 @@ public class AddressInfo extends FullInfoDto {
 
 	public void setParent(AddressInfo parent) {
 		this.parent = parent;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 }

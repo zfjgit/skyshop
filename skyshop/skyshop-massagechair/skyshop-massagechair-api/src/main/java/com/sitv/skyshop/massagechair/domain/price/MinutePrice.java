@@ -3,6 +3,8 @@
  */
 package com.sitv.skyshop.massagechair.domain.price;
 
+import java.math.BigDecimal;
+
 /**
  * 按分钟计价
  *
@@ -10,7 +12,12 @@ package com.sitv.skyshop.massagechair.domain.price;
  */
 public class MinutePrice extends Price {
 
+	public MinutePrice(Long id, String name, BigDecimal price, String img) {
+		super(id, name, price, img);
+	}
+
 	public String getType() {
 		return this.getClass().getSimpleName();
 	}
+
 }

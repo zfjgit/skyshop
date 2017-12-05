@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.order.IOrderIncomePartitionDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.order.OrderIncomePartition">
+		<id property="id" jdbcType="BIGINT" column="detailed_sno" />
+		<result property="money" jdbcType="DECIMAL" column="detailed_money" />
+		<result property="checkCode" jdbcType="VARCHAR" column="detailed_check"/>
+		<result property="percentage" jdbcType="INTEGER" column="detailed_percentage" />
+		<result property="totalMoney" jdbcType="DECIMAL" column="detailed_parent_money" />
+		<association property="order" column="orders_sno" select="com.sitv.skyshop.massagechair.dao.order.IOrderDao.get"/>
+		<association property="agency" column="user3_sno" select="com.sitv.skyshop.massagechair.dao.agency.IAgencyDao.get"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.order.OrderIncomePartition" statementType="PREPARED">
+		INSERT INTO tab_orders_Detailed
+			(detailed_money, detailed_check, detailed_percentage, detailed_parent_money, orders_sno, user3_sno) 
+		VALUES 
+			(#{money}, #{checkCode}, #{percentage}, #{totalMoney}, #{order.id}, #{agency.id})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_orders_Detailed WHERE detailed_sno=#{id}
+	</select>
+	
+	<select id="findByOrder" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_orders_Detailed WHERE orders_sno=#{id}
+	</select>
+	
+	<select id="findByAgency" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_orders_Detailed WHERE user3_sno=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.order.OrderIncomePartition" statementType="PREPARED" >
+		UPDATE tab_orders_Detailed 
+		SET detailed_money=#{money}, 
+		 	detailed_check=#{checkCode},
+		 	detailed_percentage=#{percentage},
+		 	detailed_parent_money=#{totalMoney},
+		 	orders_sno=#{order.id},
+		 	user3_sno=#{agency.id},
+		WHERE detailed_sno=#{id}
+	</update>
+	
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT m.*
+		FROM tab_orders_Detailed m 
+		LEFT JOIN tab_orders o on m.orders_sno=o.orders_sno
+		WHERE 1 = 1 
+		<if test="param != null and param.startDate != null">
+			AND o.orders_createtime &gt; #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND o.orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.payStatus != null">
+			AND o.orders_payStatus= #{param.payStatus.code}
+		</if>
+		<if test="param != null and param.payType != null">
+			AND o.orders_paytype= #{param.payType.code}
+		</if>
+		<if test="param != null and param.chair != null ">
+			AND o.chairs_sno=#{param.chair.id}
+		</if>
+		<if test="param != null and param.agency != null">
+			AND user3_sno=#{param.agency.id}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+</mapper>

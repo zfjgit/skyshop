@@ -3,58 +3,47 @@
 
 <mapper namespace="com.sitv.skyshop.massagechair.dao.price.IPriceDao" >
 
-	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.price.Price">
-		<id column="id" jdbcType="BIGINT" property="id" />
-		<result column="price" jdbcType="DECIMAL" property="price" />
-		<result column="name" jdbcType="VARCHAR" property="name" />
-		<result column="createTime" property="createTime" />
-		<result column="updateTime" property="updateTime" />
-		<discriminator javaType="java.lang.String" column="type">
-		    <case value="FixedPrice" resultType="com.sitv.skyshop.massagechair.domain.price.FixedPrice">
-		    </case>
-		    <case value="MinutePrice" resultType="com.sitv.skyshop.massagechair.domain.price.MinutePrice">
-		    </case>
-		    <case value="PromotionPrice" resultType="com.sitv.skyshop.massagechair.domain.price.PromotionPrice">
-		        <result column="earlieron" jdbcType="INTEGER" property="earlierOn" />
-				<result column="earlierMoney" jdbcType="DECIMAL" property="earlierMoney" />
-		    </case>
-		</discriminator>
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.price.FixedPrice">
+		<id property="id" jdbcType="BIGINT" column="prices_sno" />
+		<result property="price" jdbcType="DECIMAL" column="prices_amount" />
+		<result property="name" jdbcType="VARCHAR" column="prices_name" />
+		<result property="img" jdbcType="VARCHAR" column="prices_img" />
+		<result property="createTime" column="prices_createTime" />
+		<result property="updateTime" column="prices_updateTime" />
+		<result property="minutes" jdbcType="INTEGER" column="prices_minutes" />
 	</resultMap>
 	
-	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.price.Price" statementType="PREPARED">
-		INSERT INTO prices
-			(name, price, type) 
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.price.FixedPrice" statementType="PREPARED">
+		INSERT INTO tab_prices
+			(prices_name, prices_amount, prices_img, prices_createTime, prices_minutes) 
 		VALUES 
-			(#{name},#{price}, #{type})    
+			(#{name},#{price}, #{img}, #{createTime}, #{minutes})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
-		SELECT * FROM prices WHERE id=#{id}
+		SELECT * FROM tab_prices WHERE prices_sno=#{id}
 	</select>
 	
-	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.price.Price" statementType="PREPARED" >
-		UPDATE prices 
-		SET price=#{price}, 
-		 	updateTime=#{updateTime}
-		WHERE id=#{id}
+	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.price.FixedPrice" statementType="PREPARED" >
+		UPDATE tab_prices 
+		SET prices_amount=#{price}, 
+		    prices_img=#{img}, 
+		    prices_name=#{name}, 
+		    prices_minutes=#{minutes}, 
+		 	prices_updateTime=#{updateTime}
+		WHERE prices_sno=#{id}
 	</update>
 	
 	<delete id="delete" parameterType="long" statementType="PREPARED">
-	    DELETE FROM prices WHERE id=#{id}
+	    DELETE FROM tab_prices WHERE prices_sno=#{id}
 	</delete>
 
 	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
 		SELECT m.*
-		FROM prices m
+		FROM tab_prices m
 		WHERE 1 = 1 
 		<if test="param != null and param.name != null">
-			AND name LIKE CONCAT('%', #{param.name}, '%')
-		</if>
-		<if test="param != null and param.price != null">
-			AND price &lt;= #{param.price}
-		</if>
-		<if test="param != null and param.type != null">
-			AND type = #{param.type}
+			AND prices_name LIKE CONCAT('%', #{param.name}, '%')
 		</if>
 		<if test="sortField != null and sortDir != null">
 			ORDER BY ${sortField} ${sortDir}

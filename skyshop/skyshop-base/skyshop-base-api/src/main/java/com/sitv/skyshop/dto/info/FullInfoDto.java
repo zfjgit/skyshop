@@ -27,6 +27,8 @@ public abstract class FullInfoDto extends ValueInfoDto {
 
 	private String description;
 
+	private int deleteStatus;
+
 	protected FullInfoDto() {
 	}
 
@@ -140,6 +142,14 @@ public abstract class FullInfoDto extends ValueInfoDto {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+	public int getDeleteStatus() {
+		return deleteStatus;
+	}
+
+	public void setDeleteStatus(int deleteStatus) {
+		this.deleteStatus = deleteStatus;
 	}
 
 }

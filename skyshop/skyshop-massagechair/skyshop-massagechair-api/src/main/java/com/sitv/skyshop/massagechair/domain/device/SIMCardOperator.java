@@ -3,21 +3,36 @@
  */
 package com.sitv.skyshop.massagechair.domain.device;
 
-import com.sitv.skyshop.domain.DomainObject;
+import com.sitv.skyshop.domain.BaseEnum;
+import com.sitv.skyshop.massagechair.domain.device.MassageChair.ChairStatus;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
-public class SIMCardOperator extends DomainObject {
+public enum SIMCardOperator implements BaseEnum<ChairStatus, String> {
+
+	CHINAL_TELECOM("A", "电信"), CHINAL_MOBILE("B", "移动"), CHINAL_UNICOM("C", "联通");
+
+	private String code;
+	private String name;
+
+	private SIMCardOperator(String code, String name) {
+		this.code = code;
+		this.name = name;
+	}
 
 	/**
-	 * @param id
-	 * @param code
-	 * @param name
-	 * @param description
+	 * @return the code
 	 */
-	public SIMCardOperator(Long id, String code, String name, String description) {
-		super(id, code, name, description);
+	public String getCode() {
+		return code;
+	}
+
+	/**
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
 	}
 
 }

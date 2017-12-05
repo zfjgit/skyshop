@@ -16,10 +16,17 @@ import com.sitv.skyshop.massagechair.dto.price.FixedPriceInfo;
 public class FixedPriceService extends DefaultPriceService<IPriceDao<FixedPrice>, FixedPrice, FixedPriceInfo> implements IFixedPriceService {
 
 	public void createOne(FixedPriceInfo t) {
-		FixedPrice fixedPrice = new FixedPrice();
-		fixedPrice.setPrice(t.getPrice());
-		fixedPrice.setName(t.getName());
+		FixedPrice fixedPrice = new FixedPrice(null, t.getName(), t.getPrice(), t.getImg(), t.getMinutes());
 		create(fixedPrice);
+	}
+
+	public void updateOne(FixedPriceInfo t) {
+		FixedPrice price = get(t.getId());
+		price.setPrice(t.getPrice());
+		price.setName(t.getName());
+		price.setImg(t.getImg());
+		price.setMinutes(t.getMinutes());
+		update(price);
 	}
 
 }

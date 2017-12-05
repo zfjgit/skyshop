@@ -5,15 +5,21 @@ package com.sitv.skyshop.massagechair.domain.device;
 
 import java.util.Calendar;
 
+import com.sitv.skyshop.domain.BaseEnum;
+import com.sitv.skyshop.domain.IDeleteStatus;
+
 /**
  * @author zfj20 @ 2017年11月15日
  */
-public class SIMCard extends Device {
+public class SIMCard extends Device implements IDeleteStatus {
 
-	private SIMCardOperator operator;
 	private String sim;
 	private int dataFlow;
 	private Calendar dueDate;
+	private SIMCardStatus status;
+	private SIMCardOperator operator;
+
+	private DeleteStatus deleteStatus;
 
 	/**
 	 * @param id
@@ -33,12 +39,39 @@ public class SIMCard extends Device {
 	 * @param sim
 	 * @param simCardOperator
 	 */
-	public SIMCard(Long id, String name, String description, int dataFlow, Calendar dueDate, String sim, SIMCardOperator simCardOperator) {
-		this(id, name, description);
-		this.dataFlow = dataFlow;
-		this.dueDate = dueDate;
+	public SIMCard(Long id, String description, int dataFlow, Calendar dueDate, String sim, SIMCardOperator simCardOperator, SIMCardStatus status) {
+		this(id, null, description);
 		this.sim = sim;
+		this.status = status;
+		this.dueDate = dueDate;
+		this.dataFlow = dataFlow;
 		this.operator = simCardOperator;
+	}
+
+	public enum SIMCardStatus implements BaseEnum<SIMCardStatus, String> {
+		USING("A", "使用中"), UNUSED("B", "未使用");
+
+		private String code;
+		private String name;
+
+		private SIMCardStatus(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
+
+		/**
+		 * @return the code
+		 */
+		public String getCode() {
+			return code;
+		}
+
+		/**
+		 * @return the name
+		 */
+		public String getName() {
+			return name;
+		}
 	}
 
 	/**
@@ -99,5 +132,21 @@ public class SIMCard extends Device {
 	 */
 	public void setDueDate(Calendar dueDate) {
 		this.dueDate = dueDate;
+	}
+
+	public SIMCardStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(SIMCardStatus status) {
+		this.status = status;
+	}
+
+	public DeleteStatus getDeleteStatus() {
+		return deleteStatus;
+	}
+
+	public void setDeleteStatus(DeleteStatus deleteStatus) {
+		this.deleteStatus = deleteStatus;
 	}
 }

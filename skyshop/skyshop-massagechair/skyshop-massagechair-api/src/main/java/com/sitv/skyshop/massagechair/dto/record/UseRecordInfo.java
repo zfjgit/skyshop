@@ -19,40 +19,70 @@ public class UseRecordInfo extends FullInfoDto {
 	 *
 	 */
 	private static final long serialVersionUID = -6483246768896565446L;
+
 	private String from;
 	private String response;
 	private String imei;
 	private String sim;
 	private String price;
+	private String minutes;
 	private String chair;
 
-	/**
-	 *
-	 */
+	private String openid;
+
+	private String nickName;
+
+	private String addr;
+
 	public UseRecordInfo() {
 	}
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param createTime
-	 * @param from
-	 * @param response
-	 * @param imei
-	 * @param sim
-	 * @param price
-	 * @param chair
-	 */
-	public UseRecordInfo(Long id, String name, String description, Calendar createTime, String from, String response, String imei, String sim, String price, String chair) {
-		super(id, name, description);
-		setCreateTime(createTime);
-		this.chair = chair;
+	public UseRecordInfo(Long id, String name, String from, String response, String imei, String sim, String price, String minutes, String chair, String openid, String nickName,
+	                String addr, Calendar createTime) {
+		super(id, name);
 		this.from = from;
+		this.response = response;
 		this.imei = imei;
-		this.price = price;
-		this.response = price;
 		this.sim = sim;
+		this.price = price;
+		this.minutes = minutes;
+		this.chair = chair;
+		this.openid = openid;
+		this.nickName = nickName;
+		this.addr = addr;
+		setCreateTime(createTime);
+	}
+
+	public String getMinutes() {
+		return minutes;
+	}
+
+	public void setMinutes(String minutes) {
+		this.minutes = minutes;
+	}
+
+	public String getOpenid() {
+		return openid;
+	}
+
+	public void setOpenid(String openid) {
+		this.openid = openid;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public String getAddr() {
+		return addr;
+	}
+
+	public void setAddr(String addr) {
+		this.addr = addr;
 	}
 
 	/**
@@ -153,7 +183,8 @@ public class UseRecordInfo extends FullInfoDto {
 		if (r == null) {
 			return null;
 		}
-		return new UseRecordInfo(r.getId(), r.getName(), r.getDescription(), r.getCreateTime(), r.getFrom(), r.getResponse(), r.getImei(), r.getSim(), r.getPrice(), r.getChair());
+		return new UseRecordInfo(r.getId(), r.getName(), r.getFrom(), r.getResponse(), r.getImei(), r.getSim(), r.getPrice(), r.getMinutes(), r.getChair(), r.getOpenid(),
+		                r.getNickName(), r.getAddr(), r.getCreateTime());
 	}
 
 	public static List<UseRecordInfo> creates(List<UseRecord> rs) {

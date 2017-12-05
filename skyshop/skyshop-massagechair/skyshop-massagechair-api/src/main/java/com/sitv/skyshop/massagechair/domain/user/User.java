@@ -41,6 +41,16 @@ public abstract class User extends DomainObject {
 	}
 
 	/**
+	 * @param code
+	 * @param name
+	 * @param password
+	 */
+	public User(Long id, String code, String name, String password) {
+		super(id, code, name, null);
+		this.password = password;
+	}
+
+	/**
 	 * @return the password
 	 */
 	public String getPassword() {

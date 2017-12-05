@@ -16,9 +16,7 @@ import com.sitv.skyshop.massagechair.dto.price.MinutePriceInfo;
 public class MinutePriceService extends DefaultPriceService<IPriceDao<MinutePrice>, MinutePrice, MinutePriceInfo> implements IMinutePriceService {
 
 	public void createOne(MinutePriceInfo t) {
-		MinutePrice minutePrice = new MinutePrice();
-		minutePrice.setPrice(t.getPrice());
-		minutePrice.setName(t.getName());
+		MinutePrice minutePrice = new MinutePrice(null, t.getName(), t.getPrice(), t.getImg());
 		create(minutePrice);
 	}
 

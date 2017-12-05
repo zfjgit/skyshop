@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.common.dao.IAddressDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.common.domain.Address">
+		<id property="id" jdbcType="BIGINT" column="addr_sno" />
+		<result property="name" jdbcType="VARCHAR" column="addr_name" />
+		<result property="level" jdbcType="INTEGER" column="addr_level" />
+		<association property="parent" column="addr_parentsno" select="get"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.common.domain.Address" statementType="PREPARED">
+		INSERT INTO tab_addresses(addr_parentsno, addr_level, addr_name) VALUES (#{parent.id}, #{level}, #{name})    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_addresses WHERE addr_sno=#{id}
+	</select>
+	
+	<update id="update"  parameterType="com.sitv.skyshop.common.domain.Address" statementType="PREPARED" >
+		UPDATE tab_addresses 
+		SET addr_name=#{name}, 
+			addr_level=#{level}
+			<if test="parent != null">
+				addr_parentsno=#{parent.id} 
+			</if>
+		WHERE addr_sno=#{id}
+	</update>
+	
+	<delete id="delete" parameterType="long" statementType="PREPARED">
+	    DELETE FROM tab_addresses WHERE addr_sno=#{id}
+	</delete>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT *
+		FROM tab_addresses  
+		WHERE 1 = 1 
+		<if test="param != null and param.name != null">
+			AND addr_name LIKE CONCAT('%', #{param.name}, '%')
+		</if>
+		<if test="param != null and param.parentId != null">
+			AND addr_parentsno = #{param.parentId}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+	
+</mapper>

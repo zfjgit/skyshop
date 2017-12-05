@@ -13,6 +13,8 @@
 		<result column="sim" jdbcType="VARCHAR" property="sim" />
 		<result column="price" jdbcType="VARCHAR" property="price" />
 		<result column="chair" jdbcType="VARCHAR" property="chair" />
+		<result column="addr" jdbcType="VARCHAR" property="addr" />
+		<result column="openid" jdbcType="VARCHAR" property="openid" />
 		<result column="createTime" property="createTime" />
 	</resultMap>
 	

@@ -11,8 +11,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.sitv.skyshop.massagechair.domain.device.Device.DeviceStatus;
 import com.sitv.skyshop.massagechair.domain.device.MassageChair;
+import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
 import com.sitv.skyshop.massagechair.dto.price.PriceInfo;
 
 /**
@@ -20,9 +20,6 @@ import com.sitv.skyshop.massagechair.dto.price.PriceInfo;
  */
 public class MassageChairInfo extends DeviceInfo {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -5318115230379761101L;
 
 	@NotNull
@@ -36,31 +33,22 @@ public class MassageChairInfo extends DeviceInfo {
 	@NotBlank
 	private String priceIds;
 
-	private boolean isPromotionPrice;
-
 	// 品牌、厂商
 	private String brand;
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param brand
-	 * @param description
-	 * @param createTime
-	 * @param updateTime
-	 * @param promotionPrice
-	 * @param status
-	 * @param installationAddressInfo
-	 * @param gsmModuleInfo
-	 */
-	public MassageChairInfo(Long id, String name, String brand, String description, Calendar createTime, Calendar updateTime, boolean isPromotionPrice, DeviceStatus status,
-	                InstallationAddressInfo installationAddressInfo, GSMModuleInfo gsmModuleInfo, List<PriceInfo> prices) {
-		super(id, name, description, status, createTime, updateTime);
+	private AgencyInfo agency;
+
+	private String status;
+
+	public MassageChairInfo(Long id, String name, String brand, String description, Calendar createTime, Calendar updateTime, String status,
+	                InstallationAddressInfo installationAddressInfo, GSMModuleInfo gsmModuleInfo, List<PriceInfo> prices, AgencyInfo agency) {
+		super(id, name, description, createTime, updateTime);
 		this.gsmModule = gsmModuleInfo;
 		this.brand = brand;
 		this.installationAddress = installationAddressInfo;
-		this.isPromotionPrice = isPromotionPrice;
 		this.prices = prices;
+		this.setAgency(agency);
+		this.setStatus(status);
 	}
 
 	/**
@@ -91,21 +79,6 @@ public class MassageChairInfo extends DeviceInfo {
 	 */
 	public void setPrices(List<PriceInfo> prices) {
 		this.prices = prices;
-	}
-
-	/**
-	 * @return the isPromotionPrice
-	 */
-	public boolean isPromotionPrice() {
-		return isPromotionPrice;
-	}
-
-	/**
-	 * @param isPromotionPrice
-	 *            the isPromotionPrice to set
-	 */
-	public void setPromotionPrice(boolean isPromotionPrice) {
-		this.isPromotionPrice = isPromotionPrice;
 	}
 
 	/**
@@ -141,8 +114,10 @@ public class MassageChairInfo extends DeviceInfo {
 
 		List<PriceInfo> prices = PriceInfo.creates(massageChair.getPrices());
 
+		AgencyInfo agency = AgencyInfo.create(massageChair.getAgency());
+
 		return new MassageChairInfo(massageChair.getId(), massageChair.getName(), massageChair.getBrand(), massageChair.getDescription(), massageChair.getCreateTime(),
-		                massageChair.getUpdateTime(), massageChair.isPromotionPrice(), massageChair.getStatus(), installationAddressInfo, gsmModuleInfo, prices);
+		                massageChair.getUpdateTime(), massageChair.getStatus().getCode(), installationAddressInfo, gsmModuleInfo, prices, agency);
 	}
 
 	public static List<MassageChairInfo> creates(List<MassageChair> list) {
@@ -161,6 +136,22 @@ public class MassageChairInfo extends DeviceInfo {
 
 	public void setPriceIds(String priceIds) {
 		this.priceIds = priceIds;
+	}
+
+	public AgencyInfo getAgency() {
+		return agency;
+	}
+
+	public void setAgency(AgencyInfo agency) {
+		this.agency = agency;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
 	}
 
 }

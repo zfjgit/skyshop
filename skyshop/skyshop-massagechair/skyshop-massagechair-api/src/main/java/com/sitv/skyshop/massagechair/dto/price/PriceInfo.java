@@ -19,24 +19,20 @@ import com.sitv.skyshop.massagechair.domain.price.PromotionPrice;
  */
 public abstract class PriceInfo extends FullInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 8365410282988425759L;
 
 	private BigDecimal price;
 
-	/**
-	 *
-	 */
+	private String img;
+
 	public PriceInfo() {
 	}
 
 	public PriceInfo(Price price) {
-		this(price.getId(), price.getName(), price.getPrice(), price.getCreateTime(), price.getUpdateTime());
+		this(price.getId(), price.getName(), price.getPrice(), price.getImg(), price.getCreateTime(), price.getUpdateTime());
 	}
 
-	public PriceInfo(Long id, String name, BigDecimal price, Calendar createTime, Calendar updateTime) {
+	public PriceInfo(Long id, String name, BigDecimal price, String img, Calendar createTime, Calendar updateTime) {
 		super(id, name, null, createTime, updateTime);
 		this.price = price;
 	}
@@ -84,6 +80,14 @@ public abstract class PriceInfo extends FullInfoDto {
 			}
 		}
 		return priceInfos;
+	}
+
+	public String getImg() {
+		return img;
+	}
+
+	public void setImg(String img) {
+		this.img = img;
 	}
 
 }

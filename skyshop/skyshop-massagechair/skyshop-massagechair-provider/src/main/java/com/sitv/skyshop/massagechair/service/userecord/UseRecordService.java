@@ -42,7 +42,8 @@ public class UseRecordService extends CrudService<IUseRecordDao, UseRecord, UseR
 	}
 
 	public void createOne(UseRecordInfo t) {
-		UseRecord r = new UseRecord(t.getName(), t.getDescription(), t.getFrom(), t.getChair(), t.getImei(), t.getSim(), t.getResponse(), t.getPrice());
+		UseRecord r = new UseRecord(null, t.getFrom(), t.getResponse(), t.getName(), t.getImei(), t.getSim(), t.getPrice(), t.getMinutes(), t.getChair(), t.getOpenid(),
+		                t.getNickName(), t.getAddr());
 		create(r);
 	}
 
