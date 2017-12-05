@@ -6,12 +6,18 @@ package com.sitv.skyshop.massagechair.domain.device;
 import java.util.Calendar;
 
 import com.sitv.skyshop.domain.BaseEnum;
-import com.sitv.skyshop.domain.IDeleteStatus;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
-public class SIMCard extends Device implements IDeleteStatus {
+@Getter
+@Setter
+@ToString(callSuper = true)
+public class SIMCard extends Device {
 
 	private String sim;
 	private int dataFlow;
@@ -19,28 +25,11 @@ public class SIMCard extends Device implements IDeleteStatus {
 	private SIMCardStatus status;
 	private SIMCardOperator operator;
 
-	private DeleteStatus deleteStatus;
-
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 */
-	public SIMCard(Long id, String name, String description) {
-		super(id, name, description);
+	protected SIMCard() {
 	}
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 * @param dataFlow
-	 * @param dueDate
-	 * @param sim
-	 * @param simCardOperator
-	 */
-	public SIMCard(Long id, String description, int dataFlow, Calendar dueDate, String sim, SIMCardOperator simCardOperator, SIMCardStatus status) {
-		this(id, null, description);
+	public SIMCard(Long id, String description, int dataFlow, Calendar dueDate, String sim, SIMCardOperator simCardOperator, SIMCardStatus status, DeleteStatus deleteStatus) {
+		super(id, null, description, deleteStatus);
 		this.sim = sim;
 		this.status = status;
 		this.dueDate = dueDate;
@@ -74,79 +63,30 @@ public class SIMCard extends Device implements IDeleteStatus {
 		}
 	}
 
-	/**
-	 * @return the operator
-	 */
-	public SIMCardOperator getOperator() {
-		return operator;
-	}
+	public enum SIMCardOperator implements BaseEnum<SIMCardOperator, String> {
 
-	/**
-	 * @param operator
-	 *            the operator to set
-	 */
-	public void setOperator(SIMCardOperator operator) {
-		this.operator = operator;
-	}
+		CHINAL_TELECOM("A", "电信"), CHINAL_MOBILE("B", "移动"), CHINAL_UNICOM("C", "联通");
 
-	/**
-	 * @return the sim
-	 */
-	public String getSim() {
-		return sim;
-	}
+		private String code;
+		private String name;
 
-	/**
-	 * @param sim
-	 *            the sim to set
-	 */
-	public void setSim(String sim) {
-		this.sim = sim;
-	}
+		private SIMCardOperator(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
 
-	/**
-	 * @return the dataFlow
-	 */
-	public int getDataFlow() {
-		return dataFlow;
-	}
+		/**
+		 * @return the code
+		 */
+		public String getCode() {
+			return code;
+		}
 
-	/**
-	 * @param dataFlow
-	 *            the dataFlow to set
-	 */
-	public void setDataFlow(int dataFlow) {
-		this.dataFlow = dataFlow;
-	}
-
-	/**
-	 * @return the dueDate
-	 */
-	public Calendar getDueDate() {
-		return dueDate;
-	}
-
-	/**
-	 * @param dueDate
-	 *            the dueDate to set
-	 */
-	public void setDueDate(Calendar dueDate) {
-		this.dueDate = dueDate;
-	}
-
-	public SIMCardStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(SIMCardStatus status) {
-		this.status = status;
-	}
-
-	public DeleteStatus getDeleteStatus() {
-		return deleteStatus;
-	}
-
-	public void setDeleteStatus(DeleteStatus deleteStatus) {
-		this.deleteStatus = deleteStatus;
+		/**
+		 * @return the name
+		 */
+		public String getName() {
+			return name;
+		}
 	}
 }

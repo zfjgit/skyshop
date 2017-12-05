@@ -17,6 +17,7 @@ public class MinutePriceService extends DefaultPriceService<IPriceDao<MinutePric
 
 	public void createOne(MinutePriceInfo t) {
 		MinutePrice minutePrice = new MinutePrice(null, t.getName(), t.getPrice(), t.getImg());
+		minutePrice.setAgency(agencyDao.get(t.getAgency().getId()));
 		create(minutePrice);
 	}
 

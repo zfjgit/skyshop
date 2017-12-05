@@ -5,10 +5,13 @@ package com.sitv.skyshop.massagechair.service.price;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.github.pagehelper.PageHelper;
 import com.sitv.skyshop.dao.ICrudDao;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
+import com.sitv.skyshop.massagechair.dao.agency.IAgencyDao;
 import com.sitv.skyshop.massagechair.domain.price.Price;
 import com.sitv.skyshop.massagechair.dto.price.PriceInfo;
 import com.sitv.skyshop.service.CrudService;
@@ -17,6 +20,9 @@ import com.sitv.skyshop.service.CrudService;
  * @author zfj20 @ 2017年11月20日
  */
 public abstract class DefaultPriceService<D extends ICrudDao<T>, T extends Price, I extends PriceInfo> extends CrudService<D, T, I> implements IPriceService<I> {
+
+	@Autowired
+	protected IAgencyDao agencyDao;
 
 	public I getOne(Long id) {
 		return PriceInfo.create(get(id));

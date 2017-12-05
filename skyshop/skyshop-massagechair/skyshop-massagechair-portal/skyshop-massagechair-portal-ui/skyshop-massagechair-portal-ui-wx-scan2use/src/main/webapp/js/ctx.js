@@ -5,11 +5,11 @@
 var config = {
     api_server_host : 'localhost',
     api_server_port : 8080,
-    api_server_contextPath : '/api-scan2use',
+    api_server_contextPath : '/chairs-api-scan2use',
     
     ui_server_host : 'localhost',
     ui_server_port : 8080,
-    ui_server_contextPath : '/ui-scan2use'
+    ui_server_contextPath : '/chairs-ui-scan2use'
 }
 
 var api_server_url = 'http://' + config.api_server_host + ':' + config.api_server_port + config.api_server_contextPath;
@@ -36,7 +36,6 @@ var ui_server_url = 'http://' + config.ui_server_host + ':' + config.ui_server_p
  *            完成时处理函数
  */
 function doAjax(url, data, successfunc, method, async, errorfunc, beforefunc, completefunc) {
-    
     $.ajax({
         url : api_server_url + url,
         type : method ? method : 'post',

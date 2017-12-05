@@ -9,4 +9,12 @@ package com.sitv.skyshop.domain;
 public interface ICheckCodeType {
 
 	String calcCheckCode();
+
+	String getCheckCode();
+
+	void setCheckCode(String checkCode);
+
+	default boolean verifyCheckCode() {
+		return getCheckCode() != null && getCheckCode().equals(calcCheckCode());
+	}
 }

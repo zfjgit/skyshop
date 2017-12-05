@@ -31,6 +31,7 @@
 		SELECT *
 		FROM tab_present_record  
 		WHERE 1 = 1 
+			AND user3_sno = #{param.agency.id}
 		<if test="param != null and param.bank != null">
 			AND bank_name LIKE CONCAT('%', #{param.bank}, '%')
 		</if>
@@ -39,9 +40,6 @@
 		</if>
 		<if test="param != null and param.account != null">
 			AND bank_num = #{param.account}
-		</if>
-		<if test="param != null and param.agency != null">
-			AND user3_sno = #{param.agency.id}
 		</if>
 		<if test="param != null and param.status != null">
 			AND record_status = #{param.status.code}

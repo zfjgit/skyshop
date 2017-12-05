@@ -11,13 +11,23 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
+import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.massagechair.domain.device.MassageChair;
+import com.sitv.skyshop.massagechair.domain.device.MassageChair.ChairStatus;
 import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
 import com.sitv.skyshop.massagechair.dto.price.PriceInfo;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class MassageChairInfo extends DeviceInfo {
 
 	private static final long serialVersionUID = -5318115230379761101L;
@@ -38,70 +48,18 @@ public class MassageChairInfo extends DeviceInfo {
 
 	private AgencyInfo agency;
 
-	private String status;
+	private EnumInfo<ChairStatus, String> status;
 
-	public MassageChairInfo(Long id, String name, String brand, String description, Calendar createTime, Calendar updateTime, String status,
-	                InstallationAddressInfo installationAddressInfo, GSMModuleInfo gsmModuleInfo, List<PriceInfo> prices, AgencyInfo agency) {
-		super(id, name, description, createTime, updateTime);
+	public MassageChairInfo(Long id, String name, String brand, String description, Calendar createTime, Calendar updateTime, EnumInfo<ChairStatus, String> status,
+	                InstallationAddressInfo installationAddressInfo, GSMModuleInfo gsmModuleInfo, List<PriceInfo> prices, AgencyInfo agency,
+	                EnumInfo<DeleteStatus, Integer> deleteStatus) {
+		super(id, name, description, createTime, updateTime, deleteStatus);
 		this.gsmModule = gsmModuleInfo;
 		this.brand = brand;
 		this.installationAddress = installationAddressInfo;
 		this.prices = prices;
 		this.setAgency(agency);
 		this.setStatus(status);
-	}
-
-	/**
-	 * @return the gsmModule
-	 */
-	public GSMModuleInfo getGsmModule() {
-		return gsmModule;
-	}
-
-	/**
-	 * @param gsmModule
-	 *            the gsmModule to set
-	 */
-	public void setGsmModule(GSMModuleInfo gsmModule) {
-		this.gsmModule = gsmModule;
-	}
-
-	/**
-	 * @return the prices
-	 */
-	public List<PriceInfo> getPrices() {
-		return prices;
-	}
-
-	/**
-	 * @param prices
-	 *            the prices to set
-	 */
-	public void setPrices(List<PriceInfo> prices) {
-		this.prices = prices;
-	}
-
-	/**
-	 * @return the brand
-	 */
-	public String getBrand() {
-		return brand;
-	}
-
-	/**
-	 * @param brand
-	 *            the brand to set
-	 */
-	public void setBrand(String brand) {
-		this.brand = brand;
-	}
-
-	public InstallationAddressInfo getInstallationAddress() {
-		return installationAddress;
-	}
-
-	public void setInstallationAddress(InstallationAddressInfo installationAddress) {
-		this.installationAddress = installationAddress;
 	}
 
 	public static MassageChairInfo create(MassageChair massageChair) {
@@ -117,7 +75,8 @@ public class MassageChairInfo extends DeviceInfo {
 		AgencyInfo agency = AgencyInfo.create(massageChair.getAgency());
 
 		return new MassageChairInfo(massageChair.getId(), massageChair.getName(), massageChair.getBrand(), massageChair.getDescription(), massageChair.getCreateTime(),
-		                massageChair.getUpdateTime(), massageChair.getStatus().getCode(), installationAddressInfo, gsmModuleInfo, prices, agency);
+		                massageChair.getUpdateTime(), new EnumInfo<>(massageChair.getStatus()), installationAddressInfo, gsmModuleInfo, prices, agency,
+		                new EnumInfo<>(massageChair.getDeleteStatus()));
 	}
 
 	public static List<MassageChairInfo> creates(List<MassageChair> list) {
@@ -128,30 +87,6 @@ public class MassageChairInfo extends DeviceInfo {
 			}
 		}
 		return massageChairInfos;
-	}
-
-	public String getPriceIds() {
-		return priceIds;
-	}
-
-	public void setPriceIds(String priceIds) {
-		this.priceIds = priceIds;
-	}
-
-	public AgencyInfo getAgency() {
-		return agency;
-	}
-
-	public void setAgency(AgencyInfo agency) {
-		this.agency = agency;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
 	}
 
 }

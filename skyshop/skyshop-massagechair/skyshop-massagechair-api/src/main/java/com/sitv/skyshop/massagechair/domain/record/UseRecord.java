@@ -3,11 +3,19 @@
  */
 package com.sitv.skyshop.massagechair.domain.record;
 
+import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class UseRecord extends DomainObject {
 
 	private String from;
@@ -24,13 +32,15 @@ public class UseRecord extends DomainObject {
 	private String nickName;
 
 	private String addr;
+	private UseRecordType type;
 
-	public UseRecord() {
+	protected UseRecord() {
 	}
 
-	public UseRecord(Long id, String from, String response, String name, String imei, String sim, String price, String minutes, String chair, String openid, String nickName,
+	public UseRecord(Long id, String from, String response, UseRecordType type, String imei, String sim, String price, String minutes, String chair, String openid, String nickName,
 	                String addr) {
-		super(id, name);
+		super(id, "");
+		this.type = type;
 		this.from = from;
 		this.response = response;
 		this.imei = imei;
@@ -43,126 +53,24 @@ public class UseRecord extends DomainObject {
 		this.addr = addr;
 	}
 
-	public String getMinutes() {
-		return minutes;
-	}
+	public enum UseRecordType implements BaseEnum<UseRecordType, String> {
+		CHECK("A", "设备检测"), OPEN("B", "开机"), CLOSE("C", "关机"), URL("D", "设置接口地址");
 
-	public void setMinutes(String minutes) {
-		this.minutes = minutes;
-	}
+		private String code;
+		private String name;
 
-	public String getOpenid() {
-		return openid;
-	}
+		private UseRecordType(String code, String name) {
+			this.code = code;
+			this.name = name;
+		}
 
-	public void setOpenid(String openid) {
-		this.openid = openid;
-	}
+		public String getCode() {
+			return code;
+		}
 
-	public String getNickName() {
-		return nickName;
-	}
+		public String getName() {
+			return name;
+		}
 
-	public void setNickName(String nickName) {
-		this.nickName = nickName;
 	}
-
-	public String getAddr() {
-		return addr;
-	}
-
-	public void setAddr(String addr) {
-		this.addr = addr;
-	}
-
-	/**
-	 * @return the from
-	 */
-	public String getFrom() {
-		return from;
-	}
-
-	/**
-	 * @param from
-	 *            the from to set
-	 */
-	public void setFrom(String from) {
-		this.from = from;
-	}
-
-	/**
-	 * @return the response
-	 */
-	public String getResponse() {
-		return response;
-	}
-
-	/**
-	 * @param response
-	 *            the response to set
-	 */
-	public void setResponse(String response) {
-		this.response = response;
-	}
-
-	/**
-	 * @return the imei
-	 */
-	public String getImei() {
-		return imei;
-	}
-
-	/**
-	 * @param imei
-	 *            the imei to set
-	 */
-	public void setImei(String imei) {
-		this.imei = imei;
-	}
-
-	/**
-	 * @return the sim
-	 */
-	public String getSim() {
-		return sim;
-	}
-
-	/**
-	 * @param sim
-	 *            the sim to set
-	 */
-	public void setSim(String sim) {
-		this.sim = sim;
-	}
-
-	/**
-	 * @return the chair
-	 */
-	public String getChair() {
-		return chair;
-	}
-
-	/**
-	 * @param chair
-	 *            the chair to set
-	 */
-	public void setChair(String chair) {
-		this.chair = chair;
-	}
-
-	/**
-	 * @return the price
-	 */
-	public String getPrice() {
-		return price;
-	}
-
-	/**
-	 * @param price
-	 *            the price to set
-	 */
-	public void setPrice(String price) {
-		this.price = price;
-	}
-
 }

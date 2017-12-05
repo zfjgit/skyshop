@@ -9,10 +9,17 @@ import java.util.List;
 import com.sitv.skyshop.common.domain.Address;
 import com.sitv.skyshop.dto.info.FullInfoDto;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20
  * @version 2017年7月27日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class AddressInfo extends FullInfoDto {
 
 	private static final long serialVersionUID = 1L;
@@ -59,27 +66,4 @@ public class AddressInfo extends FullInfoDto {
 		return addressInfos;
 	}
 
-	public Long getParentId() {
-		return parentId;
-	}
-
-	public void setParentId(Long parentId) {
-		this.parentId = parentId;
-	}
-
-	public AddressInfo getParent() {
-		return parent;
-	}
-
-	public void setParent(AddressInfo parent) {
-		this.parent = parent;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
 }

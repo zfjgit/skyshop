@@ -12,22 +12,19 @@ import java.util.TimerTask;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sitv.skyshop.common.utils.Utils;
-import com.sitv.skyshop.controller.BaseController;
-import com.sitv.skyshop.dto.ResponseInfo;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.massagechair.dto.order.OrderInfo;
 import com.sitv.skyshop.massagechair.service.order.IOrderService;
 
@@ -36,19 +33,13 @@ import io.swagger.annotations.Api;
 /**
  * @author zfj20 @ 2017年12月1日
  */
-@Api("订单接口")
+@Api("订单生成接口")
 @Validated
-@RestController
+@RestController("orderCreateController")
 @RequestMapping("/order")
-public class OrderController extends BaseController<IOrderService, OrderInfo> {
+public class OrderController extends BaseRestController<IOrderService, OrderInfo> {
 
 	private static final Logger log = LoggerFactory.getLogger(OrderController.class);
-
-	@PostMapping("/")
-	public ResponseInfo<OrderInfo> order(@NotNull @ModelAttribute OrderInfo order) {
-
-		return ResponseInfo.SUCCESS(ResponseInfo.SUCCESS_CODE, "订单生成成功");
-	}
 
 	@GetMapping("/paynotify")
 	public void payNotify(HttpServletRequest request, HttpServletResponse response) {

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sitv.skyshop.common.dto.FullAddressInfo;
 import com.sitv.skyshop.common.service.IFullAddressService;
 import com.sitv.skyshop.common.utils.Utils;
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
@@ -28,7 +28,7 @@ import io.swagger.annotations.Api;
 @Api("组合地址接口")
 @RestController
 @RequestMapping("/fulladdress")
-public class FullAddressController extends BaseController<IFullAddressService, FullAddressInfo> {
+public class FullAddressController extends BaseRestController<IFullAddressService, FullAddressInfo> {
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
 	public ResponseInfo<FullAddressInfo> get(@PathVariable String id) {

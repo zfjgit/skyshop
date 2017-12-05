@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.massagechair.dto.agency.AgencyBankAccountInfo;
 import com.sitv.skyshop.massagechair.service.agency.IAgencyBankAccountService;
 
@@ -20,6 +20,6 @@ import io.swagger.annotations.Api;
 @Validated
 @RestController
 @RequestMapping("/agencybank")
-public class AgencyBankAccountController extends BaseController<IAgencyBankAccountService, AgencyBankAccountInfo> {
+public class AgencyBankAccountController extends BaseRestController<IAgencyBankAccountService, AgencyBankAccountInfo> {
 
 }

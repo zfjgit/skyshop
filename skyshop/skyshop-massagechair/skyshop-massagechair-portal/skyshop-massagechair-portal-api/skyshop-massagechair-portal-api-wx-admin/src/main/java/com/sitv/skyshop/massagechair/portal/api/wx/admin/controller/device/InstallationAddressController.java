@@ -7,8 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitv.skyshop.controller.BaseController;
-import com.sitv.skyshop.dto.ResponseInfo;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.massagechair.dto.device.InstallationAddressInfo;
 import com.sitv.skyshop.massagechair.service.device.IInstallationAddressService;
 
@@ -21,9 +20,6 @@ import io.swagger.annotations.Api;
 @Validated
 @RestController
 @RequestMapping("/installaddr")
-public class InstallationAddressController extends BaseController<IInstallationAddressService, InstallationAddressInfo> {
+public class InstallationAddressController extends BaseRestController<IInstallationAddressService, InstallationAddressInfo> {
 
-	public ResponseInfo<InstallationAddressInfo> get(String id) {
-		return super.get(id);
-	}
 }

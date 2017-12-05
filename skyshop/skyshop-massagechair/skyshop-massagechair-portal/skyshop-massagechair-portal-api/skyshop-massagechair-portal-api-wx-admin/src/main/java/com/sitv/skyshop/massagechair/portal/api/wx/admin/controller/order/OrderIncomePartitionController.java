@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.massagechair.dto.order.OrderIncomePartitionInfo;
 import com.sitv.skyshop.massagechair.service.order.IOrderIncomePartitionService;
 
@@ -20,6 +20,6 @@ import io.swagger.annotations.Api;
 @Validated
 @RestController
 @RequestMapping("/orderpartition")
-public class OrderIncomePartitionController extends BaseController<IOrderIncomePartitionService, OrderIncomePartitionInfo> {
+public class OrderIncomePartitionController extends BaseRestController<IOrderIncomePartitionService, OrderIncomePartitionInfo> {
 
 }

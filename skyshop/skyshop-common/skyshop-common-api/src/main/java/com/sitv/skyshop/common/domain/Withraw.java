@@ -9,9 +9,16 @@ import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject;
 import com.sitv.skyshop.domain.ICheckCodeType;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年12月4日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public abstract class Withraw extends DomainObject implements ICheckCodeType {
 
 	private BigDecimal money;
@@ -21,6 +28,9 @@ public abstract class Withraw extends DomainObject implements ICheckCodeType {
 	private String accountName;
 	private String checkCode;
 
+	protected Withraw() {
+	}
+
 	public Withraw(BigDecimal money, WithrawStatus status, String bank, String account, String accountName) {
 		super();
 		this.money = money;
@@ -28,47 +38,7 @@ public abstract class Withraw extends DomainObject implements ICheckCodeType {
 		this.bank = bank;
 		this.account = account;
 		this.accountName = accountName;
-		this.checkCode = calcCheckCode();
-	}
-
-	public BigDecimal getMoney() {
-		return money;
-	}
-
-	public void setMoney(BigDecimal money) {
-		this.money = money;
-	}
-
-	public WithrawStatus getStatus() {
-		return status;
-	}
-
-	public void setStatus(WithrawStatus status) {
-		this.status = status;
-	}
-
-	public String getBank() {
-		return bank;
-	}
-
-	public void setBank(String bank) {
-		this.bank = bank;
-	}
-
-	public String getAccount() {
-		return account;
-	}
-
-	public void setAccount(String account) {
-		this.account = account;
-	}
-
-	public String getAccountName() {
-		return accountName;
-	}
-
-	public void setAccountName(String accountName) {
-		this.accountName = accountName;
+		calcCheckCode();
 	}
 
 	public String getCheckCode() {

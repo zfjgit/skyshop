@@ -83,13 +83,13 @@ public class InstallationAddressService extends CrudService<IInstallationAddress
 		Address district = addressDao.get(t.getDistrict() != null ? t.getDistrict().getId() : null);
 
 		InstallationAddress installationAddress = new InstallationAddress(null, agency, province, city, district, t.getDetailAddress(), t.getDescription(), t.getLocation(),
-		                t.getContact(), t.getContactNumber(), Calendar.getInstance(), null);
+		                t.getContact(), t.getContactNumber(), Calendar.getInstance(), null, DeleteStatus.NORMAL);
 		create(installationAddress);
 	}
 
 	public void updateDeleteStatus(InstallationAddressInfo t) {
 		InstallationAddress address = get(t.getId());
-		address.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus()));
+		address.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus().getCode()));
 		dao.updateDeleteStatus(address);
 	}
 

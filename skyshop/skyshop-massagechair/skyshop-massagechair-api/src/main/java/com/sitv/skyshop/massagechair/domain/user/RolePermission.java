@@ -13,6 +13,9 @@ public class RolePermission extends DomainObject {
 	private Role role;
 	private Permission permission;
 
+	protected RolePermission() {
+	}
+
 	/**
 	 * @param role
 	 * @param permission

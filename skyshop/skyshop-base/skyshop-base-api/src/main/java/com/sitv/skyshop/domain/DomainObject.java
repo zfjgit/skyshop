@@ -2,8 +2,13 @@ package com.sitv.skyshop.domain;
 
 import java.util.Calendar;
 
-import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
+@Getter
+@Setter
+@ToString(callSuper = true)
 public abstract class DomainObject extends SimpleType {
 
 	private int serialNumber;
@@ -30,84 +35,22 @@ public abstract class DomainObject extends SimpleType {
 		this.description = description;
 	}
 
-	/**
-	 * @param id
-	 * @param name
-	 * @param description
-	 */
 	public DomainObject(Long id, String name, String description) {
 		super(id, name, null);
 		this.description = description;
 	}
 
-	/**
-	 * @param id
-	 * @param name
-	 */
 	public DomainObject(Long id, String name) {
 		super(id, name, null);
 	}
 
-	/**
-	 * @param id
-	 */
 	public DomainObject(Long id) {
 		super(id);
 	}
 
-	/**
-	 * @param id
-	 * @param code
-	 * @param name
-	 * @param description
-	 */
 	public DomainObject(Long id, String code, String name, String description) {
 		super(id, name, code);
 		this.description = description;
-	}
-
-	public int getSerialNumber() {
-		return serialNumber;
-	}
-
-	public void setSerialNumber(int serialNumber) {
-		this.serialNumber = serialNumber;
-	}
-
-	public int getVersion() {
-		return version;
-	}
-
-	public void setVersion(int version) {
-		this.version = version;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public Calendar getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Calendar createTime) {
-		this.createTime = createTime;
-	}
-
-	public Calendar getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Calendar updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String toString() {
-		return ReflectionToStringBuilder.toString(this);
 	}
 
 	public enum DeleteStatus implements BaseEnum<DeleteStatus, Integer> {

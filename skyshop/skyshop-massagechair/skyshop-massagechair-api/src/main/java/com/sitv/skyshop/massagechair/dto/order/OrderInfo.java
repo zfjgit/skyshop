@@ -11,15 +11,27 @@ import java.util.List;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
+import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.dto.info.FullInfoDto;
 import com.sitv.skyshop.massagechair.domain.order.Order;
+import com.sitv.skyshop.massagechair.domain.order.Order.PayStatus;
+import com.sitv.skyshop.massagechair.domain.order.Order.PayType;
 import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
 import com.sitv.skyshop.massagechair.dto.device.InstallationAddressInfo;
 import com.sitv.skyshop.massagechair.dto.device.MassageChairInfo;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年11月20日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class OrderInfo extends FullInfoDto {
 
 	private static final long serialVersionUID = 1970592130500769199L;
@@ -33,19 +45,22 @@ public class OrderInfo extends FullInfoDto {
 	@NotNull
 	private MassageChairInfo chair;
 
-	private String payStatus;
+	private EnumInfo<PayStatus, String> payStatus;
 
 	private AgencyInfo agency;
 
-	private String payType;
+	private EnumInfo<PayType, String> payType;
 
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Calendar startDate;
+
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Calendar endDate;
 
 	private InstallationAddressInfo installationAddress;
 
-	public OrderInfo(Long id, String code, int minutes, BigDecimal money, String payStatus, String payType, Calendar createTime, Calendar updateTime, String description,
-	                MassageChairInfo massageChairInfo, AgencyInfo agency) {
+	public OrderInfo(Long id, String code, int minutes, BigDecimal money, EnumInfo<PayStatus, String> payStatus, EnumInfo<PayType, String> payType, Calendar createTime,
+	                Calendar updateTime, String description, MassageChairInfo massageChairInfo, AgencyInfo agency, EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode) {
 		super(id, code, null, description, createTime, updateTime);
 		this.minutes = minutes;
 		this.money = money;
@@ -53,46 +68,17 @@ public class OrderInfo extends FullInfoDto {
 		this.chair = massageChairInfo;
 		this.agency = agency;
 		this.payType = payType;
-	}
-
-	public int getMinutes() {
-		return minutes;
-	}
-
-	public void setMinutes(int minutes) {
-		this.minutes = minutes;
-	}
-
-	public BigDecimal getMoney() {
-		return money;
-	}
-
-	public void setMoney(BigDecimal money) {
-		this.money = money;
-	}
-
-	public MassageChairInfo getChair() {
-		return chair;
-	}
-
-	public void setChair(MassageChairInfo chair) {
-		this.chair = chair;
-	}
-
-	public String getPayStatus() {
-		return payStatus;
-	}
-
-	public void setPayStatus(String payStatus) {
-		this.payStatus = payStatus;
+		setCheckCode(checkCode);
+		setDeleteStatus(deleteStatus);
 	}
 
 	public static OrderInfo create(Order order) {
 		if (order == null) {
 			return null;
 		}
-		return new OrderInfo(order.getId(), order.getCode(), order.getMinutes(), order.getMoney(), order.getPayStatus().getCode(), order.getPayType().getCode(),
-		                order.getCreateTime(), order.getUpdateTime(), order.getDescription(), MassageChairInfo.create(order.getChair()), AgencyInfo.create(order.getAgency()));
+		return new OrderInfo(order.getId(), order.getCode(), order.getMinutes(), order.getMoney(), new EnumInfo<>(order.getPayStatus()), new EnumInfo<>(order.getPayType()),
+		                order.getCreateTime(), order.getUpdateTime(), order.getDescription(), MassageChairInfo.create(order.getChair()), AgencyInfo.create(order.getAgency()),
+		                new EnumInfo<>(order.getDeleteStatus()), order.getCheckCode());
 	}
 
 	public static List<OrderInfo> creates(List<Order> orders) {
@@ -105,43 +91,4 @@ public class OrderInfo extends FullInfoDto {
 		return orderInfos;
 	}
 
-	public AgencyInfo getAgency() {
-		return agency;
-	}
-
-	public void setAgency(AgencyInfo agency) {
-		this.agency = agency;
-	}
-
-	public String getPayType() {
-		return payType;
-	}
-
-	public void setPayType(String payType) {
-		this.payType = payType;
-	}
-
-	public Calendar getStartDate() {
-		return startDate;
-	}
-
-	public void setStartDate(Calendar startDate) {
-		this.startDate = startDate;
-	}
-
-	public Calendar getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(Calendar endDate) {
-		this.endDate = endDate;
-	}
-
-	public InstallationAddressInfo getInstallationAddress() {
-		return installationAddress;
-	}
-
-	public void setInstallationAddress(InstallationAddressInfo installationAddress) {
-		this.installationAddress = installationAddress;
-	}
 }

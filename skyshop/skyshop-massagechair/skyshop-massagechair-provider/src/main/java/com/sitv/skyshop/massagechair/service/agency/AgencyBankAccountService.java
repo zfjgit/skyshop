@@ -29,7 +29,8 @@ public class AgencyBankAccountService extends CrudService<IAgencyBankAccountDao,
 	private IAgencyDao agencyDao;
 
 	public AgencyBankAccountInfo getOne(Long id) {
-		return AgencyBankAccountInfo.create(get(id));
+		AgencyBankAccount account = get(id);
+		return AgencyBankAccountInfo.create(account);
 	}
 
 	public PageInfo<AgencyBankAccountInfo> search(SearchParamInfo<AgencyBankAccountInfo> q) {

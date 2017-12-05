@@ -9,9 +9,16 @@ import com.sitv.skyshop.domain.DomainObject;
 import com.sitv.skyshop.domain.ICheckCodeType;
 import com.sitv.skyshop.massagechair.domain.agency.Agency;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年12月4日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class OrderIncomePartition extends DomainObject implements ICheckCodeType {
 
 	private Order order;
@@ -23,6 +30,9 @@ public class OrderIncomePartition extends DomainObject implements ICheckCodeType
 
 	private String checkCode;
 
+	protected OrderIncomePartition() {
+	}
+
 	public OrderIncomePartition(Order order, Agency agency, int percentage, BigDecimal money, BigDecimal totalMoney) {
 		super();
 		this.order = order;
@@ -30,59 +40,12 @@ public class OrderIncomePartition extends DomainObject implements ICheckCodeType
 		this.percentage = percentage;
 		this.money = money;
 		this.totalMoney = totalMoney;
-		this.checkCode = calcCheckCode();
+		calcCheckCode();
 	}
 
 	public String calcCheckCode() {
+		setCheckCode("");
 		return "";
-	}
-
-	public Order getOrder() {
-		return order;
-	}
-
-	public void setOrder(Order order) {
-		this.order = order;
-	}
-
-	public Agency getAgency() {
-		return agency;
-	}
-
-	public void setAgency(Agency agency) {
-		this.agency = agency;
-	}
-
-	public int getPercentage() {
-		return percentage;
-	}
-
-	public void setPercentage(int percentage) {
-		this.percentage = percentage;
-	}
-
-	public BigDecimal getMoney() {
-		return money;
-	}
-
-	public void setMoney(BigDecimal money) {
-		this.money = money;
-	}
-
-	public BigDecimal getTotalMoney() {
-		return totalMoney;
-	}
-
-	public void setTotalMoney(BigDecimal totalMoney) {
-		this.totalMoney = totalMoney;
-	}
-
-	public String getCheckCode() {
-		return checkCode;
-	}
-
-	public void setCheckCode(String checkCode) {
-		this.checkCode = checkCode;
 	}
 
 }

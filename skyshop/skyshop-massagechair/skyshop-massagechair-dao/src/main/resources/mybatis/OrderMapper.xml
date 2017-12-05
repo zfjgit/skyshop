@@ -13,7 +13,7 @@
 		<result property="createTime" javaType="java.util.Calendar" column="orders_createTime"/>
 		<result property="checkCode" jdbcType="VARCHAR" column="orders_checkCode"/>
 		<result property="deleteStatus" jdbcType="INTEGER" column="is_del" />
-		<result property="installationAddress" jdbcType="BIGINT" column="install_sno" />
+		<association property="installationAddress" column="install_sno" select="com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao.get"/>
 		<association property="chair" column="chairs_sno" select="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao.get"/>
 		<association property="agency" column="user3_sno" select="com.sitv.skyshop.massagechair.dao.agency.IAgencyDao.get"/>
 	</resultMap>
@@ -27,6 +27,18 @@
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
 		SELECT * FROM tab_orders WHERE orders_sno=#{id}
+	</select>
+	
+	<select id="getCountByAgency" resultType="int" parameterType="long">
+		SELECT count(1) FROM tab_orders WHERE user3_sno=#{id}
+	</select>
+	
+	<select id="getTotalMoney" resultType="java.math.BigDecimal" parameterType="long">
+		SELECT ISNULL(sum(orders_money),0)
+		FROM tab_orders 
+		WHERE 	orders_createtime &gt;= #{startTime} 
+			AND orders_createtime &lt;  #{endTime} 
+			AND user3_sno=#{id}
 	</select>
 	
 	<select id="findByChair" resultMap="BaseResultMap" parameterType="long">
@@ -66,6 +78,9 @@
 		SELECT m.*
 		FROM tab_orders m
 		WHERE 1 = 1 
+		<if test="param != null and param.agency != null">
+			AND user3_sno=#{param.agency.id}
+		</if>
 		<if test="param != null and param.startDate != null">
 			AND orders_createtime &gt; #{param.startDate}
 		</if>
@@ -83,9 +98,6 @@
 		</if>
 		<if test="param != null and param.chair != null ">
 			AND chairs_sno=#{param.chair.id}
-		</if>
-		<if test="param != null and param.agency != null">
-			AND user3_sno=#{param.agency.id}
 		</if>
 		<if test="sortField != null and sortDir != null">
 			ORDER BY ${sortField} ${sortDir}

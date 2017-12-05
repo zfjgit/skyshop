@@ -14,8 +14,8 @@ import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
 import com.sitv.skyshop.massagechair.dao.device.ISIMCardDao;
 import com.sitv.skyshop.massagechair.domain.device.SIMCard;
+import com.sitv.skyshop.massagechair.domain.device.SIMCard.SIMCardOperator;
 import com.sitv.skyshop.massagechair.domain.device.SIMCard.SIMCardStatus;
-import com.sitv.skyshop.massagechair.domain.device.SIMCardOperator;
 import com.sitv.skyshop.massagechair.dto.device.SIMCardInfo;
 import com.sitv.skyshop.service.CrudService;
 
@@ -45,23 +45,23 @@ public class SIMCardService extends CrudService<ISIMCardDao, SIMCard, SIMCardInf
 		SIMCard simCard = get(t.getId());
 		simCard.setDataFlow(t.getDataFlow());
 		simCard.setDueDate(t.getDueDate());
-		simCard.setOperator(SIMCardOperator.valueOf(t.getOperator()));
+		simCard.setOperator(BaseEnum.valueOf(SIMCardOperator.class, t.getOperator().getCode()));
 		simCard.setSim(t.getSim());
-		simCard.setStatus(SIMCardStatus.valueOf(t.getStatus()));
+		simCard.setStatus(BaseEnum.valueOf(SIMCardStatus.class, t.getStatus().getCode()));
 		simCard.setDescription(t.getDescription());
 
 		update(simCard);
 	}
 
 	public void createOne(SIMCardInfo t) {
-		SIMCard simCard = new SIMCard(null, t.getDescription(), t.getDataFlow(), t.getDueDate(), t.getSim(), SIMCardOperator.valueOf(t.getOperator()),
-		                SIMCardStatus.valueOf(t.getStatus()));
+		SIMCard simCard = new SIMCard(null, t.getDescription(), t.getDataFlow(), t.getDueDate(), t.getSim(), BaseEnum.valueOf(SIMCardOperator.class, t.getOperator().getCode()),
+		                BaseEnum.valueOf(SIMCardStatus.class, t.getStatus().getCode()), DeleteStatus.NORMAL);
 		create(simCard);
 	}
 
 	public void updateDeleteStatus(SIMCardInfo t) {
 		SIMCard simCard = get(t.getId());
-		simCard.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus()));
+		simCard.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus().getCode()));
 		dao.updateDeleteStatus(simCard);
 	}
 

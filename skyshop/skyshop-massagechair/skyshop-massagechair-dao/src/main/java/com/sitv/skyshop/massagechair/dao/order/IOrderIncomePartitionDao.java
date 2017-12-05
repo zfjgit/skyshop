@@ -17,4 +17,6 @@ public interface IOrderIncomePartitionDao extends ICrudDao<OrderIncomePartition>
 	List<OrderIncomePartition> findByOrder(Long id);
 
 	List<OrderIncomePartition> findByAgency(Long id);
+
+	int getCountByAgency(Long id);
 }

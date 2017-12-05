@@ -10,9 +10,16 @@ import com.sitv.skyshop.domain.DomainObject;
 import com.sitv.skyshop.domain.ICheckCodeType;
 import com.sitv.skyshop.domain.IDeleteStatus;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年12月4日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class Agency extends DomainObject implements ICheckCodeType, IDeleteStatus {
 
 	private Agency parent;
@@ -27,57 +34,26 @@ public class Agency extends DomainObject implements ICheckCodeType, IDeleteStatu
 
 	private DeleteStatus deleteStatus;
 
-	public Agency(Long id, String name, Agency parent, AgencyLevel level, int orderIncomePercentage, BigDecimal balance) {
+	protected Agency() {
+	}
+
+	public Agency(Long id, String name, Agency parent, AgencyLevel level, int orderIncomePercentage, BigDecimal balance, DeleteStatus deleteStatus) {
 		super(id, name);
 		this.parent = parent;
 		this.level = level;
 		this.orderIncomePercentage = orderIncomePercentage;
 		this.balance = balance;
-		this.checkCode = calcCheckCode();
+		calcCheckCode();
+	}
+
+	public Agency(long id) {
+		super(id);
 	}
 
 	public String calcCheckCode() {
-		return "";
-	}
-
-	public Agency getParent() {
-		return parent;
-	}
-
-	public void setParent(Agency parent) {
-		this.parent = parent;
-	}
-
-	public AgencyLevel getLevel() {
-		return level;
-	}
-
-	public void setLevel(AgencyLevel level) {
-		this.level = level;
-	}
-
-	public int getOrderIncomePercentage() {
-		return orderIncomePercentage;
-	}
-
-	public void setOrderIncomePercentage(int orderIncomePercentage) {
-		this.orderIncomePercentage = orderIncomePercentage;
-	}
-
-	public BigDecimal getBalance() {
-		return balance;
-	}
-
-	public void setBalance(BigDecimal balance) {
-		this.balance = balance;
-	}
-
-	public String getCheckCode() {
-		return checkCode;
-	}
-
-	public void setCheckCode(String checkCode) {
-		this.checkCode = checkCode;
+		String newCheckCode = "";
+		setCheckCode(newCheckCode);
+		return newCheckCode;
 	}
 
 	public enum AgencyLevel implements BaseEnum<AgencyLevel, String> {
@@ -98,14 +74,6 @@ public class Agency extends DomainObject implements ICheckCodeType, IDeleteStatu
 		public String getName() {
 			return name;
 		}
-	}
-
-	public void setDeleteStatus(DeleteStatus deleteStatus) {
-		this.deleteStatus = deleteStatus;
-	}
-
-	public DeleteStatus getDeleteStatus() {
-		return deleteStatus;
 	}
 
 }

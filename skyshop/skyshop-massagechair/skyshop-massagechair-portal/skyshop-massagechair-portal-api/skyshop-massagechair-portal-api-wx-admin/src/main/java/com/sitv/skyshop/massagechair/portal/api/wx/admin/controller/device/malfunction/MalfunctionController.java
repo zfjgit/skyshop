@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.massagechair.dto.device.malfunction.MalfunctionInfo;
 import com.sitv.skyshop.massagechair.service.device.malfunction.IMalfunctionService;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Validated
 @RestController
 @RequestMapping("/malfunction")
-public class MalfunctionController extends BaseController<IMalfunctionService<MalfunctionInfo>, MalfunctionInfo> {
+public class MalfunctionController extends BaseRestController<IMalfunctionService<MalfunctionInfo>, MalfunctionInfo> {
 	public ResponseInfo<MalfunctionInfo> create(MalfunctionInfo info) {
 		return ResponseInfo.FORBIDDEN_ERROR("错误的接口调用");
 	}

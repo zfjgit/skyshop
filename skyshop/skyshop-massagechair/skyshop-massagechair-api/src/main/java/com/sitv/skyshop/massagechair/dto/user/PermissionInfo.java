@@ -10,9 +10,16 @@ import java.util.List;
 import com.sitv.skyshop.dto.info.FullInfoDto;
 import com.sitv.skyshop.massagechair.domain.user.Permission;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年11月20日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class PermissionInfo extends FullInfoDto {
 
 	/**
@@ -35,19 +42,14 @@ public class PermissionInfo extends FullInfoDto {
 		this.uri = uri;
 	}
 
-	public String getUri() {
-		return uri;
-	}
-
-	public void setUri(String uri) {
-		this.uri = uri;
-	}
-
 	/**
 	 * @param permission
 	 * @return
 	 */
 	public static PermissionInfo create(Permission p) {
+		if (p == null) {
+			return null;
+		}
 		return new PermissionInfo(p.getId(), p.getCode(), p.getName(), p.getUri(), p.getCreateTime(), p.getUpdateTime());
 	}
 

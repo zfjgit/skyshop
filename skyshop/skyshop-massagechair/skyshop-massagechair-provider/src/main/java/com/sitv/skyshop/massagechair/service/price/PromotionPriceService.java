@@ -29,6 +29,7 @@ public class PromotionPriceService extends DefaultPriceService<IPromotionPriceDa
 		PromotionPrice price = new PromotionPrice(null, t.getName(), t.getPrice(), t.getImg());
 		price.setEarlierOn(t.getEarlierOn());
 		price.setEarlierOnMoney(t.getEarlierOnMoney());
+		price.setAgency(agencyDao.get(t.getAgency().getId()));
 		create(price);
 	}
 

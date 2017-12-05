@@ -3,6 +3,8 @@
  */
 package com.sitv.skyshop.domain;
 
+import com.sitv.skyshop.exception.EnumCreationException;
+
 /**
  * @author zfj20 @ 2017年11月16日
  */
@@ -12,6 +14,10 @@ public interface BaseEnum<E extends Enum<?>, T> {
 	String getName();
 
 	public static <N extends BaseEnum<?, C>, C> N valueOf(Class<N> clazz, C code) {
+		if (clazz == null || code == null) {
+			throw new EnumCreationException("未知的枚举类型：" + code + "，请核对" + clazz.getName());
+		}
+
 		N[] enums = clazz.getEnumConstants();
 
 		for (N e : enums) {
@@ -20,7 +26,7 @@ public interface BaseEnum<E extends Enum<?>, T> {
 			}
 		}
 
-		throw new IllegalArgumentException("未知的枚举类型：" + code + "，请核对" + clazz.getName());
+		throw new EnumCreationException("未知的枚举类型：" + code + "，请核对" + clazz.getName());
 	}
 
 }

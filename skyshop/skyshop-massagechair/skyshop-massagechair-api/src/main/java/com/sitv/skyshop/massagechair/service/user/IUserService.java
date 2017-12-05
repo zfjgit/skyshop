@@ -11,4 +11,5 @@ import com.sitv.skyshop.service.IBaseService;
  */
 public interface IUserService<I extends UserInfo> extends IBaseService<I> {
 
+	UserInfo login(String code, String pwd);
 }

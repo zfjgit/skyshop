@@ -10,7 +10,7 @@
 		<result property="createTime" jdbcType="VARCHAR" column="user3_createTime" />
 		<result property="updateTime" jdbcType="VARCHAR" column="user3_updateTime" />
 		<result property="orderIncomePercentage" jdbcType="INTEGER" column="user3_parentbonuspart" />
-		<result property="balance" jdbcType="DECIMAL" column="user3_balance"" />
+		<result property="balance" jdbcType="DECIMAL" column="user3_balance" />
 		<result property="checkCode" jdbcType="VARCHAR" column="user3_check" />
 		<result property="description" jdbcType="VARCHAR" column="description" />
 		<association property="parent" column="user3_parent_sno" select="get"/>
@@ -25,6 +25,10 @@
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
 		SELECT * FROM tab_user3 WHERE user3_sno=#{id}
+	</select>
+	
+	<select id="getCountByAgency" resultType="int" parameterType="long">
+		SELECT count(1) FROM tab_user3 WHERE user3_parent_sno=#{id}
 	</select>
 	
 	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.agency.Agency" statementType="PREPARED" >

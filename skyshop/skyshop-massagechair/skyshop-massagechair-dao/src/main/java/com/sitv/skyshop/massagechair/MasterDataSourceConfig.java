@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.context.annotation.PropertySources;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.PropertyResolver;
 import org.springframework.util.StringUtils;
@@ -25,7 +24,7 @@ import com.alibaba.druid.pool.DruidDataSource;
  * @version 2017年7月27日
  */
 @Configuration
-@PropertySources({ @PropertySource(ignoreResourceNotFound = false, value = "classpath:/config/master-${spring.profiles.active}.properties") })
+@PropertySource(ignoreResourceNotFound = false, value = "classpath:/config/master-${spring.profiles.active}.properties")
 public class MasterDataSourceConfig {
 
 	@Autowired

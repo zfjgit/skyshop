@@ -11,17 +11,22 @@
 		<result property="createTime" column="prices_createTime" />
 		<result property="updateTime" column="prices_updateTime" />
 		<result property="minutes" jdbcType="INTEGER" column="prices_minutes" />
+		<association property="agency" column="user3_sno" select="com.sitv.skyshop.massagechair.dao.agency.IAgencyDao.get"/>
 	</resultMap>
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.price.FixedPrice" statementType="PREPARED">
 		INSERT INTO tab_prices
-			(prices_name, prices_amount, prices_img, prices_createTime, prices_minutes) 
+			(prices_name, prices_amount, prices_img, prices_createTime, prices_minutes,user3_sno) 
 		VALUES 
-			(#{name},#{price}, #{img}, #{createTime}, #{minutes})    
+			(#{name},#{price}, #{img}, #{createTime}, #{minutes},#{agency.id})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
 		SELECT * FROM tab_prices WHERE prices_sno=#{id}
+	</select>
+	
+	<select id="getCountByAgency" resultType="int" parameterType="long">
+		SELECT count(1) FROM tab_prices WHERE user3_sno=#{id}
 	</select>
 	
 	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.price.FixedPrice" statementType="PREPARED" >
@@ -42,6 +47,7 @@
 		SELECT m.*
 		FROM tab_prices m
 		WHERE 1 = 1 
+			AND user3_sno=#{param.agency.id}
 		<if test="param != null and param.name != null">
 			AND prices_name LIKE CONCAT('%', #{param.name}, '%')
 		</if>

@@ -34,6 +34,6 @@
 	</dependencies>
 	
 	<build>
-		<finalName>skyshop-massagechair-portal-wx-adminui</finalName>
+		<finalName>chairs-ui-wxadmin</finalName>
 	</build>
 </project>

@@ -2,6 +2,13 @@ package com.sitv.skyshop.common.domain;
 
 import com.sitv.skyshop.domain.DomainObject;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class FullAddress extends DomainObject {
 
 	private Address province;
@@ -42,43 +49,4 @@ public class FullAddress extends DomainObject {
 		this.fullAddress = fullAddress;
 	}
 
-	public Address getProvince() {
-		return province;
-	}
-
-	public void setProvince(Address province) {
-		this.province = province;
-	}
-
-	public Address getCity() {
-		return city;
-	}
-
-	public void setCity(Address city) {
-		this.city = city;
-	}
-
-	public Address getDistrict() {
-		return district;
-	}
-
-	public void setDistrict(Address district) {
-		this.district = district;
-	}
-
-	public String getDetailAddress() {
-		return detailAddress;
-	}
-
-	public void setDetailAddress(String detailAddress) {
-		this.detailAddress = detailAddress;
-	}
-
-	public String getFullAddress() {
-		return fullAddress;
-	}
-
-	public void setFullAddress(String fullAddress) {
-		this.fullAddress = fullAddress;
-	}
 }

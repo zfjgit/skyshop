@@ -53,7 +53,7 @@ public class AgencyWithrawService extends CrudService<IAgencyWithrawDao, AgencyW
 		withraw.setAccountName(t.getAccountName());
 		withraw.setAgency(agencyDao.get(t.getAgency().getId()));
 		withraw.setMoney(t.getMoney());
-		withraw.setStatus(BaseEnum.valueOf(WithrawStatus.class, t.getStatus()));
+		withraw.setStatus(BaseEnum.valueOf(WithrawStatus.class, t.getStatus().getCode()));
 		withraw.setUpdateTime(Calendar.getInstance());
 		withraw.calcCheckCode();
 		update(withraw);
@@ -61,7 +61,8 @@ public class AgencyWithrawService extends CrudService<IAgencyWithrawDao, AgencyW
 
 	public void createOne(AgencyWithrawInfo t) {
 		Agency agency = agencyDao.get(t.getAgency().getId());
-		AgencyWithraw withraw = new AgencyWithraw(agency, t.getMoney(), BaseEnum.valueOf(WithrawStatus.class, t.getStatus()), t.getBank(), t.getAccount(), t.getAccountName());
+		AgencyWithraw withraw = new AgencyWithraw(agency, t.getMoney(), BaseEnum.valueOf(WithrawStatus.class, t.getStatus().getCode()), t.getBank(), t.getAccount(),
+		                t.getAccountName());
 		withraw.calcCheckCode();
 		create(withraw);
 	}

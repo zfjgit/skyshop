@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.massagechair.dto.user.ManagerInfo;
 import com.sitv.skyshop.massagechair.service.user.IManagerService;
@@ -30,7 +30,7 @@ import io.swagger.annotations.Api;
 @Validated
 @RestController
 @RequestMapping("/manager")
-public class ManagerController extends BaseController<IManagerService, ManagerInfo> {
+public class ManagerController extends BaseRestController<IManagerService, ManagerInfo> {
 
 	@RequestMapping(value = "/authorize/{id}/{roles}", method = RequestMethod.POST)
 	public ResponseInfo<String> authorize(@PathVariable @NotBlank @DecimalMin("1") String id, @PathVariable @NotBlank String roles) {

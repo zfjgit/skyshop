@@ -22,4 +22,6 @@ public interface IMassageChairDao extends ICrudDao<MassageChair>, IDeleteStatusD
 
 	List<MassageChair> findByAddr(Long id);
 
+	int getCountByAgency(Long id);
+
 }

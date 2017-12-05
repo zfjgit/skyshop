@@ -13,10 +13,18 @@ import com.sitv.skyshop.massagechair.domain.price.FixedPrice;
 import com.sitv.skyshop.massagechair.domain.price.MinutePrice;
 import com.sitv.skyshop.massagechair.domain.price.Price;
 import com.sitv.skyshop.massagechair.domain.price.PromotionPrice;
+import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
+
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public abstract class PriceInfo extends FullInfoDto {
 
 	private static final long serialVersionUID = 8365410282988425759L;
@@ -25,31 +33,19 @@ public abstract class PriceInfo extends FullInfoDto {
 
 	private String img;
 
+	private AgencyInfo agency;
+
 	public PriceInfo() {
 	}
 
 	public PriceInfo(Price price) {
-		this(price.getId(), price.getName(), price.getPrice(), price.getImg(), price.getCreateTime(), price.getUpdateTime());
+		this(price.getId(), price.getName(), price.getPrice(), price.getImg(), AgencyInfo.create(price.getAgency()), price.getCreateTime(), price.getUpdateTime());
 	}
 
-	public PriceInfo(Long id, String name, BigDecimal price, String img, Calendar createTime, Calendar updateTime) {
+	public PriceInfo(Long id, String name, BigDecimal price, String img, AgencyInfo agencyInfo, Calendar createTime, Calendar updateTime) {
 		super(id, name, null, createTime, updateTime);
 		this.price = price;
-	}
-
-	/**
-	 * @return the price
-	 */
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	/**
-	 * @param price
-	 *            the price to set
-	 */
-	public void setPrice(BigDecimal price) {
-		this.price = price;
+		this.setAgency(agencyInfo);
 	}
 
 	public abstract String getType();
@@ -68,10 +64,6 @@ public abstract class PriceInfo extends FullInfoDto {
 		return null;
 	}
 
-	/**
-	 * @param prices
-	 * @return
-	 */
 	public static <I extends PriceInfo, T extends Price> List<I> creates(List<T> prices) {
 		List<I> priceInfos = new ArrayList<>();
 		if (prices != null) {
@@ -80,14 +72,6 @@ public abstract class PriceInfo extends FullInfoDto {
 			}
 		}
 		return priceInfos;
-	}
-
-	public String getImg() {
-		return img;
-	}
-
-	public void setImg(String img) {
-		this.img = img;
 	}
 
 }

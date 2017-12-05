@@ -13,10 +13,9 @@ public class UserRole extends DomainObject {
 	private Role role;
 	private User user;
 
-	/**
-	 * @param manager
-	 * @param role
-	 */
+	protected UserRole() {
+	}
+
 	public UserRole(User user, Role role) {
 		this.role = role;
 		this.setUser(user);

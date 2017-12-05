@@ -2,6 +2,13 @@ package com.sitv.skyshop.common.domain;
 
 import com.sitv.skyshop.domain.DomainObject;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class Configuration extends DomainObject {
 
 	private int level;
@@ -30,35 +37,4 @@ public class Configuration extends DomainObject {
 		return new Configuration(0l);
 	}
 
-	public String getClassification() {
-		return classification;
-	}
-
-	public void setClassification(String classification) {
-		this.classification = classification;
-	}
-
-	public Configuration getParent() {
-		return parent;
-	}
-
-	public void setParent(Configuration parent) {
-		this.parent = parent;
-	}
-
-	public int getLevel() {
-		return level;
-	}
-
-	public void setLevel(int level) {
-		this.level = level;
-	}
-
-	public String getImgurl() {
-		return imgurl;
-	}
-
-	public void setImgurl(String imgurl) {
-		this.imgurl = imgurl;
-	}
 }

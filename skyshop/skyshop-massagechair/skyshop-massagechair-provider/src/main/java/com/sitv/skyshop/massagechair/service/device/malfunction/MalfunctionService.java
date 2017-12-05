@@ -48,13 +48,13 @@ public class MalfunctionService extends CrudService<IMalfunctionDao<Malfunction>
 
 	public void updateOne(MalfunctionInfo t) {
 		Malfunction m = get(t.getId());
-		m.setStatus(MalfunctionStatus.valueOf(t.getStatus()));
+		m.setStatus(BaseEnum.valueOf(MalfunctionStatus.class, t.getStatus().getCode()));
 		update(m);
 	}
 
 	public void createOne(MalfunctionInfo t) {
-		Malfunction malfunction = new Malfunction(null, deviceDao.get(t.getChair().getId()), BaseEnum.valueOf(MalfunctionType.class, t.getType()),
-		                BaseEnum.valueOf(MalfunctionStatus.class, t.getStatus()), t.getDescription(), Calendar.getInstance(), null);
+		Malfunction malfunction = new Malfunction(null, deviceDao.get(t.getChair().getId()), BaseEnum.valueOf(MalfunctionType.class, t.getType().getCode()),
+		                BaseEnum.valueOf(MalfunctionStatus.class, t.getStatus().getCode()), t.getDescription(), Calendar.getInstance(), null);
 
 		create(malfunction);
 	}

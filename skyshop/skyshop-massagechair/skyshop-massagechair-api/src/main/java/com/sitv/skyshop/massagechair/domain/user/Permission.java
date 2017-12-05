@@ -12,10 +12,7 @@ public class Permission extends DomainObject {
 
 	private String uri;
 
-	/**
-	 *
-	 */
-	public Permission() {
+	protected Permission() {
 	}
 
 	/**

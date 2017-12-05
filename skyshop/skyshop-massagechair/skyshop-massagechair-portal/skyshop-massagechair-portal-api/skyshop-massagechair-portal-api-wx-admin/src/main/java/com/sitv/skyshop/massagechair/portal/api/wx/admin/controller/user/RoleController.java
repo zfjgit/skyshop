@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.massagechair.dto.user.RoleInfo;
 import com.sitv.skyshop.massagechair.service.user.IRoleService;
@@ -30,7 +30,7 @@ import io.swagger.annotations.Api;
 @Validated
 @RestController
 @RequestMapping("/role")
-public class RoleController extends BaseController<IRoleService, RoleInfo> {
+public class RoleController extends BaseRestController<IRoleService, RoleInfo> {
 
 	@RequestMapping(value = "/authorize/{id}/{permissions}", method = RequestMethod.POST)
 	public ResponseInfo<String> authorize(@PathVariable @NotBlank @DecimalMin("1") String id, @PathVariable @NotBlank String permissions) {

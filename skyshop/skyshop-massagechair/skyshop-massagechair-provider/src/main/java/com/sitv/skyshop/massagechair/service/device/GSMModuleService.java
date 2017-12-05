@@ -55,7 +55,7 @@ public class GSMModuleService extends CrudService<IGSMModuleDao, GSMModule, GSMM
 		gsmModule.setImei(t.getImei());
 		gsmModule.setModule(t.getModule());
 		gsmModule.setSimCard(simCard);
-		gsmModule.setStatus(GSMModuleStatus.valueOf(t.getStatus()));
+		gsmModule.setStatus(BaseEnum.valueOf(GSMModuleStatus.class, t.getStatus().getCode()));
 		gsmModule.setUpdateTime(Calendar.getInstance());
 
 		update(gsmModule);
@@ -63,13 +63,14 @@ public class GSMModuleService extends CrudService<IGSMModuleDao, GSMModule, GSMM
 
 	public void createOne(GSMModuleInfo t) {
 		SIMCard simCard = simCardDao.get(t.getSimCard().getId());
-		GSMModule gsmModule = new GSMModule(null, t.getImei(), t.getModule(), GSMModuleStatus.valueOf(t.getStatus()), simCard, t.getDescription(), Calendar.getInstance(), null);
+		GSMModule gsmModule = new GSMModule(null, t.getImei(), t.getModule(), BaseEnum.valueOf(GSMModuleStatus.class, t.getStatus().getCode()), simCard, t.getDescription(),
+		                Calendar.getInstance(), null, DeleteStatus.NORMAL);
 		create(gsmModule);
 	}
 
 	public void updateDeleteStatus(GSMModuleInfo t) {
 		GSMModule gsmModule = get(t.getId());
-		gsmModule.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus()));
+		gsmModule.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus().getCode()));
 		dao.updateDeleteStatus(gsmModule);
 	}
 

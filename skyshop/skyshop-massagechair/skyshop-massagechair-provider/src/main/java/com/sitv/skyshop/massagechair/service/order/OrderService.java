@@ -60,8 +60,8 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 		order.setDescription(t.getDescription());
 		order.setMinutes(t.getMinutes());
 		order.setMoney(t.getMoney());
-		order.setPayStatus(PayStatus.valueOf(t.getPayStatus()));
-		order.setPayType(PayType.valueOf(t.getPayType()));
+		order.setPayStatus(BaseEnum.valueOf(PayStatus.class, t.getPayStatus().getCode()));
+		order.setPayType(BaseEnum.valueOf(PayType.class, t.getPayType().getCode()));
 		order.setAgency(agencyDao.get(t.getAgency().getId()));
 
 		update(order);
@@ -73,14 +73,14 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 		Calendar c = Calendar.getInstance();
 		String code = Utils.time2String(c, "yyyyMMddHHmmss") + c.get(Calendar.MILLISECOND);
 
-		Order order = new Order(code, t.getMinutes(), t.getMoney(), PayStatus.valueOf(t.getPayStatus()), PayType.valueOf(t.getPayType()), chair,
-		                agencyDao.get(t.getAgency().getId()));
+		Order order = new Order(code, t.getMinutes(), t.getMoney(), BaseEnum.valueOf(PayStatus.class, t.getPayStatus().getCode()),
+		                BaseEnum.valueOf(PayType.class, t.getPayType().getCode()), chair, agencyDao.get(t.getAgency().getId()), DeleteStatus.NORMAL);
 		create(order);
 	}
 
 	public void updateDeleteStatus(OrderInfo t) {
 		Order order = get(t.getId());
-		order.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus()));
+		order.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus().getCode()));
 		dao.updateDeleteStatus(order);
 	}
 

@@ -9,9 +9,16 @@ import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject;
 import com.sitv.skyshop.massagechair.domain.device.MassageChair;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Getter
+@Setter
+@ToString(callSuper = true)
 public class Malfunction extends DomainObject {
 
 	private MassageChair chair;
@@ -20,6 +27,9 @@ public class Malfunction extends DomainObject {
 
 	private MalfunctionType type;
 
+	protected Malfunction() {
+	}
+
 	public Malfunction(Long id, MassageChair chair, MalfunctionType type, MalfunctionStatus status, String description, Calendar createTime, Calendar updateTime) {
 		super(id, null, description);
 		this.setChair(chair);
@@ -27,37 +37,6 @@ public class Malfunction extends DomainObject {
 		this.type = type;
 		setCreateTime(createTime);
 		setUpdateTime(updateTime);
-	}
-
-	/**
-	 * @return the status
-	 */
-	public MalfunctionStatus getStatus() {
-		return status;
-	}
-
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	public void setStatus(MalfunctionStatus status) {
-		this.status = status;
-	}
-
-	public MalfunctionType getType() {
-		return type;
-	}
-
-	public void setType(MalfunctionType type) {
-		this.type = type;
-	}
-
-	public MassageChair getChair() {
-		return chair;
-	}
-
-	public void setChair(MassageChair chair) {
-		this.chair = chair;
 	}
 
 	public enum MalfunctionStatus implements BaseEnum<MalfunctionStatus, String> {

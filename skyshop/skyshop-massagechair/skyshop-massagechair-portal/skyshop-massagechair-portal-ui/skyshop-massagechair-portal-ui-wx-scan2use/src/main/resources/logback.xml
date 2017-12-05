@@ -10,9 +10,9 @@
 
 	<appender name="logfile"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${catalina.home}/logs/skyshop-massagechair-portal-ui-wx-scan2use.log</File>
+		<File>${catalina.home}/logs/chairs-ui-scan2use.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${catalina.home}/logs/skyshop-massagechair-portal-ui-wx-scan2use.log.%d{yyyy-MM-dd}.gz
+			<FileNamePattern>${catalina.home}/logs/chairs-ui-scan2use.log.%d{yyyy-MM-dd}.gz
 			</FileNamePattern>
 		</rollingPolicy>
 		<encoder charset="UTF-8">

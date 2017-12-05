@@ -11,22 +11,23 @@ import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.sitv.skyshop.domain.BaseEnum;
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
 import com.sitv.skyshop.massagechair.dao.agency.IAgencyDao;
-import com.sitv.skyshop.massagechair.dao.agency.IAgencyUserDao;
+import com.sitv.skyshop.massagechair.dao.user.IUserDao;
 import com.sitv.skyshop.massagechair.domain.agency.Agency;
 import com.sitv.skyshop.massagechair.domain.agency.AgencyUser;
-import com.sitv.skyshop.massagechair.domain.agency.AgencyUser.AgencyUserLevel;
-import com.sitv.skyshop.massagechair.domain.agency.AgencyUser.AgencyUserStatus;
+import com.sitv.skyshop.massagechair.domain.user.User.UserStatus;
+import com.sitv.skyshop.massagechair.domain.user.User.UserType;
 import com.sitv.skyshop.massagechair.dto.agency.AgencyUserInfo;
-import com.sitv.skyshop.service.CrudService;
+import com.sitv.skyshop.massagechair.service.user.DefaultUserService;
 
 /**
  * @author zfj20 @ 2017年12月5日
  */
 @Service
-public class AgencyUserService extends CrudService<IAgencyUserDao, AgencyUser, AgencyUserInfo> implements IAgencyUserService {
+public class AgencyUserService extends DefaultUserService<IUserDao<AgencyUser>, AgencyUserInfo, AgencyUser> implements IAgencyUserService {
 
 	@Autowired
 	private IAgencyDao agencyDao;
@@ -53,8 +54,8 @@ public class AgencyUserService extends CrudService<IAgencyUserDao, AgencyUser, A
 		agencyUser.setName(t.getName());
 		agencyUser.setCode(t.getCode());
 		agencyUser.setPassword(t.getPassword());
-		agencyUser.setAgencyUserStatus(BaseEnum.valueOf(AgencyUserStatus.class, t.getAgencyUserStatus()));
-		agencyUser.setLevel(BaseEnum.valueOf(AgencyUserLevel.class, t.getLevel()));
+		agencyUser.setStatus(BaseEnum.valueOf(UserStatus.class, t.getStatus().getCode()));
+		agencyUser.setType(BaseEnum.valueOf(UserType.class, t.getType().getCode()));
 		agencyUser.setUpdateTime(Calendar.getInstance());
 		agencyUser.calcCheckCode();
 		update(agencyUser);
@@ -63,8 +64,8 @@ public class AgencyUserService extends CrudService<IAgencyUserDao, AgencyUser, A
 	public void createOne(AgencyUserInfo t) {
 		Agency agency = agencyDao.get(t.getAgency().getId());
 
-		AgencyUser agencyUser = new AgencyUser(null, t.getCode(), t.getName(), t.getPassword(), BaseEnum.valueOf(AgencyUserStatus.class, t.getAgencyUserStatus()),
-		                BaseEnum.valueOf(AgencyUserLevel.class, t.getLevel()), agency);
+		AgencyUser agencyUser = new AgencyUser(null, t.getCode(), t.getName(), t.getPassword(), BaseEnum.valueOf(UserStatus.class, t.getStatus().getCode()),
+		                BaseEnum.valueOf(UserType.class, t.getType().getCode()), agency, DeleteStatus.NORMAL);
 		agencyUser.calcCheckCode();
 		create(agencyUser);
 	}

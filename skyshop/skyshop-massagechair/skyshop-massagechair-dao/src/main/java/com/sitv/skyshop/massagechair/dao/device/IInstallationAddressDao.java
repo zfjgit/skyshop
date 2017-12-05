@@ -17,4 +17,6 @@ import com.sitv.skyshop.massagechair.domain.device.InstallationAddress;
 public interface IInstallationAddressDao extends ICrudDao<InstallationAddress>, IDeleteStatusDao<InstallationAddress> {
 
 	List<InstallationAddress> findByAgency(Long agencyId);
+
+	int getCountByAgency(Long id);
 }

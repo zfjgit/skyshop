@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.userecord.IOperateRecordDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.record.UserOperateRecord">
+		<id column="user2_log_sno" jdbcType="BIGINT" property="id" />
+		<result column="user2_no" jdbcType="VARCHAR" property="account" />
+		<result column="content_log" jdbcType="VARCHAR" property="description" />
+		<result column="ip" jdbcType="VARCHAR" property="ip" />
+		<result column="cdate" property="createTime" />
+		<result column="type" property="type" />
+		<association property="agency" column="user3_sno" select="com.sitv.skyshop.massagechair.dao.agency.IAgencyDao.get"/>
+	</resultMap>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.record.UserOperateRecord" statementType="PREPARED">
+		INSERT INTO tab_user2_log
+			(user2_no, content_log, type, ip, cdate, user3_sno) 
+		VALUES 
+			(#{account}, #{description}, #{type.code}, #{ip}, #{createTime}, 
+			<choose>
+			    <when test="agency == null">
+			        0
+			    </when>
+			    <otherwise>
+					#{agency.id}
+			    </otherwise>
+			</choose>
+			)    
+	</insert>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long">
+		SELECT * FROM tab_user2_log WHERE user2_log_sno=#{id}
+	</select>
+
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT m.*
+		FROM tab_user2_log m
+		WHERE 1 = 1 
+		<if test="param != null and param.type.code != null">
+			AND type=#{param.type.code}
+		</if>
+		<if test="param != null and param.description != null">
+			AND content_log like CONCAT('%', #{param.description}, '%')
+		</if>
+		<if test="param != null and param.account != null">
+			AND user2_no like CONCAT('%', #{param.account}, '%')
+		</if>
+		<if test="param != null and param.ip != null">
+			AND ip like CONCAT('%', #{param.ip}, '%')
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND cdate &gt; #{param.startDate}
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND cdate &lt; #{param.endDate}
+		</if>
+		<if test="sortField != null and sortDir != null">
+			ORDER BY ${sortField} ${sortDir}
+		</if>
+	</select>
+</mapper>

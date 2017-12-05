@@ -46,9 +46,15 @@
 			<groupId>io.springfox</groupId>
 			<artifactId>springfox-swagger-ui</artifactId>
 		</dependency>
+		
+				<dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
 	</dependencies>
 	
 	<build>
-		<finalName>skyshop-massagechair-portal-api-wx-scan2use</finalName>
+		<finalName>chairs-api-scan2use</finalName>
 	</build>
 </project>

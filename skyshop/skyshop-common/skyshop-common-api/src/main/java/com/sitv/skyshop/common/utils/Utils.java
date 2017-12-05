@@ -133,6 +133,30 @@ public class Utils implements Serializable {
 		return startTime;
 	}
 
+	public static Calendar getDayEndTime(Calendar day) {
+		day.set(Calendar.HOUR_OF_DAY, 23);
+		day.set(Calendar.MINUTE, 59);
+		day.set(Calendar.SECOND, 59);
+		day.set(Calendar.MILLISECOND, 1000);
+		return day;
+	}
+
+	public static Calendar getTodayEndTime() {
+		return getDayEndTime(Calendar.getInstance());
+	}
+
+	public static Calendar getDayStartTime(Calendar day) {
+		day.set(Calendar.HOUR_OF_DAY, 0);
+		day.set(Calendar.MINUTE, 0);
+		day.set(Calendar.SECOND, 0);
+		day.set(Calendar.MILLISECOND, 0);
+		return day;
+	}
+
+	public static Calendar getTodayStartTime() {
+		return getDayStartTime(Calendar.getInstance());
+	}
+
 	/**
 	 * 默认格式：'yyyy-MM-dd HH:mm:ss' 如果参数为空则格式化当前日期
 	 *
@@ -144,7 +168,7 @@ public class Utils implements Serializable {
 	 * @author Zhou 2010-4-27
 	 */
 	public static String time2String(Calendar c, String pattern) {
-		SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_FORMAT);
+		SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_FORMAT_1);
 
 		if (!Utils.isNull(pattern)) {
 			formatter.applyPattern(pattern);
@@ -163,12 +187,18 @@ public class Utils implements Serializable {
 	 *            格式
 	 * @return
 	 */
-	public static Calendar toCalendar(String time, String pattern) {
-		if (isNull(time)) {
+	public static Calendar toCalendar(String... params) {
+		if (isNull(params)) {
 			return null;
 		}
 
-		SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_FORMAT);
+		String time = params[0];
+		String pattern = null;
+		if (params.length > 1) {
+			pattern = params[1];
+		}
+
+		SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_FORMAT_1);
 
 		if (!isNull(pattern)) {
 			formatter.applyPattern(pattern);

@@ -13,14 +13,13 @@ import com.sitv.skyshop.dto.ResponseInfo;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-	
 	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	@ResponseBody
 	@ExceptionHandler(value = Throwable.class)
 	public ResponseInfo<String> defaultHandler(HttpServletRequest request, Throwable e) {
 		log.error(e.getMessage(), e);
-		
+
 		ResponseInfo<String> info = CommonResponseInfo.RUNTIME_ERROR(e.getMessage());
 		info.setUrl(request.getRequestURL().toString());
 		info.setData("ERROR STACKS：" + ExceptionUtils.getStackTrace(e));

@@ -86,7 +86,7 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 		massageChair.setDescription(t.getDescription());
 		massageChair.setGsmModule(gsmModule);
 		massageChair.setInstallationAddress(installationAddress);
-		massageChair.setStatus(ChairStatus.valueOf(t.getStatus()));
+		massageChair.setStatus(BaseEnum.valueOf(ChairStatus.class, t.getStatus().getCode()));
 		dao.update(massageChair);
 
 		pricePackageDao.deleteByChair(t.getId());
@@ -111,8 +111,8 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 			agencyDao.get(t.getAgency().getId());
 		}
 
-		MassageChair massageChair = new MassageChair(null, t.getName(), t.getDescription(), t.getBrand(), ChairStatus.valueOf(t.getStatus()), gsmModule, installationAddress,
-		                agency);
+		MassageChair massageChair = new MassageChair(null, t.getName(), t.getDescription(), t.getBrand(), BaseEnum.valueOf(ChairStatus.class, t.getStatus().getCode()), gsmModule,
+		                installationAddress, agency, DeleteStatus.NORMAL);
 
 		StringTokenizer priceIdTokenizer = new StringTokenizer(t.getPriceIds(), ",");
 		while (priceIdTokenizer.hasMoreTokens()) {
@@ -131,7 +131,7 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 
 	public void updateDeleteStatus(MassageChairInfo t) {
 		MassageChair chair = get(t.getId());
-		chair.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus()));
+		chair.setDeleteStatus(BaseEnum.valueOf(DeleteStatus.class, t.getDeleteStatus().getCode()));
 		dao.updateDeleteStatus(chair);
 	}
 

@@ -6,6 +6,7 @@ package com.sitv.skyshop.massagechair.service.price;
 import org.springframework.stereotype.Service;
 
 import com.sitv.skyshop.massagechair.dao.price.IPriceDao;
+import com.sitv.skyshop.massagechair.domain.agency.Agency;
 import com.sitv.skyshop.massagechair.domain.price.FixedPrice;
 import com.sitv.skyshop.massagechair.dto.price.FixedPriceInfo;
 
@@ -16,7 +17,9 @@ import com.sitv.skyshop.massagechair.dto.price.FixedPriceInfo;
 public class FixedPriceService extends DefaultPriceService<IPriceDao<FixedPrice>, FixedPrice, FixedPriceInfo> implements IFixedPriceService {
 
 	public void createOne(FixedPriceInfo t) {
+		Agency agency = agencyDao.get(t.getAgency().getId());
 		FixedPrice fixedPrice = new FixedPrice(null, t.getName(), t.getPrice(), t.getImg(), t.getMinutes());
+		fixedPrice.setAgency(agency);
 		create(fixedPrice);
 	}
 

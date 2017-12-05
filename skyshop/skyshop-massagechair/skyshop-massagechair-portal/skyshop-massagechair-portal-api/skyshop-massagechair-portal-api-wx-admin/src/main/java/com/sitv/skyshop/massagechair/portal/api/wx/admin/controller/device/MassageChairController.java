@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.massagechair.dto.device.MassageChairInfo;
 import com.sitv.skyshop.massagechair.service.device.IMassageChairService;
 
@@ -20,6 +20,6 @@ import io.swagger.annotations.Api;
 @Validated
 @RestController
 @RequestMapping("/chair")
-public class MassageChairController extends BaseController<IMassageChairService, MassageChairInfo> {
+public class MassageChairController extends BaseRestController<IMassageChairService, MassageChairInfo> {
 
 }

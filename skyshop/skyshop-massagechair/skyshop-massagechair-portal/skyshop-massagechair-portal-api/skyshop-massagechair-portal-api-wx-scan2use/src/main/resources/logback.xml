@@ -4,29 +4,59 @@
     
 	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
 		<encoder charset="UTF-8">
-			<pattern>%d{yyyy-MM-dd HH:mm:ss} %level [%thread] %caller{1} - %msg%n </pattern>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %level [%thread] %replace(%caller{1}){'(\bCaller\+?0?\s*at?)|\r|\n|\t', ''}    -     %msg%n  </pattern>
 		</encoder>
 	</appender>
 
 	<appender name="logfile"
 		class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<File>${catalina.home}/logs/skyshop-massagechair-portal-api-wx-scan2use.log</File>
+		<File>${catalina.home}/logs/chairs-api-scan2use.log</File>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-			<FileNamePattern>${catalina.home}/logs/skyshop-massagechair-portal-api-wx-scan2use.log.%d{yyyy-MM-dd}.gz
+			<FileNamePattern>${catalina.home}/logs/chairs-api-scan2use.log.%d{yyyy-MM-dd}.gz
 			</FileNamePattern>
 		</rollingPolicy>
 		<encoder charset="UTF-8">
-			<pattern>%X{sessionId} %date [%thread] %-5level %logger{80} - %msg%n
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %level [%thread] %replace(%caller{1}){'(\bCaller\+?0?\s*at?)|\r|\n|\t', ''}    -     %msg%n  
 			</pattern>
 		</encoder>
 	</appender>
+	
+	<appender name="debug" class="ch.qos.logback.core.rolling.RollingFileAppender">  
+        <file>${catalina.home}/logs/chairs-api-scan2use-debug.log</file>  
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">  
+            <FileNamePattern>${catalina.home}/logs/chairs-api-scan2use-debug.%d{yyyy-MM-dd}.gz</FileNamePattern>  
+        </rollingPolicy>  
+        <!--  这个得注释掉，因为加上了会重复打印，原因看下面就知道了  -->  
+        <!-- 
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">  
+            <level>DEBUG</level>  
+            <onMatch>ACCEPT</onMatch>  
+            <onMismatch>DENY</onMismatch>  
+        </filter> -->  
+        
+        <encoder>  
+            <pattern>%d{HH:mm:ss.SSS} %-5level %logger{35} - %msg%n</pattern>  
+        </encoder>  
+    </appender>
 
-	<logger name="org.springframework.beans">
+	<logger name="org.springframework.beans" additivity="false">
 		<level value="INFO" />
 	</logger>
 	
-	<root level="INFO">
+	<logger name="mybatis.dao" additivity="false">
+		<level value="DEBUG" />
+	</logger>
+	
+	<logger name="org.mybatis" >
+		<level value="DEBUG" />
+	</logger>
+	
+	<root level="DEBUG">
+		<appender-ref ref="debug"/>
 		<appender-ref ref="stdout" />
+	</root>
+	
+	<root level="INFO">
 		<appender-ref ref="logfile"/>
 	</root>
 </configuration>

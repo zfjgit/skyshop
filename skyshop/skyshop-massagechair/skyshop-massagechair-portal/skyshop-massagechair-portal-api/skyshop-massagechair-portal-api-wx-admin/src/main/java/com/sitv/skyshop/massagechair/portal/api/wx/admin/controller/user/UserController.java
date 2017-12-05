@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.massagechair.dto.user.UserInfo;
 import com.sitv.skyshop.massagechair.service.user.IUserService;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Validated
 @RestController
 @RequestMapping("/user")
-public class UserController extends BaseController<IUserService<UserInfo>, UserInfo> {
+public class UserController extends BaseRestController<IUserService<UserInfo>, UserInfo> {
 
 	public ResponseInfo<UserInfo> create(UserInfo info) {
 		return ResponseInfo.FORBIDDEN_ERROR("错误的接口调用");

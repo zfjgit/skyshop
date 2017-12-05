@@ -7,7 +7,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitv.skyshop.controller.BaseController;
+import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.massagechair.dto.price.PriceInfo;
 import com.sitv.skyshop.massagechair.service.price.IPriceService;
@@ -21,7 +21,7 @@ import io.swagger.annotations.Api;
 @Validated
 @RestController
 @RequestMapping("/price")
-public class PriceController extends BaseController<IPriceService<PriceInfo>, PriceInfo> {
+public class PriceController extends BaseRestController<IPriceService<PriceInfo>, PriceInfo> {
 
 	public ResponseInfo<PriceInfo> create(PriceInfo info) {
 		return ResponseInfo.FORBIDDEN_ERROR("错误的接口调用");

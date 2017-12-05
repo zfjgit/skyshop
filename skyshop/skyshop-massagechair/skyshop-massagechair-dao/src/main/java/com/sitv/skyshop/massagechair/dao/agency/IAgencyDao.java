@@ -14,4 +14,6 @@ import com.sitv.skyshop.massagechair.domain.agency.Agency;
 @MyBatisDao
 public interface IAgencyDao extends ICrudDao<Agency>, IDeleteStatusDao<Agency> {
 
+	int getCountByAgency(Long id);
+
 }
