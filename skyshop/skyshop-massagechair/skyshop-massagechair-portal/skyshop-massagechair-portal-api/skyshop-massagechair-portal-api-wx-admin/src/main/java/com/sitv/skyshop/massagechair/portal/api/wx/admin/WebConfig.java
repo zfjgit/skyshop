@@ -11,8 +11,8 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
+import com.sitv.skyshop.common.interceptor.auth.AuthorizationInterceptor;
 import com.sitv.skyshop.common.utils.converters.CalendarConverter;
-import com.sitv.skyshop.massagechair.portal.api.wx.admin.interceptor.AuthorizationInterceptor;
 
 /**
  * @author zfj20 @ 2017年12月8日
@@ -27,8 +27,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(authorizationInterceptor())
-		                // .addPathPatterns("/api/*")
-		                .excludePathPatterns("/**/*.*", "/v2/**", "/swagger-resources/**");
+				// .addPathPatterns("/api/*")
+				.excludePathPatterns("/**/*.*", "/v2/**", "/swagger-resources/**");
 		super.addInterceptors(registry);
 	}
 

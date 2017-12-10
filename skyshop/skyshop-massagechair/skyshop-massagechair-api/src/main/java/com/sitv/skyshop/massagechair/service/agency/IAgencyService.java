@@ -17,5 +17,4 @@ public interface IAgencyService extends IBaseService<AgencyInfo>, IDeleteStatusS
 	String OVERVIEW_LAST_GET_TIME_KEY = "OVERVIEW_LAST_GET_TIME_KEY";
 
 	AgencyOverviewInfo getOverview(Long agencyId);
-
 }

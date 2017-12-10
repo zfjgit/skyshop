@@ -55,4 +55,5 @@ public abstract class DefaultUserService<D extends ICrudDao<T>, I extends UserIn
 	public I login(String code, String pwd) {
 		return null;
 	}
+
 }

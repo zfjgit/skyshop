@@ -31,11 +31,12 @@ public class Swagger2Config {
 		List<Parameter> params = new ArrayList<>();
 		params.add(tokenPar.build());
 		return new Docket(DocumentationType.SWAGGER_2).genericModelSubstitutes(SearchParamInfo.class).apiInfo(apiInfo()).select()
-		                .apis(RequestHandlerSelectors.basePackage("com.sitv.skyshop")).paths(PathSelectors.any()).build().globalOperationParameters(params);
+				.apis(RequestHandlerSelectors.basePackage("com.sitv.skyshop")).paths(PathSelectors.any()).build().globalOperationParameters(params);
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("skyshop massagechair api").description("skyshop massagechair api").termsOfServiceUrl("http://www.tba-taobao.com/")
-		                .contact(new Contact("skyshop", "http://www.tba-taobao.com/", "zfjemail@qq.com")).version("1.0.0-SNAPSHOT").build();
+		return new ApiInfoBuilder().title("chairs-api-wxadmin").description("skyshop massagechair wxadmin api")
+				.termsOfServiceUrl("https://github.com/zfjgit/skyshop/tree/master/skyshop/skyshop-massagechair")
+				.contact(new Contact("skyshop", "https://github.com/zfjgit/skyshop", "zfjemail@qq.com")).version("1.0.0-SNAPSHOT").build();
 	}
 }

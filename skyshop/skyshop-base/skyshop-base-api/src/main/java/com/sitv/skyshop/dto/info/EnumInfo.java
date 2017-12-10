@@ -33,24 +33,18 @@ public class EnumInfo<E extends BaseEnum<?, T>, T> extends Dto {
 		}
 	}
 
-	public EnumInfo(Class<E> c, T code) {
-		super();
-
+	public static <N extends BaseEnum<?, C>, C> EnumInfo<N, C> valueOf(Class<N> c, C code) {
 		if (c == null || code == null) {
-			throw new EnumCreationException("枚举类型生成失败：class=" + c.getName() + "/code=" + code);
+			return null;
 		}
 
-		E[] enums = c.getEnumConstants();
-		for (E e : enums) {
+		N[] enums = c.getEnumConstants();
+		for (N e : enums) {
 			if (e.getCode().equals(code)) {
-				this.code = e.getCode();
-				this.name = e.getName();
-				break;
+				return new EnumInfo<>(e);
 			}
 		}
-		if (this.code == null) {
-			throw new EnumCreationException("枚举类型生成失败：class=" + c.getName() + "/code=" + code);
-		}
+		throw new EnumCreationException("未知的枚举类型：class=" + c.getName() + "/code=" + code);
 	}
 
 	public EnumInfo(T code, String name) {

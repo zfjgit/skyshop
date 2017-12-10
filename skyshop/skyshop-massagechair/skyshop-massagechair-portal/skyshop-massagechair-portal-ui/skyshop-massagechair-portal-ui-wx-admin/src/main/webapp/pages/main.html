@@ -10,22 +10,24 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
 		
+		<link rel="stylesheet" type="text/css" href="../plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="../plugins/jqweui/css/jquery-weui.css"/>
+		
 		<link rel="stylesheet" type="text/css" href="../css/style.css"/>
-		<script type="text/javascript" src="../plugins/jquery-3.2.1.min.js"></script>
+		
+		<script type="text/javascript" src="../plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../plugins/jqweui/js/jquery-weui.js"></script>
+		<script type="text/javascript" src="../plugins/ukulelejs/dist/uku.js"></script>
+		<script type="text/javascript" src="../js/ctx.js"></script>
 		<script type="text/javascript" src="../js/ui.js"></script>
-		<script type="text/javascript">
-			$(function(){
-			    $('#income_by_addr').click(function(){
-			        window.location.href = 'income/income_main.html';
-			    });
-			});
-		</script>
+		<script type="text/javascript" src="../js/data.js"></script>
+		<script type="text/javascript" src="../js/main.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="header" >
 			<div class="title">我的收益</div>
 			<div class="t_white t_today_income">今日收益（元）</div>
-			<div class="today_income">100.00</div>
+			<div class="today_income">{{overviewInfo.todayIncome}}</div>
 			<div id="income_by_addr" class="t_white t_right t_href" style="margin: 15px;margin-top: 20px;">查看收益明细&gt;</div>
 		</div>
 		<div class="content">
@@ -33,34 +35,34 @@
 				<div class="btn" onclick="window.location.href='addr/addr_list.html';">
 					<img src="../images/01.jpg"/>
 					<div class="t_btn t_black">场所管理</div>
-					<div class="number t_orange">3个</div>
+					<div class="number t_orange">{{overviewInfo.addressCount}}<span>个</span></div>
 				</div>
 				<div class="btn" onclick="window.location.href='chair/chair_main.html';">
 					<img src="../images/03.jpg"/>
 					<div class="t_btn t_black">设备管理</div>
-					<div class="number t_orange">3个</div>
+					<div class="number t_orange">{{overviewInfo.deviceCount}}<span>个</span></div>
 				</div>
 				<div class="btn" onclick="window.location.href='agents/agents_main.html';">
 					<img src="../images/04.jpg"/>
 					<div class="t_btn t_black">代理商</div>
-					<div class="number t_orange">3个</div>
+					<div class="number t_orange">{{overviewInfo.agencyCount}}<span>个</span></div>
 				</div>
 			</div>
 			<div class="row_btn">
 				<div class="btn" onclick="window.location.href='price/price_list.html';">
 					<img src="../images/05.jpg"/>
 					<div class="t_btn t_black">价格管理</div>
-					<div class="number t_orange">5条</div>
+					<div class="number t_orange">{{overviewInfo.priceCount}}<span>个</span></div>
 				</div>
 				<div class="btn" onclick="window.location.href='income/income_main.html';">
 					<img src="../images/06.jpg"/>
 					<div class="t_btn t_black">收益查询</div>
-					<div class="number t_orange">2笔</div>
+					<div class="number t_orange">{{overviewInfo.partitionCount}}<span>个</span></div>
 				</div>
 				<div class="btn" onclick="window.location.href='order/order_list.html';">
 					<img src="../images/02.jpg"/>
 					<div class="t_btn t_black">订单查询</div>
-					<div class="number t_orange">2笔</div>
+					<div class="number t_orange">{{overviewInfo.orderCount}}<span>个</span></div>
 				</div>
 			</div>
 		</div>

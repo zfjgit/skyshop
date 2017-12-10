@@ -12,16 +12,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sitv.skyshop.common.utils.Constants;
 import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
 import com.sitv.skyshop.massagechair.dto.agency.AgencyOverviewInfo;
-import com.sitv.skyshop.massagechair.dto.agency.AgencyUserInfo;
-import com.sitv.skyshop.massagechair.dto.user.LoginUserInfo;
 import com.sitv.skyshop.massagechair.service.agency.IAgencyService;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -34,21 +32,16 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/agency")
 public class AgencyController extends BaseRestController<IAgencyService, AgencyInfo> {
 
-	@GetMapping("/overview")
+	@ApiOperation(value = "", notes = "如果返回HttpStatus_Code=403，请检查路径映射是否配置了@PathVariable参数")
+	@GetMapping("/overview/{agencyId}")
 	public ResponseInfo<AgencyOverviewInfo> overview(@Min(0) @PathVariable Long agencyId) {
-		log.debug("代理商信息总览>>>");
-		log.debug("userId=" + agencyId);
+		log.debug("账号资产/收益/订单信息总览>>>");
+		log.debug("agencyId=" + agencyId);
 
 		HttpSession session = request.getSession();
 
-		LoginUserInfo loginUserInfo = (LoginUserInfo) session.getAttribute(Constants.USER_KEY);
-		AgencyUserInfo agencyUserInfo = (AgencyUserInfo) loginUserInfo.getUserInfo();
-		if (agencyUserInfo.getAgency().getId() != agencyId) {
-			return ResponseInfo.ARGS_ERROR("错误的代理商id");
-		}
-
 		AgencyOverviewInfo overviewInfo = (AgencyOverviewInfo) session.getAttribute(IAgencyService.OVERVIEW_KEY);
-		long lastGetTime = (long) session.getAttribute(IAgencyService.OVERVIEW_LAST_GET_TIME_KEY);
+		Long lastGetTime = (Long) session.getAttribute(IAgencyService.OVERVIEW_LAST_GET_TIME_KEY);
 		if (overviewInfo == null || System.currentTimeMillis() - lastGetTime > 10000) {
 			overviewInfo = service.getOverview(agencyId);
 			session.setAttribute(IAgencyService.OVERVIEW_KEY, overviewInfo);
@@ -58,5 +51,4 @@ public class AgencyController extends BaseRestController<IAgencyService, AgencyI
 		log.debug("overviewInfo=" + overviewInfo);
 		return ResponseInfo.SUCCESS(overviewInfo);
 	}
-
 }

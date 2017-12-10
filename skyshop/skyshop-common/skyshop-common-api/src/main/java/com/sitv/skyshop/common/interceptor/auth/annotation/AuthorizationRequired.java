@@ -1,4 +1,4 @@
-package com.sitv.skyshop.massagechair.portal.api.wx.admin.interceptor.annotation;
+package com.sitv.skyshop.common.interceptor.auth.annotation;
 
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.TYPE;

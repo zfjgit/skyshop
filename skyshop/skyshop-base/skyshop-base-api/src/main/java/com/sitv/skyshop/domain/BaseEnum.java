@@ -15,7 +15,7 @@ public interface BaseEnum<E extends Enum<?>, T> {
 
 	public static <N extends BaseEnum<?, C>, C> N valueOf(Class<N> clazz, C code) {
 		if (clazz == null || code == null) {
-			throw new EnumCreationException("未知的枚举类型：" + code + "，请核对" + clazz.getName());
+			return null;
 		}
 
 		N[] enums = clazz.getEnumConstants();
@@ -26,7 +26,7 @@ public interface BaseEnum<E extends Enum<?>, T> {
 			}
 		}
 
-		throw new EnumCreationException("未知的枚举类型：" + code + "，请核对" + clazz.getName());
+		throw new EnumCreationException("未知的枚举类型：class=" + clazz.getName() + "/code=" + code);
 	}
 
 }

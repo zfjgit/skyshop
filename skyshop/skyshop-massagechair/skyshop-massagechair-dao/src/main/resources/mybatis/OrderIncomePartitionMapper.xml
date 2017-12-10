@@ -24,7 +24,7 @@
 		SELECT * FROM tab_orders_Detailed WHERE detailed_sno=#{id}
 	</select>
 	
-	<select id="getCountByAgency" resultMap="BaseResultMap" parameterType="long">
+	<select id="getCountByAgency" resultType="int" parameterType="long">
 		SELECT count(1) FROM tab_orders_Detailed WHERE user3_sno=#{id}
 	</select>
 	

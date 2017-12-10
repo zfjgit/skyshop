@@ -21,12 +21,13 @@
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
 		
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js"></script>
+		<script type="text/javascript" src="../../js/ctx.js"></script>
 		<script type="text/javascript" src="../../js/ui.js"></script>
-		<script type="text/javascript">
-			
-		</script>
+		<script type="text/javascript" src="../../js/data.js"></script>
+		<script type="text/javascript" src="../../js/memberinfo.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
 			<div class="h_title">个人中心</div>
@@ -35,11 +36,43 @@
 			<table class="t_table">
 				<tr>
 					<td class="t_fieldname">我的账号</td>
-					<td class="t_fieldvalue t_bg_white"><input class="t_text" value="admin" readonly="readonly"/></td>
+					<td class="t_fieldvalue t_bg_white"><input class="t_text" uku-value="userInfo.code" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="t_fieldname">我的姓名</td>
+					<td class="t_fieldvalue t_bg_white"><input class="t_text" uku-value="userInfo.name" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="t_fieldname">账号类别</td>
+					<td class="t_fieldvalue t_bg_white"><input class="t_text" uku-value="userInfo.type.name" readonly="readonly"/></td>
+				</tr>
+				<tr>
+					<td class="t_fieldname">账号状态</td>
+					<td class="t_fieldvalue t_bg_white"><input class="t_text" uku-value="userInfo.status.name" readonly="readonly"/></td>
+				</tr>
+				<tr class="t_agency_field">
+					<td class="t_fieldname">代理商名称</td>
+					<td class="t_fieldvalue t_bg_white"><input class="t_text" uku-value="userInfo.agency.name" readonly="readonly"/></td>
+				</tr>
+				<tr class="t_agency_field">
+					<td class="t_fieldname">代理商级别</td>
+					<td class="t_fieldvalue t_bg_white"><input class="t_text" uku-value="userInfo.agency.level.name" readonly="readonly"/></td>
+				</tr>
+				<tr class="t_agency_field">
+					<td class="t_fieldname">上级代理商</td>
+					<td class="t_fieldvalue t_bg_white"><input class="t_text" uku-value="userInfo.agency.parent.name" readonly="readonly"/></td>
+				</tr>
+				<tr class="t_agency_field">
+					<td class="t_fieldname">收益分成（%）</td>
+					<td class="t_fieldvalue t_bg_white"><input class="t_text" uku-value="userInfo.agency.percentage" readonly="readonly"/></td>
+				</tr>
+				<tr class="t_agency_field">
+					<td class="t_fieldname">我的余额（元）</td>
+					<td class="t_fieldvalue t_bg_white"><input class="t_text" uku-value="userInfo.agency.balance" readonly="readonly"/></td>
 				</tr>
 			</table>
 			<div class="t_area_btn">
-				<div class="weui-btn weui-btn_warn">退出登录</div>
+				<div id="btn_exit" class="weui-btn weui-btn_warn">退出登录</div>
 			</div>
 		</div>
 	</body>

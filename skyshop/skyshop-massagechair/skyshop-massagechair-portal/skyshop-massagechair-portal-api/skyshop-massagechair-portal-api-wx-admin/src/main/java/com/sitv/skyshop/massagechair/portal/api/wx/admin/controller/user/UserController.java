@@ -30,4 +30,5 @@ public class UserController extends BaseRestController<IUserService<UserInfo>, U
 	public ResponseInfo<UserInfo> update(UserInfo info) {
 		return ResponseInfo.FORBIDDEN_ERROR("错误的接口调用");
 	}
+
 }

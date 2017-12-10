@@ -1,12 +1,7 @@
-/**
- *
- */
-package com.sitv.skyshop.massagechair.portal.api.wx.admin.exception.handler;
+package com.sitv.skyshop.common.exception.handler;
 
 import javax.validation.ValidationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,15 +17,15 @@ import com.sitv.skyshop.common.exception.ParamValidException;
 import com.sitv.skyshop.common.exception.PlainReponseException;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.exception.CheckCodeVerificationFailedException;
-import com.sitv.skyshop.massagechair.dto.MassageChairResponseInfo;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
- * @author zfj20 @ 2017年11月16日
+ * @author zfj 2017-12-11
  */
+@Slf4j
 @ControllerAdvice
-public class ChairGlobalExceptionHandler extends ResponseEntityExceptionHandler {
-	private static final Logger log = LoggerFactory.getLogger(ChairGlobalExceptionHandler.class);
-
+public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ResponseBody
 	@ExceptionHandler(CheckCodeVerificationFailedException.class)
 	private <T> ResponseInfo<T> entityVarificationFailedExceptionHandler(CheckCodeVerificationFailedException e) {
@@ -39,10 +34,17 @@ public class ChairGlobalExceptionHandler extends ResponseEntityExceptionHandler 
 	}
 
 	@ResponseBody
+	@ExceptionHandler(UnsupportedOperationException.class)
+	private <T> ResponseInfo<T> unsupportedOperationExceptionHandler(UnsupportedOperationException e) {
+		log.error("---------> 不允许的操作!!!", e);
+		return ResponseInfo.FORBIDDEN_ERROR(e.getMessage());
+	}
+
+	@ResponseBody
 	@ExceptionHandler(EntityStatusException.class)
-	private <T> MassageChairResponseInfo<T> entityStatusExceptionHandler(EntityStatusException e) {
+	private <T> ResponseInfo<T> entityStatusExceptionHandler(EntityStatusException e) {
 		log.error("---------> 实体对象状态错误!!!", e);
-		return MassageChairResponseInfo.UNNORMAL_STATUS("实体对象状态错误");
+		return ResponseInfo.UNNORMAL_STATUS("实体对象状态错误");
 	}
 
 	@ResponseBody
@@ -83,5 +85,4 @@ public class ChairGlobalExceptionHandler extends ResponseEntityExceptionHandler 
 		log.error("---------> ARGS_ERROR!!!", e);
 		return ResponseInfo.ARGS_ERROR("参数错误");
 	}
-
 }

@@ -33,7 +33,7 @@
 		SELECT count(1) FROM tab_orders WHERE user3_sno=#{id}
 	</select>
 	
-	<select id="getTotalMoney" resultType="java.math.BigDecimal" parameterType="long">
+	<select id="getTotalMoney" resultType="java.math.BigDecimal" >
 		SELECT ISNULL(sum(orders_money),0)
 		FROM tab_orders 
 		WHERE 	orders_createtime &gt;= #{startTime} 
