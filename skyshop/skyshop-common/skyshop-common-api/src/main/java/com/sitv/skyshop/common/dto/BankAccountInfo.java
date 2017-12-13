@@ -25,6 +25,9 @@ public class BankAccountInfo extends FullInfoDto {
 	private String account;
 	private String accountName;
 
+	public BankAccountInfo() {
+	}
+
 	public BankAccountInfo(Long id, String bank, String account, String accountName, String checkCode, Calendar createTime, Calendar updateTime) {
 		super(id, createTime, updateTime);
 		this.bank = bank;

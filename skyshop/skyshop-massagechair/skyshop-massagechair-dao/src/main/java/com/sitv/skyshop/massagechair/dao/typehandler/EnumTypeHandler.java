@@ -34,7 +34,7 @@ import com.sitv.skyshop.massagechair.domain.user.User.UserType;
  */
 @MappedTypes({ AgencyLevel.class, MalfunctionStatus.class, MalfunctionType.class, PayStatus.class, PayType.class, SIMCardOperator.class, SIMCardStatus.class, ChairStatus.class,
                 GSMModuleStatus.class, UserType.class, UserStatus.class, WithrawStatus.class, DeleteStatus.class, OperateType.class, UseRecordType.class })
-public class EnumTypeHandler<E extends BaseEnum<?, String>> extends BaseTypeHandler<E> {
+public class EnumTypeHandler<E extends BaseEnum<?, C>, C> extends BaseTypeHandler<E> {
 
 	private Class<E> type;
 	private E[] enums;
@@ -48,11 +48,11 @@ public class EnumTypeHandler<E extends BaseEnum<?, String>> extends BaseTypeHand
 	}
 
 	public void setNonNullParameter(PreparedStatement ps, int i, E e, JdbcType jdbcType) throws SQLException {
-		ps.setString(i, e.getCode());
+		ps.setObject(i, e.getCode());
 	}
 
 	public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
-		String code = rs.getString(columnName);
+		Object code = rs.getObject(columnName);
 		if (rs.wasNull()) {
 			return null;
 		}
@@ -60,7 +60,7 @@ public class EnumTypeHandler<E extends BaseEnum<?, String>> extends BaseTypeHand
 	}
 
 	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-		String code = rs.getString(columnIndex);
+		Object code = rs.getObject(columnIndex);
 		if (rs.wasNull()) {
 			return null;
 		}
@@ -68,14 +68,14 @@ public class EnumTypeHandler<E extends BaseEnum<?, String>> extends BaseTypeHand
 	}
 
 	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-		String code = cs.getString(columnIndex);
+		Object code = cs.getObject(columnIndex);
 		if (cs.wasNull()) {
 			return null;
 		}
 		return valueOf(code);
 	}
 
-	private E valueOf(String code) {
+	private E valueOf(Object code) {
 		if (code == null || "".equals(code)) {
 			return null;
 		}

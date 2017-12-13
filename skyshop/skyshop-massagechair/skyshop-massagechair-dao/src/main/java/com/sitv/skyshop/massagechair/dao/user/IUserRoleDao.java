@@ -5,6 +5,8 @@ package com.sitv.skyshop.massagechair.dao.user;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.sitv.skyshop.dao.ICrudDao;
 import com.sitv.skyshop.dao.MyBatisDao;
 import com.sitv.skyshop.massagechair.domain.user.UserRole;
@@ -15,11 +17,11 @@ import com.sitv.skyshop.massagechair.domain.user.UserRole;
 @MyBatisDao
 public interface IUserRoleDao extends ICrudDao<UserRole> {
 
-	List<UserRole> findByUser(Long id);
+	List<UserRole> findByUser(@Param("id") Long id);
 
-	List<UserRole> findByRole(Long id);
+	List<UserRole> findByRole(@Param("id") Long id);
 
-	void deleteByUser(Long id);
+	void deleteByUser(@Param("id") Long id);
 
-	void deleteByRole(Long id);
+	void deleteByRole(@Param("id") Long id);
 }

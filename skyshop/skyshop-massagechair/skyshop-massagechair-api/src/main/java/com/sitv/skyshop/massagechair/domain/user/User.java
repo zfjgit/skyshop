@@ -3,6 +3,9 @@
  */
 package com.sitv.skyshop.massagechair.domain.user;
 
+import java.util.Calendar;
+
+import com.sitv.skyshop.common.utils.Utils;
 import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject;
 import com.sitv.skyshop.domain.ICheckCodeType;
@@ -27,6 +30,7 @@ public abstract class User extends DomainObject implements ICheckCodeType, IDele
 	private UserType type;
 	private String checkCode;
 	private DeleteStatus deleteStatus;
+	private String loginCheckCode;
 
 	public User(String code, String name, String description, String password, String email, String mobile, UserStatus status, UserType type, DeleteStatus deleteStatus) {
 		super(name, code);
@@ -37,6 +41,9 @@ public abstract class User extends DomainObject implements ICheckCodeType, IDele
 		this.status = status;
 		this.type = type;
 		this.deleteStatus = deleteStatus;
+
+		calcCheckCode();
+		calcLoginCheckCode();
 	}
 
 	public User(Long id, String code, String name, String description, String password, String email, String mobile, UserStatus status, UserType type, DeleteStatus deleteStatus) {
@@ -48,8 +55,10 @@ public abstract class User extends DomainObject implements ICheckCodeType, IDele
 		this.type = type;
 		this.deleteStatus = deleteStatus;
 		setDescription(description);
-
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
 		calcCheckCode();
+		calcLoginCheckCode();
 	}
 
 	protected User() {
@@ -103,5 +112,10 @@ public abstract class User extends DomainObject implements ICheckCodeType, IDele
 	public String calcCheckCode() {
 		setCheckCode("");
 		return "";
+	}
+
+	public String calcLoginCheckCode() {
+		setLoginCheckCode(Utils.UUID());
+		return getLoginCheckCode();
 	}
 }

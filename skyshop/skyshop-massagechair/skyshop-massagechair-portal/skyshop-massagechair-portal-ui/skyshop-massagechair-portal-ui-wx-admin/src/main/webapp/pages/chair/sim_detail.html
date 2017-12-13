@@ -21,67 +21,20 @@
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		
+		<script type="text/javascript" src="../../js/chair/sim_detail.js"></script>
+		
 		<script type="text/javascript">
-			$(function(){
-			    var search = window.location.search;
-			    if(!search) {
-			        $('.h_title').text('新增SIM卡');
-			        $('#btn_delete').hide();
-			        $('#btn_fault').hide();
-			    }
-			    
-			    $("#operator-picker").picker({
-			        title: "请选择运营商",
-			        cols: [
-			          {
-			            textAlign: 'center',
-			            values: ['中国电信', '中国移动', '中国联通']
-			          }
-			        ]
-			    });
-			    
-			    $("#date-picker").calendar();
-			    
-			    $("#status-picker").picker({
-			        title: "请选择状态",
-			        cols: [
-			          {
-			            textAlign: 'center',
-			            values: ['未使用', '已使用']
-			          }
-			        ]
-			    });
-			    
-			    
-			    $('#btn_delete').click(function(){
-			        $.confirm("确认删除这个设备？", function() {
-			            //点击确认后的回调函数
-			        }, function() {
-			            //点击取消后的回调函数
-			        });
-			    });
-			    
-			    $('#btn_fault').click(function() {
-			        $.prompt({
-			            title: '报告故障',
-			            text: '',
-			            input: '输入故障描述',
-			            empty: false, // 是否允许为空
-			            onOK: function (input) {
-			              //点击确认
-			            },
-			            onCancel: function () {
-			              //点击取消
-			            }
-			          });
-			    });
-			    
-			});
 			
 		</script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
 			<div class="h_title">SIM卡详情</div>
@@ -92,19 +45,19 @@
 					<tr>
 						<td class="t_fieldname">输入SIM卡号</td>
 						<td class="t_fieldvalue">
-							<input id="" type="number" class="t_text" value="" placeholder="SIM卡号" />
+							<input id="" type="number" class="t_text" uku-value="simInfo.sim" placeholder="SIM卡号" />
 						</td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">总流量（M）</td>
 						<td class="t_fieldvalue">
-							<input id="" type="number" class="t_text" value="" placeholder="总流量" />
+							<input id="" type="number" class="t_text" uku-value="simInfo.dataFlow" placeholder="总流量" />
 						</td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">到期日</td>
 						<td class="t_fieldvalue">
-							<input id="date-picker" class="t_text" value="" placeholder="到期日" />
+							<input id="date-picker" class="t_text" uku-value="simInfo.dueDate" placeholder="到期日" />
 						</td>
 					</tr>
 					<tr>
@@ -115,12 +68,15 @@
 						<td class="t_fieldname">选择状态</td>
 						<td class="t_fieldvalue"><input id="status-picker" class="t_text" value="" placeholder="状态" /></td>
 					</tr>
+					<tr class="t_deletestatus_field">
+						<td class="t_fieldname">是否已删除</td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="simInfo.deleteStatus.name" placeholder="是否已删除" readonly="readonly"/></td>
+					</tr>
 				</table>
 			</div>
 			<div style="margin-top: 10px;">
 				<div id="btn_save" class="weui-btn weui-btn_primary" style="width: 80%">保存</div>
 				<div id="btn_delete" class="weui-btn weui-btn_warn" style="width: 80%">删除</div>
-				<div id="btn_fault" class="weui-btn weui-btn_default" style="width: 80%">报告故障</div>
 			</div>
 			
 		</div>

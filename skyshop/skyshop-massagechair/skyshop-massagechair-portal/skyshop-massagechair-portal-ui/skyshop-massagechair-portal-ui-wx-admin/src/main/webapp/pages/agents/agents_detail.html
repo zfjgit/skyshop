@@ -21,64 +21,20 @@
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
-		<script type="text/javascript">
-			$(function(){
-			    var search = window.location.search;
-			    if(!search) {
-			        
-			    }
-			    
-			    $("#lv-picker").select({
-			        title: "请选择级别",
-			        multi: false,
-			        items: [
-			          {
-			            title: "平台/公司",
-			            value: 'A'
-			          },
-			          {
-			            title: "区域总代",
-			            value: 'C'
-			          },
-			          {
-			            title: "代理商-E",
-			            value: 'E'
-			          },
-			          {
-			            title: "代理商-M",
-			            value: 'M'
-			          }
-			        ]
-			      });
-			    
-			    $("#parent-picker").select({
-			        title: "请选择上级",
-			        multi: false,
-			        items: [
-			          {
-			            title: "系统",
-			            value: 'A'
-			          },
-			          {
-			            title: "区域总代--1",
-			            value: '1'
-			          },
-			          {
-			            title: "区域总代--2",
-			            value: '2'
-			          }
-			        ]
-			      });
-			});
-			
-		</script>
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		
+		<script type="text/javascript" src="../../js/agency/agency_detail.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
-			<div class="h_title">场所详情</div>
-<!-- 			<div class=" t_nav_btn" onclick="">保存</div> -->
+			<div class="h_title">代理商详情</div>
 		</div>
 		<div class="content">
 			<div class="t_search_results">
@@ -86,31 +42,36 @@
 					<tr>
 						<td class="t_fieldname">请输入名称</td>
 						<td class="t_fieldvalue">
-							<input class="t_text" value="" placeholder="名称" />
+							<input class="t_text" uku-value="agencyInfo.name" placeholder="名称" />
 						</td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">请选择级别</td>
 						<td class="t_fieldvalue">
-							<input id="lv-picker" class="t_text" value="" placeholder="级别" />
+							<input id="lv-picker" class="t_text"  placeholder="级别" />
 						</td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">分成比例</td>
-						<td class="t_fieldvalue"><input type="number" class="t_text" value="" placeholder="分成比例" /></td>
+						<td class="t_fieldvalue"><input type="number" class="t_text" uku-value="agencyInfo.percentage" placeholder="分成比例" /></td>
 					</tr>
-					<tr>
+					<tr class="t_balance_field">
 						<td class="t_fieldname">余额</td>
-						<td class="t_fieldvalue"><input type="number" class="t_text" value="" placeholder="余额" /></td>
+						<td class="t_fieldvalue"><input type="number" class="t_text" uku-value="agencyInfo.balance" placeholder="余额" readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">上级</td>
 						<td class="t_fieldvalue"><input id="parent-picker" class="t_text" value="" placeholder="上级" /></td>
 					</tr>
+					<tr class="t_deletestatus_field">
+						<td class="t_fieldname">是否已删除</td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="agencyInfo.deleteStatus.name" placeholder="是否已删除" readonly="readonly"/></td>
+					</tr>
 				</table>
 			</div>
 			<div style="margin-top: 10px;">
 				<div id="btn_save" class="weui-btn weui-btn_primary" style="width: 80%">保存</div>
+				<div id="btn_delete" class="weui-btn weui-btn_warn" style="width: 80%">删除</div>
 			</div>
 		</div>
 	</body>

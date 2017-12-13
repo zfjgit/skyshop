@@ -24,33 +24,41 @@ public abstract class DomainObject extends SimpleType {
 	protected DomainObject() {
 	}
 
+	public DomainObject(Long id) {
+		super(id);
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
+	}
+
 	public DomainObject(String name, String code) {
 		super(name, code);
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
+	}
+
+	public DomainObject(Long id, String name) {
+		super(id, name);
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
 	}
 
 	public DomainObject(String name, String code, int serialNumber, int version, String description, Calendar createTime) {
-		super(name, code);
+		this(name, code);
 		this.serialNumber = serialNumber;
 		this.version = version;
 		this.description = description;
 	}
 
 	public DomainObject(Long id, String name, String description) {
-		super(id, name, null);
+		this(id, name);
 		this.description = description;
-	}
-
-	public DomainObject(Long id, String name) {
-		super(id, name, null);
-	}
-
-	public DomainObject(Long id) {
-		super(id);
 	}
 
 	public DomainObject(Long id, String code, String name, String description) {
 		super(id, name, code);
 		this.description = description;
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
 	}
 
 	public enum DeleteStatus implements BaseEnum<DeleteStatus, Integer> {

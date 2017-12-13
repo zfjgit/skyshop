@@ -23,6 +23,12 @@ public abstract class SimpleType implements IBaseType {
 		this.id = id;
 	}
 
+	public SimpleType(Long id, String name) {
+		super();
+		this.id = id;
+		this.name = name;
+	}
+
 	public SimpleType(Long id, String name, String code) {
 		super();
 		this.id = id;

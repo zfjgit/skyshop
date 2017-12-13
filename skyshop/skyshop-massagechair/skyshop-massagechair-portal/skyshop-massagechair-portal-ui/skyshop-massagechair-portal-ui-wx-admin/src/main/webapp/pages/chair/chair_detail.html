@@ -21,93 +21,15 @@
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
-		<script type="text/javascript">
-			$(function(){
-			    var search = window.location.search;
-			    if(!search) {
-			        $('.h_title').text('新增按摩椅');
-			        $('#btn_delete').hide();
-			        $('#btn_fault').hide();
-			    }
-			    
-			    $("#addr-picker").picker({
-			        title: "请选择场所",
-			        cols: [
-			          {
-			            textAlign: 'center',
-			            values: ['无', '沃尔玛', '电影院', '公园']
-			          }
-			        ]
-			    });
-			    
-			    $("#gsm-picker").picker({
-			        title: "请选择模块",
-			        cols: [
-			          {
-			            textAlign: 'center',
-			            values: ['模块-1', '模块-2', '模块-3']
-			          }
-			        ]
-			    });
-			    
-			    $("#status-picker").picker({
-			        title: "请选择状态",
-			        cols: [
-			          {
-			            textAlign: 'center',
-			            values: ['正常', '故障']
-			          }
-			        ]
-			    });
-			    
-			    $("#price-picker").select({
-			        title: "请选择价格",
-			        multi: true,
-			        items: [
-			          {
-			            title: "5元10分钟",
-			            value: 1
-			          },
-			          {
-			            title: "10元20分钟",
-			            value: 2
-			          }
-			        ]
-			      });
-			    
-			    $('#btn_delete').click(function(){
-			        $.confirm("确认删除这个设备？", function() {
-			            //点击确认后的回调函数
-			        }, function() {
-			            //点击取消后的回调函数
-			        });
-			    });
-			    
-			    $('#btn_fault').click(function() {
-			        $.prompt({
-			            title: '报告故障',
-			            text: '',
-			            input: '输入故障描述',
-			            empty: false, // 是否允许为空
-			            onOK: function (input) {
-			              //点击确认
-			            },
-			            onCancel: function () {
-			              //点击取消
-			            }
-			          });
-			    });
-			    
-			    
-				$('#btn_qrcode').click(function() {
-				    $("#popup-qrcode").popup();
-			    });
-			});
-			
-		</script>
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		<script type="text/javascript" src="../../js/chair/chair_detail.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
 			<div class="h_title">按摩椅详情</div>
@@ -118,32 +40,36 @@
 					<tr>
 						<td class="t_fieldname">输入编号</td>
 						<td class="t_fieldvalue">
-							<input id="" class="t_text" value="" placeholder="编号" />
+							<input id="" class="t_text" uku-value="chairInfo.name" placeholder="编号" />
 						</td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">设备品牌</td>
 						<td class="t_fieldvalue">
-							<input id="" class="t_text" value="" placeholder="设备品牌" />
+							<input id="" class="t_text" uku-value="chairInfo.brand" placeholder="设备品牌" />
 						</td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">选择场所</td>
 						<td class="t_fieldvalue">
-							<input id="addr-picker" class="t_text" value="" placeholder="场所" />
+							<input id="addr-picker" class="t_text" placeholder="场所" />
 						</td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">选择模块</td>
-						<td class="t_fieldvalue"><input id="gsm-picker" class="t_text" value="" placeholder="模块" /></td>
+						<td class="t_fieldvalue"><input id="gsm-picker" class="t_text"  placeholder="模块" /></td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">选择状态</td>
-						<td class="t_fieldvalue"><input id="status-picker" class="t_text" value="" placeholder="状态" /></td>
+						<td class="t_fieldvalue"><input id="status-picker" class="t_text" placeholder="状态" /></td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">选择价格</td>
-						<td class="t_fieldvalue"><input id="price-picker" class="t_text" value="" placeholder="价格" /></td>
+						<td class="t_fieldvalue"><input id="price-picker" class="t_text"  placeholder="价格" /></td>
+					</tr>
+					<tr class="t_deletestatus_field">
+						<td class="t_fieldname">是否已删除</td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="chairInfo.deleteStatus.name" placeholder="是否已删除" readonly="readonly"/></td>
 					</tr>
 				</table>
 			</div>
@@ -151,14 +77,15 @@
 				<div id="btn_save" class="weui-btn weui-btn_primary" style="width: 80%">保存</div>
 				<div id="btn_delete" class="weui-btn weui-btn_warn" style="width: 80%">删除</div>
 				<div id="btn_fault" class="weui-btn weui-btn_default" style="width: 80%">报告故障</div>
-				<div id="btn_qrcode" class="weui-btn weui-btn_default" style="width: 80%">生成二维码</div>
+				<div id="btn_check" class="weui-btn weui-btn_default" style="width: 80%">设备检测</div>
+				<div id="btn_qrcode" class="weui-btn weui-btn_default" style="width: 80%">查看二维码</div>
 			</div>
 			
 			<div id="popup-qrcode" class="weui-popup__container popup-bottom">
 			  <div class="weui-popup__overlay"></div>
 			  <div class="weui-popup__modal">
-			  	<div style="padding: 10px;"><img src="../../images/qr.png" style="width: 60%"/></div>
-			  	<div class="weui-btn weui-btn_mini weui-btn_primary">下载</div>
+			  	<div style="padding: 10px;"><img id="chair-qrcode" uku-src="chairInfo.qrcode" style="width: 60%"/></div>
+			  	<div id="btn_download" class="weui-btn weui-btn_mini weui-btn_primary">下载</div>
 			  </div>
 			</div>
 		</div>

@@ -19,12 +19,27 @@
 		INSERT INTO tab_present_record
 			(bank_name, bank_num, bank_user, record_check, cdate, user3_sno, record_money, record_status) 
 		VALUES 
-			(#{bank}, #{account}, #{accountName}, #{checkCode}, #{createTime}, #{agency.id}, #{money}, #{status.code})    
+			(#{bank}, #{account}, #{accountName}, #{checkCode}, #{createTime}, 
+			<choose>
+				<when test="agency != null">
+					#{agency.id}, 
+				</when>
+				<otherwise>
+				    0, 
+				</otherwise>
+			</choose> 
+			#{money}, #{status.code})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
 		SELECT * FROM tab_present_record WHERE record_sno=#{id}
 	</select>
+	
+	<update id="updateStatus" parameterType="com.sitv.skyshop.massagechair.domain.agency.AgencyWithraw" statementType="PREPARED" >
+		UPDATE tab_present_record 
+		SET record_status=#{status.code}
+		WHERE record_sno=#{id}
+	</update>
 	
 
 	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
@@ -33,10 +48,10 @@
 		WHERE 1 = 1 
 			AND user3_sno = #{param.agency.id}
 		<if test="param != null and param.bank != null">
-			AND bank_name LIKE CONCAT('%', #{param.bank}, '%')
+			AND bank_name LIKE '%' + #{param.bank} +'%'
 		</if>
 		<if test="param != null and param.accountName != null">
-			AND bank_user LIKE CONCAT('%', #{param.accountName}, '%')
+			AND bank_user LIKE '%' + #{param.accountName} + '%'
 		</if>
 		<if test="param != null and param.account != null">
 			AND bank_num = #{param.account}
@@ -44,7 +59,6 @@
 		<if test="param != null and param.status != null">
 			AND record_status = #{param.status.code}
 		</if>
-		
 		<if test="param != null and param.endDate != null">
 			AND cdate &lt; #{param.endDate}
 		</if>

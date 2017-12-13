@@ -5,8 +5,6 @@ package com.sitv.skyshop.massagechair.dto.agency;
 
 import java.util.Calendar;
 
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.massagechair.domain.agency.AgencyUser;
@@ -29,9 +27,12 @@ public class AgencyUserInfo extends UserInfo {
 
 	private AgencyInfo agency;
 
+	public AgencyUserInfo() {
+	}
+
 	public AgencyUserInfo(Long id, String code, String name, String password, EnumInfo<User.UserStatus, String> status, EnumInfo<User.UserType, String> type, AgencyInfo agency,
-	                EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode, Calendar createTime, Calendar updateTime) {
-		super(id, code, name, password, status, type, deleteStatus, checkCode, createTime, updateTime);
+	                EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode, String loginCheckCode, Calendar createTime, Calendar updateTime) {
+		super(id, code, name, password, status, type, deleteStatus, checkCode, loginCheckCode, createTime, updateTime);
 		this.agency = agency;
 	}
 
@@ -42,15 +43,8 @@ public class AgencyUserInfo extends UserInfo {
 		AgencyInfo agency = AgencyInfo.create(agencyUser.getAgency());
 
 		return new AgencyUserInfo(agencyUser.getId(), agencyUser.getCode(), agencyUser.getName(), "*", new EnumInfo<>(agencyUser.getStatus()), new EnumInfo<>(agencyUser.getType()),
-		                agency, new EnumInfo<>(agencyUser.getDeleteStatus()), agencyUser.getCheckCode(), agencyUser.getCreateTime(), agencyUser.getUpdateTime());
-	}
-
-	public void setCode(@NotBlank String code) {
-		super.setCode(code);
-	}
-
-	public void setPassword(@NotBlank String password) {
-		super.setPassword(password);
+		                agency, new EnumInfo<>(agencyUser.getDeleteStatus()), agencyUser.getCheckCode(), agencyUser.getLoginCheckCode(), agencyUser.getCreateTime(),
+		                agencyUser.getUpdateTime());
 	}
 
 }

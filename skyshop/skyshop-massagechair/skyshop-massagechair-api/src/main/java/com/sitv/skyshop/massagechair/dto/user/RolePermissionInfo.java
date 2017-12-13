@@ -21,37 +21,24 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class RolePermissionInfo extends SimpleInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -4047200153348042173L;
 
-	/**
-	 * @param id
-	 */
+	private RoleInfo role;
+	private PermissionInfo permission;
+
 	public RolePermissionInfo(Long id) {
 		super(id);
 	}
 
-	/**
-	 *
-	 */
 	public RolePermissionInfo() {
 		this(null);
 	}
 
-	/**
-	 * @param create
-	 * @param create2
-	 */
 	public RolePermissionInfo(RoleInfo role, PermissionInfo permission) {
 		this();
 		this.setPermission(permission);
 		this.role = role;
 	}
-
-	private RoleInfo role;
-	private PermissionInfo permission;
 
 	/**
 	 * @param rolePermission

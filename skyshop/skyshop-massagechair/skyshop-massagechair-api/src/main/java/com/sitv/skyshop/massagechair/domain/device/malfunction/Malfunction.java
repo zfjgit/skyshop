@@ -66,7 +66,7 @@ public class Malfunction extends DomainObject {
 	}
 
 	public enum MalfunctionType implements BaseEnum<MalfunctionType, String> {
-		SIM("A", "SIM卡故障"), GSM("B", "模块故障"), CHAIR("B", "按摩椅故障");
+		SIM("A", "SIM卡故障"), GSM("B", "模块故障"), CHAIR("C", "按摩椅故障");
 
 		private String code;
 		private String name;

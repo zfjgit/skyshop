@@ -3,31 +3,51 @@
  */
 package com.sitv.skyshop.massagechair.service.order;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 
+import javax.persistence.EntityNotFoundException;
+
+import org.apache.commons.lang3.RandomUtils;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
+import com.sitv.skyshop.common.exception.OrderExpiredException;
+import com.sitv.skyshop.common.utils.Constants;
 import com.sitv.skyshop.common.utils.Utils;
+import com.sitv.skyshop.common.utils.httpclient4.HttpConnectionManager;
 import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
+import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.massagechair.dao.agency.IAgencyDao;
+import com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao;
 import com.sitv.skyshop.massagechair.dao.device.IMassageChairDao;
 import com.sitv.skyshop.massagechair.dao.order.IOrderDao;
+import com.sitv.skyshop.massagechair.domain.device.InstallationAddress;
 import com.sitv.skyshop.massagechair.domain.device.MassageChair;
+import com.sitv.skyshop.massagechair.domain.device.MassageChair.ChairStatus;
 import com.sitv.skyshop.massagechair.domain.order.Order;
 import com.sitv.skyshop.massagechair.domain.order.Order.PayStatus;
 import com.sitv.skyshop.massagechair.domain.order.Order.PayType;
+import com.sitv.skyshop.massagechair.domain.record.UseRecord.UseRecordType;
 import com.sitv.skyshop.massagechair.dto.order.OrderInfo;
+import com.sitv.skyshop.massagechair.dto.record.OperateResultInfo;
+import com.sitv.skyshop.massagechair.dto.record.UseRecordInfo;
+import com.sitv.skyshop.massagechair.service.userecord.IUseRecordService;
 import com.sitv.skyshop.service.CrudService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author zfj20 @ 2017年11月20日
  */
+@Slf4j
 @Service
 public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> implements IOrderService {
 	@Autowired
@@ -35,6 +55,18 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 
 	@Autowired
 	private IAgencyDao agencyDao;
+
+	@Autowired
+	private IInstallationAddressDao addressDao;
+
+	@Autowired
+	private IUseRecordService recordService;
+
+	@Autowired
+	private Environment env;
+
+	@Autowired
+	private HttpConnectionManager httpConnectionManager;
 
 	public OrderInfo getOne(Long id) {
 		return OrderInfo.create(get(id));
@@ -55,27 +87,51 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 	public void updateOne(OrderInfo t) {
 		MassageChair chair = massageChairDao.get(t.getChair().getId());
 
+		InstallationAddress address = addressDao.get(t.getInstallationAddress().getId());
+
 		Order order = get(t.getId());
 		order.setChair(chair);
-		order.setDescription(t.getDescription());
-		order.setMinutes(t.getMinutes());
 		order.setMoney(t.getMoney());
+		order.setMinutes(t.getMinutes());
+		order.setInstallationAddress(address);
+		order.setDescription(t.getDescription());
+		order.setAgency(agencyDao.get(t.getAgency().getId()));
 		order.setPayStatus(BaseEnum.valueOf(PayStatus.class, t.getPayStatus().getCode()));
 		order.setPayType(BaseEnum.valueOf(PayType.class, t.getPayType().getCode()));
-		order.setAgency(agencyDao.get(t.getAgency().getId()));
 
 		update(order);
 	}
 
 	public void createOne(OrderInfo t) {
+		if (t.getMoney().compareTo(BigDecimal.ZERO) <= 0) {
+			throw new IllegalArgumentException("金额必须大于0");
+		}
+		if (t.getMinutes() <= 0) {
+			throw new IllegalArgumentException("时长必须大于0");
+		}
+		if (t.getChair() == null || t.getChair().getId() == null) {
+			throw new IllegalArgumentException("按摩椅ID不正确");
+		}
 		MassageChair chair = massageChairDao.get(t.getChair().getId());
+		if (chair == null) {
+			throw new EntityNotFoundException("未找到按摩椅：ID=" + t.getChair().getId());
+		}
+		if (chair.getStatus() != ChairStatus.NORMAL) {
+			throw new EntityNotFoundException("按摩椅状态不正常");
+		}
 
-		Calendar c = Calendar.getInstance();
-		String code = Utils.time2String(c, "yyyyMMddHHmmss") + c.get(Calendar.MILLISECOND);
+		String code = Utils.time2String(Calendar.getInstance(), Constants.DATETIME_FORMAT_4) + RandomUtils.nextInt(100, 1000) + chair.getId();
 
-		Order order = new Order(code, t.getMinutes(), t.getMoney(), BaseEnum.valueOf(PayStatus.class, t.getPayStatus().getCode()),
-		                BaseEnum.valueOf(PayType.class, t.getPayType().getCode()), chair, agencyDao.get(t.getAgency().getId()), DeleteStatus.NORMAL);
+		Order order = new Order(code, t.getMinutes(), t.getMoney(), PayStatus.UNPAID, BaseEnum.valueOf(PayType.class, t.getPayType().getCode()), chair, chair.getAgency(),
+		                DeleteStatus.NORMAL, chair.getInstallationAddress());
 		create(order);
+
+		t.setId(order.getId());
+		t.setCode(code);
+	}
+
+	public void deleteOne(Long id) {
+		updateDeleteStatus(getOne(id));
 	}
 
 	public void updateDeleteStatus(OrderInfo t) {
@@ -84,4 +140,104 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 		dao.updateDeleteStatus(order);
 	}
 
+	public void pay(OrderInfo t) {
+		log.debug("订单支付成功，发送开机指令>>>");
+		Order order = get(t.getId());
+		if (order == null) {
+			throw new EntityNotFoundException("未找到订单：id=" + t.getId());
+		}
+
+		if (System.currentTimeMillis() - order.getCreateTime().getTimeInMillis() >= order.getMinutes() * 60 * 1000) {
+			log.debug("ordermins=" + order.getMinutes());
+			log.debug("ordertime=" + Utils.time2String(order.getCreateTime(), Constants.DATETIME_FORMAT_1));
+			log.debug("now=" + Utils.time2String(Calendar.getInstance(), Constants.DATETIME_FORMAT_1));
+			throw new OrderExpiredException("订单已过期");
+		}
+
+		String operateOk = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_RESULT_OK);
+		UseRecordInfo closeRecord = recordService.getByOrder(order.getId(), UseRecordType.CLOSE.getCode(), operateOk);
+		if (closeRecord != null) {
+			log.warn("设备已经关机，订单已完成");
+			return;
+		}
+
+		UseRecordInfo useRecord = recordService.getByOrder(order.getId(), UseRecordType.OPEN.getCode(), operateOk);
+		if (useRecord != null) {
+			log.warn("已经开机，不能重复开机");
+			return;
+		}
+
+		orderPartition(order);
+
+		order.setPayStatus(BaseEnum.valueOf(PayStatus.class, t.getPayStatus().getCode()));
+		dao.update(order);
+
+		MassageChair chair = order.getChair();
+		chair.setStatus(ChairStatus.WORKING);
+		massageChairDao.updateStatus(chair);
+
+		UseRecordInfo record = new UseRecordInfo(null, order.getId(), "", EnumInfo.valueOf(UseRecordType.class, UseRecordType.OPEN.getCode()), "扫码", "发送开机指令",
+		                chair.getGsmModule().getImei(), chair.getGsmModule().getSimCard().getSim(), order.getMoney().toString(), order.getMinutes() + "", chair.getName(), "", "",
+		                chair.getInstallationAddress().getFullAddress(), "", Calendar.getInstance());
+		recordService.createOpenRecord(record);
+	}
+
+	private void orderPartition(Order order) {
+		try {
+			log.debug("调用拆账接口>>>");
+			String host = env.getProperty(Constants.ORDER_SERVICE_PARTITION_SERVER_URL);
+			String params = "?type=SettlementOrder&orders_code=" + order.getCode();
+
+			new Thread(new Runnable() {
+				public void run() {
+					String result = httpConnectionManager.doHttpGet(host + params);
+
+					log.debug("result=" + result);
+					if (!Utils.isNull(result)) {
+						JSONObject json = new JSONObject(result);
+						if (json.getInt("status") == 1) {
+							log.debug("调用拆账接口成功");
+							return;
+						}
+					}
+					log.warn("调用拆账接口失败");
+				}
+			}).start();
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+	}
+
+	public OrderInfo getOrderServiceInfo(Long id) {
+		log.debug("获取订单开机信息>>>");
+		Order order = get(id);
+		if (order == null) {
+			throw new EntityNotFoundException("未找到订单：id=" + id);
+		}
+		OrderInfo t = OrderInfo.create(order);
+		t.setContactNumber(order.getInstallationAddress().getContactNumber());
+
+		String operateOk = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_RESULT_OK);
+		UseRecordInfo closeRecord = recordService.getByOrder(order.getId(), UseRecordType.CLOSE.getCode(), operateOk);
+		if (closeRecord != null) {
+			log.warn("设备已经关机，订单已完成");
+			t.setLeftMinutes(0);
+			return t;
+		}
+
+		log.debug("ordertime=" + Utils.time2String(order.getCreateTime(), Constants.DATETIME_FORMAT_1));
+		log.debug("now=" + Utils.time2String(Calendar.getInstance(), Constants.DATETIME_FORMAT_1));
+		long leftMinutes = order.getMinutes() - (System.currentTimeMillis() - order.getCreateTime().getTimeInMillis()) / (60 * 1000);
+		leftMinutes = Math.min(leftMinutes, order.getMinutes());
+		leftMinutes = Math.max(leftMinutes, 0);
+		log.debug("leftMinutes=" + leftMinutes);
+		t.setLeftMinutes(leftMinutes);
+
+		MassageChair chair = order.getChair();
+
+		OperateResultInfo operateResultInfo = recordService.getOpenOperateResult(chair.getGsmModule().getSimCard().getSim(), t.getId().toString(), 3);
+		t.setOperateResultInfo(operateResultInfo);
+		log.debug("获取订单开机信息完成：operateResultInfo=" + operateResultInfo);
+		return t;
+	}
 }

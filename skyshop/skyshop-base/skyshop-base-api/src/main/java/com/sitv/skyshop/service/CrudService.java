@@ -13,11 +13,13 @@ import com.sitv.skyshop.domain.DomainObject;
 import com.sitv.skyshop.domain.IBaseType;
 import com.sitv.skyshop.domain.ICheckCodeType;
 import com.sitv.skyshop.dto.Dto;
-import com.sitv.skyshop.exception.CheckCodeVerificationFailedException;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * Service基类
  */
+@Slf4j
 @Transactional
 public abstract class CrudService<D extends ICrudDao<T>, T extends IBaseType, I extends Dto> implements IBaseService<I> {
 
@@ -37,7 +39,7 @@ public abstract class CrudService<D extends ICrudDao<T>, T extends IBaseType, I 
 		if (t instanceof ICheckCodeType) {
 			ICheckCodeType checkCodeType = (ICheckCodeType) t;
 			if (!checkCodeType.verifyCheckCode()) {
-				throw new CheckCodeVerificationFailedException(checkCodeType);
+				log.error("CHECK码检验失败：" + checkCodeType.getClass().getName() + "=" + checkCodeType.getCheckCode());
 			}
 		}
 		return t;

@@ -37,7 +37,8 @@ public class UserOperateRecord extends DomainObject {
 		this.ip = ip;
 		this.type = type;
 		setDescription(description);
-		setCreateTime(createTime);
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
 	}
 
 	public enum OperateType implements BaseEnum<OperateType, String> {

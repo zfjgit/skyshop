@@ -21,14 +21,17 @@
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
-		<script type="text/javascript">
-		$(function(){
-		    $('.t_date').calendar();
-		});
-		</script>
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		
+		<script type="text/javascript" src="../../js/order/order_list.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
 			<div class="h_title">订单查询</div>
@@ -39,51 +42,37 @@
 				<table class="t_table">
 					<tr>
 						<td class="t_fieldname">选择开始时间</td>
-						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-21" readonly="readonly"/></td>
+						<td class="t_fieldvalue"><input id="startDate" class="t_text t_date" uku-value="orderManage.startDate" readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">选择结束时间</td>
-						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-22" readonly="readonly"/></td>
+						<td class="t_fieldvalue"><input id="endDate" class="t_text t_date" uku-value="orderManage.endDate" readonly="readonly"/></td>
 					</tr>
 				</table>
 				<div class="t_area_btn">
-					<div class="t_table_title">订单列表</div><div class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+					<div class="t_table_title">订单列表</div><div id="btn_search" class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
 				</div>
 			</div>
 			<div class="t_search_results">
-				<div class="t_search_total">查询总收益：<span class="money">100.00</span> 元</div>
+				<div class="t_search_total">查询总收益：<span class="money">{{orderManage.total}}</span> 元</div>
 				<div class="tb_search_table">
 					<table class="t_table" style="width: 650px;">
 						<thead class="t_table_head">
 							<tr>
-								<td>订单号</td>
-								<td>设备编号</td>
-								<td>订单时间</td>
-								<td>时长（分钟）</td>
-								<td>金额（元）</td>
+								<td width="25%">订单号</td>
+								<td width="30%">订单时间</td>
+								<td width="18%">时长（分钟）</td>
+								<td width="18%">金额（元）</td>
+								<td width="8%">操作</td>
 							</tr>
 						</thead>
 						<tbody class="t_table_body">
-							<tr>
-								<td class="t_wrap_text t_order_no">20171121124</td>
-								<td>C121223</td>
-								<td>2017-11-21 12:45:14</td>
-								<td>5</td>
-								<td>300.00</td>
-							</tr>
-							<tr>
-								<td class="t_wrap_text t_order_no">20171121124</td>
-								<td>C121223</td>
-								<td>2017-11-21 12:45:14</td>
-								<td>5</td>
-								<td>300.00</td>
-							</tr>
-							<tr>
-								<td class="t_wrap_text t_order_no">20171121124</td>
-								<td>C121223</td>
-								<td>2017-11-21 12:45:14</td>
-								<td>5</td>
-								<td>300.00</td>
+							<tr uku-repeat="item in orderManage.orders">
+								<td class="t_wrap_text t_order_no">{{item.code}}</td>
+								<td>{{item.createTime}}</td>
+								<td>{{item.minutes}}</td>
+								<td>{{item.money}}</td>
+								<td><a uku-href="item.detailUrl">{{item.id ? '&gt;' : ''}}</a></td>
 							</tr>
 						</tbody>
 					</table>

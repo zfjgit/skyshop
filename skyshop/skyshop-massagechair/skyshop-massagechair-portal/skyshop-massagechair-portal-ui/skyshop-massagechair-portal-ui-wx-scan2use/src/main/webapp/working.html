@@ -23,88 +23,144 @@
 		<script type="text/javascript">
 			$(function() {
 			    var search = window.location.search;
+			    var orderId = 0;
+			    var chairId = 0;
+			    if(search && search.length > 1 && search.indexOf('_') != -1) {
+			    	orderId = search.substring(1).split('_')[0];
+			    	chairId = search.substring(1).split('_')[1];
+			    }
+			    if(orderId == 0) {
+			        window.location.href = 'fault.html?ordersno_err';
+			    	return;
+			    }
 			    
-			    if(search && search.length > 1) {
-				    search = search.substring(1);
+			    $('.restart').on('click', function(){
+			       	doAjax('/chair/restart/' + chairId, '', function(d){
+			    	    window.location.href='index.html?' + chairId;
+			       	}, 'POST', function(d){
+			       		// runtime error
+			            window.location.href = 'fault.html?server_err';
+			       	}, true, function(d){
+			       		// net error
+			            $('.tel').show();
+			            window.location.href = 'fault.html?net_err';
+			       	}, '', function(){
+			       	 	showloading('images/qsh1.png');
+			        }, function(){
+			            hideloading();
+			        });
+		    	});
+			    
+			    $('#contactNumber').text(localStorage.contactNumber);
+			    $('#contactNumber').attr('href', 'tel:' + localStorage.contactNumber);
+			    $('.tel').show();
+                $('.btns').hide();
+			    doAjax('/order/postpay/?id=' + orderId, '', function(d){
+			        $('.reload').show();
+			    	var order = d.data;
+			    	
+			    	var operateResult = order.operateResultInfo;
+			    	
+			    	if(operateResult.code == 0) {
+			    	    showConfirmMsg('开机失败，是否进行重试？', function() {
+			    	        window.location.reload();
+			    	    },function(){
+			    	        window.location.href = 'fault.html?open_err';
+			    	    });
+			    	    return;
+			    	}
+			    	
+					                
+			    	var chair_price_name = '';
+				    if(order.chair) {
+				        chair_price_name = '欢迎体验 ' + order.chair.name + ' 号按摩椅 ' + order.money + ' 元 ' + order.minutes + ' 分钟按摩项目';
+				    }
+					
+			    	var leftMinutes = order.leftMinutes;
+			    	if(leftMinutes == 0) {
+			            $('.btns').show();
+			            $('.tel').hide();
+			    	    return;
+			    	}
+			    	
+			    	var hours = Math.floor(leftMinutes / 60);
+				    $('#mins').val(leftMinutes - hours * 60);
+				    $('#hours').val(hours);
+				    $('#seconds').val(0);
 				    
-				    var paramObj = {};
-				    var params = search.split('&');
-				    for (var i = 0; i < params.length; i++) {
-                        var p = params[i];
-                        if(p && p.indexOf('=') != -1) {
-                            var pair = p.split('=');
-                            paramObj[pair[0]] = pair[1];
-                        }
-                    }
-			    }
-			    var servicemins = 0;
-			    if(paramObj['mins']) {
-				    servicemins = parseInt(paramObj['mins']);
-			    }
-			    
-			    var chair_price_name = '';
-			    if(paramObj['chair_price_name']) {
-			        chair_price_name = paramObj['chair_price_name'];
-			    }
-			    
-			    var hours = Math.floor(servicemins/60);
-			    $('#mins').val(servicemins - hours * 60);
-			    $('#hours').val(hours);
-			    $('#seconds').val(0);
-			    
-			    if(servicemins > 0) {
-			        doAjax(api_server_url + '/order/timetik/' + servicemins, function(){
-			            // 计时
-			        }, 'POST');
-			        
-				    var clock = setInterval(function(){
-				        var hours = parseInt($('#hours').val());
-				        var mins = parseInt($('#mins').val());
-				        var seconds = parseInt($('#seconds').val());
-				        
-				        seconds = seconds - 1;
-				        
-				        if(mins > 0) {
-					        if(seconds < 0) {
-					            seconds = 59;
-					            mins = mins - 1;
-					            
-					            if(hours > 0) {
-						            if(mins < 0) {
-						            	mins = 59;
-						            	hours = hours - 1;
+				    if(leftMinutes > 0) {
+					    var clock = setInterval(function(){
+					        var hours = parseInt($('#hours').val());
+					        var mins = parseInt($('#mins').val());
+					        var seconds = parseInt($('#seconds').val());
+					        
+					        seconds = seconds - 1;
+					        
+					        if(mins > 0) {
+						        if(seconds < 0) {
+						            seconds = 59;
+						            mins = mins - 1;
+						            
+						            if(hours > 0) {
+							            if(mins < 0) {
+							            	mins = 59;
+							            	hours = hours - 1;
+							            }
 						            }
+						        }
+					        } else {
+					            if(seconds == 0) {
+					                clearInterval(clock);
+					                $('.tel').hide();
+					                $('.btns').show();
 					            }
 					        }
-				        } else {
-				            if(seonds == 0) {
-				                clearInterval(clock);
-				                $('.btns').show();
-				            }
-				        }
-				        
-				        $('#hours').val(hours);
-					    $('#mins').val(mins);
-					    $('#seconds').val(seconds);
-				    }, 1000);
-			    }
-			    
-			    $('.btns').hide();
+					        
+					        $('#hours').val(hours);
+						    $('#mins').val(mins);
+						    $('#seconds').val(seconds);
+					    }, 1000);
+				    }
+			    }, 'POST', function(d){
+		            // runtime error
+			        if(d.code == 603) {
+			            $('.btns').show();
+			            $('.tel').hide();
+						return;			            
+			        }
+		            window.location.href = 'fault.html?server_err';
+		        }, true, function() {
+		            // net error
+		            window.location.href = 'fault.html?net_err';
+		        }, '按摩椅启动中', function(){
+		            showloading('images/qsh3.png');
+		        }, function(){
+		            hideloading();
+		        });
 			});
 		</script>
 	</head>
-	<body>
+	<body style="background-image: url('images/bg9.jpg');background-size: 100%;">
 		<div class="header" >
 		</div>
-		<div class="content">
+		<div class="content" style="margin-top: 15%;">
 			<div class="servicetime">剩余时间：</div>
 			<div>
 				<input class="time" id="hours" value="0" readonly="readonly" /><span class="timeunit">时</span>
-				<input class="time" id="mins" value="20" readonly="readonly"/><span class="timeunit">分</span>
+				<input class="time" id="mins" value="0" readonly="readonly"/><span class="timeunit">分</span>
 				<input class="time" id="seconds" value="0" readonly="readonly"/><span class="timeunit">秒</span>
 			</div>
-			<div class="btns">
-				<a class="a" href="index.html">返回首页</a>
+			<div class="weui-loadmore" style="position: fixed;bottom: 20%;text-align: center;width: 100%;display: none;">
+			  	<i class="weui-loading"></i>
+			  	<span class="weui-loadmore__tips" style="font-size: 20px;">正在启动，请稍候...<span id="count"></span></span>
+			</div>
+			<div class="tel" style="display: none;margin: auto;position: fixed;bottom: 12%;width: 100%;font-size: 20px;">
+				如有任何问题，请联系客服：<br/>
+				<a id="contactNumber" href="" style="color: red;"></a>
+			</div>
+			<div class="btns" style="display: none;margin: auto;position: fixed;bottom: 12%;width: 100%;font-size: 20px;">
+				本次按摩已结束，您可以<br/>
+				<span class="restart" style="color: red;font-size: 25px;font-weight: bold;">再来一次</span>
 			</div>
 		</div>
 	</body>

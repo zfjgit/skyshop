@@ -8,19 +8,17 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.dto.info.FullInfoDto;
+import com.sitv.skyshop.dto.info.SimpleInfoDto;
+import com.sitv.skyshop.massagechair.domain.agency.Agency.AgencyLevel;
 import com.sitv.skyshop.massagechair.domain.order.Order;
 import com.sitv.skyshop.massagechair.domain.order.Order.PayStatus;
 import com.sitv.skyshop.massagechair.domain.order.Order.PayType;
 import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
-import com.sitv.skyshop.massagechair.dto.device.InstallationAddressInfo;
-import com.sitv.skyshop.massagechair.dto.device.MassageChairInfo;
+import com.sitv.skyshop.massagechair.dto.record.OperateResultInfo;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -36,14 +34,11 @@ public class OrderInfo extends FullInfoDto {
 
 	private static final long serialVersionUID = 1970592130500769199L;
 
-	@Min(1)
 	private int minutes;
 
-	@Min(1)
 	private BigDecimal money;
 
-	@NotNull
-	private MassageChairInfo chair;
+	private SimpleInfoDto chair;
 
 	private EnumInfo<PayStatus, String> payStatus;
 
@@ -57,17 +52,33 @@ public class OrderInfo extends FullInfoDto {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Calendar endDate;
 
-	private InstallationAddressInfo installationAddress;
+	private SimpleInfoDto installationAddress;
+
+	private OperateResultInfo operateResultInfo;
+
+	private long leftMinutes;
+
+	private String contactNumber;
+
+	public OrderInfo() {
+	}
 
 	public OrderInfo(Long id, String code, int minutes, BigDecimal money, EnumInfo<PayStatus, String> payStatus, EnumInfo<PayType, String> payType, Calendar createTime,
-	                Calendar updateTime, String description, MassageChairInfo massageChairInfo, AgencyInfo agency, EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode) {
+	                Calendar updateTime, String description, SimpleInfoDto massageChairInfo, SimpleInfoDto address, AgencyInfo agency, EnumInfo<DeleteStatus, Integer> deleteStatus,
+	                String checkCode) {
 		super(id, code, null, description, createTime, updateTime);
 		this.minutes = minutes;
 		this.money = money;
 		this.payStatus = payStatus;
 		this.chair = massageChairInfo;
-		this.agency = agency;
 		this.payType = payType;
+		this.installationAddress = address;
+		this.agency = agency;
+		if (this.agency == null) {
+			this.agency = new AgencyInfo();
+			this.agency.setId(0l);
+			this.agency.setName(AgencyLevel.SYSTEM.getName());
+		}
 		setCheckCode(checkCode);
 		setDeleteStatus(deleteStatus);
 	}
@@ -77,7 +88,8 @@ public class OrderInfo extends FullInfoDto {
 			return null;
 		}
 		return new OrderInfo(order.getId(), order.getCode(), order.getMinutes(), order.getMoney(), new EnumInfo<>(order.getPayStatus()), new EnumInfo<>(order.getPayType()),
-		                order.getCreateTime(), order.getUpdateTime(), order.getDescription(), MassageChairInfo.create(order.getChair()), AgencyInfo.create(order.getAgency()),
+		                order.getCreateTime(), order.getUpdateTime(), order.getDescription(), new SimpleInfoDto(order.getChair().getId(), order.getChair().getName()),
+		                new SimpleInfoDto(order.getInstallationAddress().getId(), order.getInstallationAddress().getFullAddress()), AgencyInfo.create(order.getAgency()),
 		                new EnumInfo<>(order.getDeleteStatus()), order.getCheckCode());
 	}
 

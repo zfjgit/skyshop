@@ -25,7 +25,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public abstract class PriceInfo extends FullInfoDto {
+public class PriceInfo extends FullInfoDto {
 
 	private static final long serialVersionUID = 8365410282988425759L;
 
@@ -48,7 +48,9 @@ public abstract class PriceInfo extends FullInfoDto {
 		this.setAgency(agencyInfo);
 	}
 
-	public abstract String getType();
+	public String getType() {
+		throw new RuntimeException("需要重写");
+	}
 
 	@SuppressWarnings("unchecked")
 	public static <I extends PriceInfo, T extends Price> I create(T p) {

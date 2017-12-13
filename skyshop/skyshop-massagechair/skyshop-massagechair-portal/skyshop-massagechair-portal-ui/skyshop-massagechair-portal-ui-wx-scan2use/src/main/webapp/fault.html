@@ -11,13 +11,24 @@
 		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
 		<link rel="shortcut icon" type="image/png" href="images/logo.png">
 		
+		<link rel="stylesheet" type="text/css" href="plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="plugins/jqweui/css/jquery-weui.css"/>
+		
 		<link rel="stylesheet" type="text/css" href="css/style.css">
+		<script type="text/javascript" src="plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				var contactNumber = localStorage.contactNumber;				
+			    $('#contactNumber').attr('href', 'tel:' + contactNumber);
+			});
+		</script>
 	</head>
-	<body>
+	<body style="background-image: url('images/bg5.jpg');background-size: 100%;">
 		<div class="header" >
 		</div>
-		<div class="content">
-			<img src="images/s3.jpg" style="width: 100%;"/>
+		<div class="content" style="margin-top: 45%;">
+			<div style="text-align: left;margin-left: 10%;font-size: 25px;">设备发生故障</div>
+			<div class="weui-btn weui-btn_warn" style="width: 80%;margin-top: 20%;"><a id="contactNumber" href="tel:075538969888" style="color: white;">请稍后重试或联系客服</a></div>
 		</div>
 	</body>
 </html>

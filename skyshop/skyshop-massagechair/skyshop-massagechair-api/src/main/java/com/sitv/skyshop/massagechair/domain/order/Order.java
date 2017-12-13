@@ -4,7 +4,10 @@
 package com.sitv.skyshop.massagechair.domain.order;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 
+import com.sitv.skyshop.common.utils.Constants;
+import com.sitv.skyshop.common.utils.Utils;
 import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject;
 import com.sitv.skyshop.domain.ICheckCodeType;
@@ -16,10 +19,12 @@ import com.sitv.skyshop.massagechair.domain.device.MassageChair;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author zfj20 @ 2017年11月15日
  */
+@Slf4j
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -41,7 +46,8 @@ public class Order extends DomainObject implements ICheckCodeType, IDeleteStatus
 	protected Order() {
 	}
 
-	public Order(String code, int minutes, BigDecimal money, PayStatus payStatus, PayType payType, MassageChair chair, Agency agency, DeleteStatus deleteStatus) {
+	public Order(String code, int minutes, BigDecimal money, PayStatus payStatus, PayType payType, MassageChair chair, Agency agency, DeleteStatus deleteStatus,
+	                InstallationAddress installationAddress) {
 		super("", code);
 		this.minutes = minutes;
 		this.money = money;
@@ -49,13 +55,20 @@ public class Order extends DomainObject implements ICheckCodeType, IDeleteStatus
 		this.chair = chair;
 		this.setPayType(payType);
 		this.setAgency(agency);
-
+		this.deleteStatus = deleteStatus;
+		this.installationAddress = installationAddress;
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
 		calcCheckCode();
 	}
 
 	public String calcCheckCode() {
-		setCheckCode("");
-		return "";
+		String raw = getCode() + chair.getId() + getMinutes() + getMoney() + getPayStatus().getCode() + Utils.time2String(getCreateTime(), Constants.DATETIME_FORMAT_3)
+		                + (agency == null ? 0 : agency.getId()) + deleteStatus.getCode();
+		log.debug("raw=" + raw);
+		String chc = Utils.digest(raw, "SHA-1");
+		setCheckCode(chc);
+		return chc;
 	}
 
 	public enum PayType implements BaseEnum<PayType, String> {
@@ -96,6 +109,11 @@ public class Order extends DomainObject implements ICheckCodeType, IDeleteStatus
 		public String getName() {
 			return name;
 		}
+	}
+
+	public BigDecimal getMoney() {
+		money.setScale(2);
+		return money;
 	}
 
 }

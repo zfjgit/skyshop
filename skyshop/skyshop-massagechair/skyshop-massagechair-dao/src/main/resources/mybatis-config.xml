@@ -6,7 +6,7 @@
     <settings>
         <setting name="logPrefix" value="mybatis.dao."/>
         
-        <setting name="logImpl" value="SLF4J"/>
+<!--         <setting name="logImpl" value="SLF4J"/> -->
         
         <!-- 使全局的映射器启用或禁用缓存。 -->
 		<setting name="cacheEnabled" value="true"/>

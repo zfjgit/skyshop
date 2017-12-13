@@ -20,17 +20,11 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class PromotionPriceInfo extends PriceInfo {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 7273513643743911948L;
 
 	private int earlierOn;
 	private BigDecimal earlierOnMoney;
 
-	/**
-	 *
-	 */
 	public PromotionPriceInfo() {
 	}
 

@@ -16,16 +16,13 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString(callSuper = true)
-public abstract class SimpleInfoDto extends ValueInfoDto {
+public class SimpleInfoDto extends ValueInfoDto {
 
 	private static final long serialVersionUID = -8925202536322986374L;
 
 	private String code;
 	private String name;
 
-	/**
-	 *
-	 */
 	public SimpleInfoDto() {
 	}
 
@@ -34,9 +31,14 @@ public abstract class SimpleInfoDto extends ValueInfoDto {
 	}
 
 	public SimpleInfoDto(Long id, String code, String name) {
-		super(id);
+		this(id);
 		this.name = name;
 		this.code = code;
+	}
+
+	public SimpleInfoDto(Long id, String name) {
+		this(id);
+		this.name = name;
 	}
 
 }

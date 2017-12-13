@@ -15,6 +15,8 @@ import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
 import com.sitv.skyshop.massagechair.dao.device.IMassageChairDao;
 import com.sitv.skyshop.massagechair.dao.device.malfunction.IMalfunctionDao;
+import com.sitv.skyshop.massagechair.domain.device.MassageChair;
+import com.sitv.skyshop.massagechair.domain.device.MassageChair.ChairStatus;
 import com.sitv.skyshop.massagechair.domain.device.malfunction.Malfunction;
 import com.sitv.skyshop.massagechair.domain.device.malfunction.Malfunction.MalfunctionStatus;
 import com.sitv.skyshop.massagechair.domain.device.malfunction.Malfunction.MalfunctionType;
@@ -50,13 +52,26 @@ public class MalfunctionService extends CrudService<IMalfunctionDao<Malfunction>
 		Malfunction m = get(t.getId());
 		m.setStatus(BaseEnum.valueOf(MalfunctionStatus.class, t.getStatus().getCode()));
 		update(m);
+
+		if (m.getStatus() == MalfunctionStatus.PROCESSED) {
+			MassageChair chair = m.getChair();
+			if (chair.getStatus() == ChairStatus.FAULT) {
+				chair.setStatus(ChairStatus.NORMAL);
+			}
+			deviceDao.updateStatus(chair);
+		}
 	}
 
 	public void createOne(MalfunctionInfo t) {
-		Malfunction malfunction = new Malfunction(null, deviceDao.get(t.getChair().getId()), BaseEnum.valueOf(MalfunctionType.class, t.getType().getCode()),
-		                BaseEnum.valueOf(MalfunctionStatus.class, t.getStatus().getCode()), t.getDescription(), Calendar.getInstance(), null);
+		MassageChair massageChair = deviceDao.get(t.getChair().getId());
+
+		Malfunction malfunction = new Malfunction(null, massageChair, BaseEnum.valueOf(MalfunctionType.class, t.getType().getCode()),
+		                BaseEnum.valueOf(MalfunctionStatus.class, t.getStatus().getCode()), t.getDescription(), Calendar.getInstance(), Calendar.getInstance());
 
 		create(malfunction);
+
+		massageChair.setStatus(ChairStatus.FAULT);
+		deviceDao.updateStatus(massageChair);
 	}
 
 }

@@ -21,65 +21,16 @@
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
-		<script type="text/javascript">
-			$(function(){
-			    var search = window.location.search;
-			    if(!search) {
-			        $('.h_title').text('新增GSM模块');
-			        $('#btn_delete').hide();
-			        $('#btn_fault').hide();
-			    }
-			    
-			    $("#sim-picker").picker({
-			        title: "请选择SIM卡",
-			        cols: [
-			          {
-			            textAlign: 'center',
-			            values: ['SIM-100122', 'SIM-100123', 'SIM-100124']
-			          }
-			        ]
-			    });
-			    
-			    $("#status-picker").picker({
-			        title: "请选择状态",
-			        cols: [
-			          {
-			            textAlign: 'center',
-			            values: ['未使用', '已使用']
-			          }
-			        ]
-			    });
-			    
-			    
-			    $('#btn_delete').click(function(){
-			        $.confirm("确认删除这个设备？", function() {
-			            //点击确认后的回调函数
-			        }, function() {
-			            //点击取消后的回调函数
-			        });
-			    });
-			    
-			    $('#btn_fault').click(function() {
-			        $.prompt({
-			            title: '报告故障',
-			            text: '',
-			            input: '输入故障描述',
-			            empty: false, // 是否允许为空
-			            onOK: function (input) {
-			              //点击确认
-			            },
-			            onCancel: function () {
-			              //点击取消
-			            }
-			          });
-			    });
-			    
-			});
-			
-		</script>
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		
+		<script type="text/javascript" src="../../js/chair/gsm_detail.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
 			<div class="h_title">GSM模块详情</div>
@@ -90,29 +41,32 @@
 					<tr>
 						<td class="t_fieldname">输入IMEI号</td>
 						<td class="t_fieldvalue">
-							<input id="" type="number" class="t_text" value="" placeholder="IMEI号" />
+							<input id="" type="number" class="t_text" uku-value="gsmInfo.imei" placeholder="IMEI号" />
 						</td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">型号</td>
 						<td class="t_fieldvalue">
-							<input id="" class="t_text" value="" placeholder="型号" />
+							<input id="" class="t_text" uku-value="gsmInfo.module" placeholder="型号" />
 						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">选择状态</td>
+						<td class="t_fieldvalue"><input id="status-picker" class="t_text" value="" placeholder="状态" /></td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">选择SIM卡</td>
 						<td class="t_fieldvalue"><input id="sim-picker" class="t_text" value="" placeholder="SIM卡" /></td>
 					</tr>
-					<tr>
-						<td class="t_fieldname">选择状态</td>
-						<td class="t_fieldvalue"><input id="status-picker" class="t_text" value="" placeholder="状态" /></td>
+					<tr class="t_deletestatus_field">
+						<td class="t_fieldname">是否已删除</td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="gsmInfo.deleteStatus.name" placeholder="是否已删除" readonly="readonly"/></td>
 					</tr>
 				</table>
 			</div>
 			<div style="margin-top: 10px;">
 				<div id="btn_save" class="weui-btn weui-btn_primary" style="width: 80%">保存</div>
 				<div id="btn_delete" class="weui-btn weui-btn_warn" style="width: 80%">删除</div>
-				<div id="btn_fault" class="weui-btn weui-btn_default" style="width: 80%">报告故障</div>
 			</div>
 			
 		</div>

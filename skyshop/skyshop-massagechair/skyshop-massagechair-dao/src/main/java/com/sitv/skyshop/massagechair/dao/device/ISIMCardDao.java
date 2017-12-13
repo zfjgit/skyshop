@@ -13,5 +13,5 @@ import com.sitv.skyshop.massagechair.domain.device.SIMCard;
  */
 @MyBatisDao
 public interface ISIMCardDao extends ICrudDao<SIMCard>, IDeleteStatusDao<SIMCard> {
-
+	void updateStatus(SIMCard simCard);
 }

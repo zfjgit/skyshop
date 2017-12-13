@@ -6,6 +6,7 @@ package com.sitv.skyshop.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,9 +44,10 @@ public abstract class BaseController<S extends IBaseService<I>, I extends Dto> {
 	}
 
 	@RequestMapping(value = "/search", method = RequestMethod.POST)
-	public ResponseInfo<PageInfo<I>> search(@Valid @ModelAttribute SearchParamInfo<I> paramInfo) {
-		log.debug("SEARCH:param=" + paramInfo);
-		return ResponseInfo.SUCCESS(service.search(paramInfo));
+	public ResponseInfo<PageInfo<I>> search(@NotNull @Valid @ModelAttribute SearchParamInfo<I> s, @NotNull @Valid @ModelAttribute I p) {
+		s.setParam(p);
+		log.debug("SEARCH:param=" + s);
+		return ResponseInfo.SUCCESS(service.search(s));
 	}
 
 	@RequestMapping(value = "/create", method = RequestMethod.POST)

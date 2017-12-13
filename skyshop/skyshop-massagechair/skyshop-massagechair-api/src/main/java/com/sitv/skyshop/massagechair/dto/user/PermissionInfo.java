@@ -22,30 +22,18 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class PermissionInfo extends FullInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 8170687221231810662L;
 
 	private String uri;
 
-	/**
-	 * @param id
-	 * @param code
-	 * @param name
-	 * @param uri
-	 * @param createTime
-	 * @param updateTime
-	 */
+	public PermissionInfo() {
+	}
+
 	public PermissionInfo(Long id, String code, String name, String uri, Calendar createTime, Calendar updateTime) {
 		super(id, code, name, null, createTime, updateTime);
 		this.uri = uri;
 	}
 
-	/**
-	 * @param permission
-	 * @return
-	 */
 	public static PermissionInfo create(Permission p) {
 		if (p == null) {
 			return null;

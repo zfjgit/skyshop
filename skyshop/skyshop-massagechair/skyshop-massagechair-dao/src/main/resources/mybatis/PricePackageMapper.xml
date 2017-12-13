@@ -12,7 +12,7 @@
 		INSERT INTO tab_pricepackages
 			(chairs_sno, prices_sno) 
 		VALUES 
-			(#{massageChair.id}, #{chairs_sno})    
+			(#{massageChair.id}, #{price.id})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.massagechair.domain.device.PricePackage">

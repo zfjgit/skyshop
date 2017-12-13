@@ -10,21 +10,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
 		
-<!-- 		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/lib/weui.css"/> -->
-<!-- 		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/css/jquery-weui.css"/> -->
-		
-<!-- 		<link rel="stylesheet" type="text/css" href="../../css/style.css"/> -->
-<!-- 		<link rel="stylesheet" type="text/css" href="../../css/list.css"/> -->
-
-		
-<!-- 		<script type="text/javascript" src="../../plugins/jqweui/lib/jquery-2.1.4.js"></script> -->
-<!-- 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script> -->
-<!-- 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script> -->
-		
-<!-- 		<script type="text/javascript" src="../../js/admin.js"></script> -->
-		<script type="text/javascript">
-			
-		</script>
+		<script type="text/javascript" src="../../js/agency/agency_list.js"></script>
 	</head>
 	<body>
 		<div class="h_nav" style="display: none;" >
@@ -37,11 +23,11 @@
 				<table class="t_table">
 					<tr>
 						<td class="t_fieldname">代理商名称</td>
-						<td class="t_fieldvalue"><input class="t_text" placeholder="名称" /></td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="agencyManage.agencyName" placeholder="代理商名称" /></td>
 					</tr>
 				</table>
 				<div class="t_area_btn">
-					<div class="t_table_title">下级代理商列表</div><div class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+					<div class="t_table_title">下级代理商列表</div><div id="btn_search" class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
 				</div>
 			</div>
 			<div class="t_search_results">
@@ -49,30 +35,18 @@
 					<table class="t_table" style="width: 500px;">
 						<thead class="t_table_head">
 							<tr>
-								<td>名称</td>
-								<td>级别</td>
-								<td>分成比例</td>
-								<td>操作</td>
+								<td width="20%">名称</td>
+								<td width="20%">等级</td>
+								<td width="15%">分成比例</td>
+								<td width="10%">操作</td>
 							</tr>
 						</thead>
 						<tbody class="t_table_body">
-							<tr>
-								<td>总代理--1</td>
-								<td>区域总代</td>
-								<td>15%</td>
-								<td><a href="agents_main.html?id=1">&gt;</a></td>
-							</tr>
-							<tr>
-								<td>总代理--1</td>
-								<td>区域总代</td>
-								<td>15%</td>
-								<td><a href="agents_main.html?id=1">&gt;</a></td>
-							</tr>
-							<tr>
-								<td>总代理--1</td>
-								<td>区域总代</td>
-								<td>15%</td>
-								<td><a href="agents_main.html?id=1">&gt;</a></td>
+							<tr uku-repeat="item in agencyManage.agencys">
+								<td>{{item.name}}</td>
+								<td>{{item.level.name}}</td>
+								<td>{{item.percentage}}</td>
+								<td><a uku-href="item.detailUrl">{{item.id ? '&gt;' : ''}}</a></td>
 							</tr>
 						</tbody>
 					</table>

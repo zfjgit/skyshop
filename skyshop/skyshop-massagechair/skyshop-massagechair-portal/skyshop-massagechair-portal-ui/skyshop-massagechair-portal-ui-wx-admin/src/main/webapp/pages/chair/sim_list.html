@@ -10,13 +10,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
 		
-<!-- 		<link rel="stylesheet" type="text/css" href="../../css/style.css"/> -->
-<!-- 		<link rel="stylesheet" type="text/css" href="../../css/list.css"/> -->
-<!-- 		<script type="text/javascript" src="../../plugins/jquery-3.2.1.min.js"></script> -->
-<!-- 		<script type="text/javascript" src="../../js/admin.js"></script> -->
-		<script type="text/javascript">
-			
-		</script>
+		<script type="text/javascript" src="../../js/chair/sim_list.js"></script>
 	</head>
 	<body>
 		<div class="h_nav" style="display: none;">
@@ -30,11 +24,11 @@
 				<table class="t_table">
 					<tr>
 						<td class="t_fieldname">输入SIM卡号</td>
-						<td class="t_fieldvalue"><input class="t_text" value="" placeholder="SIM卡号" /></td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="simManage.sim" placeholder="SIM卡号" /></td>
 					</tr>
 				</table>
 				<div class="t_area_btn">
-					<div class="t_table_title">SIM卡列表</div><div class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+					<div class="t_table_title">SIM卡列表</div><div id="btn_search" class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
 				</div>
 			</div>
 			<div class="t_search_results">
@@ -47,33 +41,17 @@
 								<td width="25%">到期日</td>
 								<td width="15%">运营商</td>
 								<td width="15%">状态</td>
-								<td>操作</td>
+								<td width="10%">操作</td>
 							</tr>
 						</thead>
 						<tbody class="t_table_body">
-							<tr>
-								<td>S11123</td>
-								<td>100M</td>
-								<td>2019-11-01</td>
-								<td>中国电信</td>
-								<td>未绑定</td>
-								<td><a href="sim_detail.html?id=1">&gt;</a></td>
-							</tr>
-							<tr>
-								<td>S11124</td>
-								<td>100M</td>
-								<td>2019-11-01</td>
-								<td>中国电信</td>
-								<td>未绑定</td>
-								<td><a href="sim_detail.html?id=2">&gt;</a></td>
-							</tr>
-							<tr>
-								<td>S11125</td>
-								<td>100M</td>
-								<td>2019-11-01</td>
-								<td>中国电信</td>
-								<td>未绑定</td>
-								<td><a href="sim_detail.html?id=3">&gt;</a></td>
+							<tr uku-repeat="item in simManage.sims">
+								<td>{{item.sim}}</td>
+								<td>{{item.dataFlow}}</td>
+								<td>{{item.dueDate}}</td>
+								<td>{{item.operator.name}}</td>
+								<td>{{item.status.name}}</td>
+								<td><a uku-href="item.detailUrl">{{item.id ? '&gt;' : ''}}</a></td>
 							</tr>
 						</tbody>
 					</table>

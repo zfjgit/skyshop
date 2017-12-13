@@ -22,32 +22,20 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class RoleInfo extends FullInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 6902116025332992712L;
 
 	private boolean isSuper;
 
 	private List<PermissionInfo> permissions;
 
-	/**
-	 * @param id
-	 * @param code
-	 * @param name
-	 * @param super
-	 * @param createTime
-	 * @param updateTime
-	 */
+	public RoleInfo() {
+	}
+
 	public RoleInfo(Long id, String code, String name, boolean issuper, Calendar createTime, Calendar updateTime) {
 		super(id, code, name, createTime, updateTime);
 		this.isSuper = issuper;
 	}
 
-	/**
-	 * @param role
-	 * @return
-	 */
 	public static RoleInfo create(Role role) {
 		if (role == null) {
 			return null;

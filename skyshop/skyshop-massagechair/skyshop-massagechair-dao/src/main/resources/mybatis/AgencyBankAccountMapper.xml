@@ -17,7 +17,16 @@
 		INSERT INTO tab_user3_bank
 			(bank_name, bank_card_number, bank_user_name, bank_check, cdate, user3_sno) 
 		VALUES 
-			(#{bank}, #{account}, #{accountName}, #{checkCode}, #{createTime}, #{agency.id})    
+			(#{bank}, #{account}, #{accountName}, #{checkCode}, #{createTime}, 
+			<choose>
+				<when test="agency != null">
+					#{agency.id}
+				</when>
+				<otherwise>
+				    0
+				</otherwise>
+			</choose>
+			)    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
@@ -29,11 +38,15 @@
 		SET bank_name=#{bank}, 
 			bank_card_number=#{account}, 
 			bank_user_name=#{accountName}, 
-			bank_check=#{checkCode}, 
-			cdate=#{createTime}, 
-			<if test="agency != null">
-				user3_sno=#{agency.id} 
-			</if>
+			<choose>
+				<when test="agency != null">
+					user3_sno=#{agency.id}, 
+				</when>
+				<otherwise>
+				    user3_sno=0, 
+				</otherwise>
+			</choose>
+			bank_check=#{checkCode}
 		WHERE bank_sno=#{id}
 	</update>
 	
@@ -47,10 +60,10 @@
 		WHERE 1 = 1 
 			AND user3_sno = #{param.agency.id}
 		<if test="param != null and param.bank != null">
-			AND bank_name LIKE CONCAT('%', #{param.bank}, '%')
+			AND bank_name LIKE '%' + #{param.bank} + '%'
 		</if>
 		<if test="param != null and param.accountName != null">
-			AND bank_user_name LIKE CONCAT('%', #{param.accountName}, '%')
+			AND bank_user_name LIKE '%'+ #{param.accountName}+ '%'
 		</if>
 		<if test="param != null and param.account != null">
 			AND bank_card_number = #{param.account}

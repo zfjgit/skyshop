@@ -5,6 +5,8 @@ package com.sitv.skyshop.massagechair.dao.user;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.sitv.skyshop.dao.ICrudDao;
 import com.sitv.skyshop.dao.MyBatisDao;
 import com.sitv.skyshop.massagechair.domain.user.RolePermission;
@@ -15,11 +17,11 @@ import com.sitv.skyshop.massagechair.domain.user.RolePermission;
 @MyBatisDao
 public interface IRolePermissionDao extends ICrudDao<RolePermission> {
 
-	List<RolePermission> findByPermission(Long id);
+	List<RolePermission> findByPermission(@Param("id") Long id);
 
-	List<RolePermission> findByRole(Long id);
+	List<RolePermission> findByRole(@Param("id") Long id);
 
-	void deleteByRole(Long id);
+	void deleteByRole(@Param("id") Long id);
 
-	void deleteByPermission(Long id);
+	void deleteByPermission(@Param("id") Long id);
 }

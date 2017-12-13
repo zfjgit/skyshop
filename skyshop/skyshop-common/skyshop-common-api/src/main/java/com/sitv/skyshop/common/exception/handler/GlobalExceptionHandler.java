@@ -9,10 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.sitv.skyshop.common.exception.EntityNotFoundException;
 import com.sitv.skyshop.common.exception.EntityStatusException;
+import com.sitv.skyshop.common.exception.OperateResultReceivException;
+import com.sitv.skyshop.common.exception.OrderExpiredException;
 import com.sitv.skyshop.common.exception.ParamValidException;
 import com.sitv.skyshop.common.exception.PlainReponseException;
 import com.sitv.skyshop.dto.ResponseInfo;
@@ -26,11 +29,24 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+	protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+		log.error("发生错误：" + ex.getMessage(), ex);
+		return super.handleExceptionInternal(ex, body, headers, status, request);
+	}
+
 	@ResponseBody
 	@ExceptionHandler(CheckCodeVerificationFailedException.class)
 	private <T> ResponseInfo<T> entityVarificationFailedExceptionHandler(CheckCodeVerificationFailedException e) {
 		log.error("---------> 实体对象CHECKCODE校验错误!!!", e);
 		return ResponseInfo.CHECKCODE_VARIFY_ERROR(e.getMessage());
+	}
+
+	@ResponseBody
+	@ExceptionHandler(OrderExpiredException.class)
+	private <T> ResponseInfo<T> orderExpiredExceptionHandler(OrderExpiredException e) {
+		log.error("---------> 订单已过期!!!", e);
+		return ResponseInfo.ORDER_EXPIRED_ERROR(e.getMessage());
 	}
 
 	@ResponseBody
@@ -62,6 +78,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 		return new ResponseEntity<>("code=0", headers, HttpStatus.OK);
 	}
 
+	@ExceptionHandler(OperateResultReceivException.class)
+	private ResponseEntity<String> operateResultReceivExceptionHandler(OperateResultReceivException e) {
+		log.error("---------> OperateResultReceivException!!!", e);
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.TEXT_PLAIN);
+		return new ResponseEntity<>("code=0", headers, HttpStatus.OK);
+	}
+
 	@ResponseBody
 	@ExceptionHandler(Exception.class)
 	private <T> ResponseInfo<T> runtimeExceptionHandler(Exception e) {
@@ -74,7 +98,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ResponseBody
 	@ExceptionHandler(ValidationException.class)
-	private <T> ResponseInfo<T> illegalParamsExceptionHandler(ValidationException e) {
+	private <T> ResponseInfo<T> validationExceptionHandler(ValidationException e) {
 		log.error("---------> ARGS_ERROR!!!", e);
 		return ResponseInfo.ARGS_ERROR("参数错误");
 	}

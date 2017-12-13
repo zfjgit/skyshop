@@ -40,11 +40,13 @@ public class UserInfo extends FullInfoDto {
 	private EnumInfo<User.UserStatus, String> status;
 	private EnumInfo<User.UserType, String> type;
 
+	private String loginCheckCode;
+
 	public UserInfo() {
 	}
 
 	public UserInfo(Long id, String code, String name, String password, EnumInfo<User.UserStatus, String> status, EnumInfo<User.UserType, String> type,
-	                EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode, Calendar createTime, Calendar updateTime) {
+	                EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode, String loginCheckCode, Calendar createTime, Calendar updateTime) {
 		super(id, name, null, createTime, updateTime);
 		setCode(code);
 		this.type = type;
@@ -52,10 +54,12 @@ public class UserInfo extends FullInfoDto {
 		this.password = password;
 		setCheckCode(checkCode);
 		setDeleteStatus(deleteStatus);
+		setLoginCheckCode(loginCheckCode);
 	}
 
 	public UserInfo(Long id, String code, String name, String description, Calendar createTime, Calendar updateTime, String password, String email, String mobile,
-	                EnumInfo<User.UserStatus, String> status, EnumInfo<User.UserType, String> type, EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode) {
+	                EnumInfo<User.UserStatus, String> status, EnumInfo<User.UserType, String> type, EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode,
+	                String loginCheckCode) {
 		super(id, code, name, description, createTime, updateTime);
 		this.email = email;
 		this.mobile = mobile;
@@ -64,6 +68,7 @@ public class UserInfo extends FullInfoDto {
 		this.type = type;
 		setCheckCode(checkCode);
 		setDeleteStatus(deleteStatus);
+		setLoginCheckCode(loginCheckCode);
 	}
 
 	@SuppressWarnings("unchecked")

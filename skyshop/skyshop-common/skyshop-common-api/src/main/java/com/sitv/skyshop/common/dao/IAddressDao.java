@@ -1,7 +1,9 @@
 /**
- * 
+ *
  */
 package com.sitv.skyshop.common.dao;
+
+import org.apache.ibatis.annotations.Param;
 
 import com.sitv.skyshop.common.domain.Address;
 import com.sitv.skyshop.dao.ICrudDao;
@@ -13,5 +15,7 @@ import com.sitv.skyshop.dao.MyBatisDao;
  */
 @MyBatisDao
 public interface IAddressDao extends ICrudDao<Address> {
+
+	Address getBy(@Param("code") String code);
 
 }

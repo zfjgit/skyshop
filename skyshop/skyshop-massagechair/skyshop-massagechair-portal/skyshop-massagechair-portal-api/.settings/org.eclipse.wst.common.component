@@ -8,9 +8,6 @@
         <dependent-module archiveName="skyshop-massagechair-api-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/skyshop-massagechair-api/skyshop-massagechair-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module archiveName="skyshop-common-api-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/skyshop-common-api/skyshop-common-api">
-            <dependency-type>uses</dependency-type>
-        </dependent-module>
         <dependent-module archiveName="skyshop-base-api-1.0.0-SNAPSHOT.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/skyshop-base-api/skyshop-base-api">
             <dependency-type>uses</dependency-type>
         </dependent-module>

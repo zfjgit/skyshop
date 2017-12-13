@@ -35,6 +35,9 @@ public class AgencyInfo extends FullInfoDto {
 
 	private BigDecimal balance;
 
+	public AgencyInfo() {
+	}
+
 	public AgencyInfo(Long id, String name, AgencyInfo parent, EnumInfo<Agency.AgencyLevel, String> level, int orderIncomePercentage, BigDecimal balance,
 	                EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode, Calendar createTime, Calendar updateTime) {
 		super(id, name, null, createTime, updateTime);

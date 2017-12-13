@@ -45,23 +45,24 @@ public abstract class BaseRestController<S extends IBaseService<I>, I extends Dt
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.GET)
-	public ResponseInfo<PageInfo<I>> search(@Valid @NotNull @ModelAttribute SearchParamInfo<I> paramInfo) {
-		log.debug("SEARCH:param=" + paramInfo);
-		return ResponseInfo.SUCCESS(service.search(paramInfo));
+	public ResponseInfo<PageInfo<I>> search(@NotNull @Valid @ModelAttribute SearchParamInfo<I> searchParamInfo, @NotNull @Valid @ModelAttribute I info) {
+		searchParamInfo.setParam(info);
+		log.debug("SEARCH:param=" + searchParamInfo);
+		return ResponseInfo.SUCCESS(service.search(searchParamInfo));
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.POST)
 	public ResponseInfo<I> create(@Valid @NotNull @ModelAttribute I info) {
 		log.debug("CREATE:T=" + info);
 		service.createOne(info);
-		return ResponseInfo.CREATED_SUCCESS();
+		return ResponseInfo.CREATED_SUCCESS(info);
 	}
 
 	@RequestMapping(value = "/", method = RequestMethod.PUT)
 	public ResponseInfo<I> update(@Valid @NotNull @ModelAttribute I info) {
 		log.debug("UPDATE:T=" + info);
 		service.updateOne(info);
-		return ResponseInfo.UPDATED_SUCCESS();
+		return ResponseInfo.UPDATED_SUCCESS(info);
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

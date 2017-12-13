@@ -17,7 +17,7 @@
 		INSERT INTO tab_user2_log
 			(user2_no, content_log, type, ip, cdate, user3_sno) 
 		VALUES 
-			(#{account}, #{description}, #{type.code}, #{ip}, #{createTime}, 
+			(#{account}, #{description, jdbcType=VARCHAR}, #{type.code}, #{ip}, #{createTime}, 
 			<choose>
 			    <when test="agency == null">
 			        0
@@ -41,13 +41,13 @@
 			AND type=#{param.type.code}
 		</if>
 		<if test="param != null and param.description != null">
-			AND content_log like CONCAT('%', #{param.description}, '%')
+			AND content_log LIKE '%' + #{param.description} + '%'
 		</if>
 		<if test="param != null and param.account != null">
-			AND user2_no like CONCAT('%', #{param.account}, '%')
+			AND user2_no LIKE  '%' + #{param.account} + '%'
 		</if>
 		<if test="param != null and param.ip != null">
-			AND ip like CONCAT('%', #{param.ip}, '%')
+			AND ip LIKE '%' + #{param.ip} + '%'
 		</if>
 		<if test="param != null and param.startDate != null">
 			AND cdate &gt; #{param.startDate}

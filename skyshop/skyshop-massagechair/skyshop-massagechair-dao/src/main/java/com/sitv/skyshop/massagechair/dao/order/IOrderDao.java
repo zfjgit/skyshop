@@ -19,11 +19,13 @@ import com.sitv.skyshop.massagechair.domain.order.Order;
  */
 @MyBatisDao
 public interface IOrderDao extends ICrudDao<Order>, IDeleteStatusDao<Order> {
-	List<Order> findByChair(Long id);
+	List<Order> findByChair(@Param("id") Long id);
 
-	List<Order> findByAgency(Long id);
+	List<Order> findByAgency(@Param("id") Long id);
 
-	int getCountByAgency(Long id);
+	int getCountByAgency(@Param("id") Long id);
+
+	void updateStatus(Order order);
 
 	BigDecimal getTotalMoney(@Param("id") Long id, @Param("startTime") Calendar startTime, @Param("endTime") Calendar endTime);
 }

@@ -15,7 +15,7 @@ public class CheckCodeVerificationFailedException extends RuntimeException {
 	private ICheckCodeType checkCodeType;
 
 	public CheckCodeVerificationFailedException(ICheckCodeType checkCodeType) {
-		super("CHECKCODE校验失败：" + checkCodeType);
+		super("CHECKCODE校验失败：" + checkCodeType.getClass().getName() + "=" + checkCodeType.getCheckCode());
 		this.checkCodeType = checkCodeType;
 	}
 

@@ -12,5 +12,5 @@ import com.sitv.skyshop.massagechair.domain.agency.AgencyWithraw;
  */
 @MyBatisDao
 public interface IAgencyWithrawDao extends ICrudDao<AgencyWithraw> {
-
+	void updateStatus(AgencyWithraw withraw);
 }

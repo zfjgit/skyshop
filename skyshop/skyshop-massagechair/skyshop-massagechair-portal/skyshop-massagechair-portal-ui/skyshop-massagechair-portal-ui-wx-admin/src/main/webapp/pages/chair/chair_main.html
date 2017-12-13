@@ -15,13 +15,17 @@
 		
 		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
 		<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
-
 		
 		<script type="text/javascript" src="../../plugins/jqweui/lib/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
-		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		
 		<script type="text/javascript">
 			$(function(){
 			    $('#item-chair').click(function(){
@@ -60,11 +64,11 @@
 			    } else {
 			        $('#' + sessionStorage.chair_tab).click();
 			    }
-			    
 			});
+			
 		</script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
 			<div class="h_title">设备管理</div>

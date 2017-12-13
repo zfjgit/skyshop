@@ -4,6 +4,7 @@
 package com.sitv.skyshop.massagechair.domain.device;
 
 import java.util.Calendar;
+import java.util.List;
 
 import com.sitv.skyshop.common.domain.Address;
 import com.sitv.skyshop.common.domain.FullAddress;
@@ -19,7 +20,7 @@ import lombok.ToString;
  */
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = "chairs")
 public class InstallationAddress extends FullAddress implements IDeleteStatus {
 
 	private String contact;
@@ -30,6 +31,8 @@ public class InstallationAddress extends FullAddress implements IDeleteStatus {
 	private Agency agency;
 
 	private DeleteStatus deleteStatus;
+
+	private List<MassageChair> chairs;
 
 	protected InstallationAddress() {
 	}

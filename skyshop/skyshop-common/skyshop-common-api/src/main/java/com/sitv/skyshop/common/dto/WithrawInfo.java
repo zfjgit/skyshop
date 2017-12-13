@@ -30,6 +30,9 @@ public class WithrawInfo extends FullInfoDto {
 	private String account;
 	private String accountName;
 
+	public WithrawInfo() {
+	}
+
 	public WithrawInfo(Long id, BigDecimal money, EnumInfo<WithrawStatus, String> status, String bank, String account, String accountName, String checkCode, Calendar createTime,
 	                Calendar updateTime) {
 		super(id, createTime, updateTime);

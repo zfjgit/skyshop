@@ -18,9 +18,10 @@
 		<script type="text/javascript" src="../plugins/jqweui/lib/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../plugins/ukulelejs/dist/uku.js"></script>
-		<script type="text/javascript" src="../js/ctx.js"></script>
-		<script type="text/javascript" src="../js/ui.js"></script>
-		<script type="text/javascript" src="../js/data.js"></script>
+		
+		<script type="text/javascript" src="../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../js/common/ui.js"></script>
+		<script type="text/javascript" src="../js/common/data.js"></script>
 		<script type="text/javascript" src="../js/main.js"></script>
 	</head>
 	<body uku-application>
@@ -28,7 +29,7 @@
 			<div class="title">我的收益</div>
 			<div class="t_white t_today_income">今日收益（元）</div>
 			<div class="today_income">{{overviewInfo.todayIncome}}</div>
-			<div id="income_by_addr" class="t_white t_right t_href" style="margin: 15px;margin-top: 20px;">查看收益明细&gt;</div>
+			<div id="income_by_addr" class="t_white t_right t_href" style="margin: 15px;margin-top: 10px;" onclick="window.location.href='income/income_main.html';">查看收益明细&gt;</div>
 		</div>
 		<div class="content">
 			<div class="row_btn">

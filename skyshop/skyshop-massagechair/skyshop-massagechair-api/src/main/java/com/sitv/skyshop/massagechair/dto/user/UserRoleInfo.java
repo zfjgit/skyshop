@@ -17,12 +17,11 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class UserRoleInfo extends SimpleInfoDto {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = 4444853286189390068L;
 
 	private RoleInfo role;
 	private ManagerInfo manager;
 
+	public UserRoleInfo() {
+	}
 }

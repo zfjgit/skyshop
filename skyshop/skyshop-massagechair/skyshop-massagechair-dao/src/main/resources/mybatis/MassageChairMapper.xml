@@ -9,8 +9,9 @@
 		<result property="brand" jdbcType="VARCHAR" column="chairs_brand" />
 		<result property="description" jdbcType="VARCHAR" column="description" />
 		<result property="status" jdbcType="VARCHAR" column="chairs_status" />
-		<result property="createtime" column="chairs_createTime" />
-		<result property="updatetime" column="chairs_updateTime" />
+		<result property="createTime" column="chairs_createTime" />
+		<result property="updateTime" column="chairs_updateTime" />
+		<result property="qrcode" column="chairs_qrcode" />
 		<result property="deleteStatus" jdbcType="INTEGER" column="is_del" />
 		<association property="gsmModule" column="gsm_sno" select="com.sitv.skyshop.massagechair.dao.device.IGSMModuleDao.get"/>
 		<association property="installationAddress" column="install_sno" select="com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao.get"/>
@@ -21,15 +22,32 @@
 	<select id="getPrices" resultMap="com.sitv.skyshop.massagechair.dao.price.IPriceDao.BaseResultMap" parameterType="long">
 		SELECT p.* 
 		FROM tab_pricepackages pp 
-		LEFT JOIN tab_prices p ON pp.price_sno=p.price_sno
-		WHERE pp.chairs_sno=#{id}
+		LEFT JOIN tab_prices p ON pp.prices_sno=p.prices_sno
+		WHERE pp.chairs_sno=#{id} order by p.prices_amount
 	</select>
 	
-	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED">
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tab_massagechairs
-			(chairs_name, chairs_brand, install_sno, user3_sno, description, gsm_sno, chairs_status, chairs_createTime) 
+			(chairs_name, is_del, chairs_brand, install_sno, user3_sno, description, gsm_sno, chairs_status, chairs_createTime, chairs_updateTime, chairs_qrcode) 
 		VALUES 
-			(#{name}, #{brand}, #{installationAddress.id}, #{agency.id}, #{description}, #{gsmModule.id}, #{status.code}, #{createTime})    
+			(#{name}, #{deleteStatus.code}, #{brand}, 
+			<choose>
+			    <when test="installationAddress == null">
+			        0,
+			    </when>
+			    <otherwise>
+			        #{installationAddress.id},
+			    </otherwise>
+			</choose> 
+			<choose>
+			    <when test="agency == null">
+			        0,
+			    </when>
+			    <otherwise>
+			        #{agency.id},
+			    </otherwise>
+			</choose>
+			#{description, jdbcType=VARCHAR}, #{gsmModule.id}, #{status.code}, #{createTime}, #{updateTime}, #{qrcode})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
@@ -37,13 +55,22 @@
 	</select>
 	
 	<select id="getCountByAgency" resultType="int" parameterType="long">
-		SELECT count(1) FROM tab_massagechairs WHERE user3_sno=#{id}
+		SELECT count(1) FROM tab_massagechairs WHERE 1=1 
+		<if test="id != 0">
+			AND user3_sno=#{id}
+		</if>
 	</select>
 	
 	<select id="findByAddr" resultMap="BaseResultMap" parameterType="long">
 		SELECT m.* 
 		FROM tab_massagechairs m 
 		WHERE m.install_sno=#{id}
+	</select>
+	
+	<select id="getByGSM" resultMap="BaseResultMap" parameterType="long">
+		SELECT m.* 
+		FROM tab_massagechairs m 
+		WHERE gsm_sno=#{id}
 	</select>
 	
 	<select id="getByIMEI" resultMap="BaseResultMap" parameterType="String">
@@ -68,18 +95,44 @@
 		UPDATE tab_massagechairs 
 		SET chairs_name=#{name}, 
 		 	chairs_brand=#{brand},
-		 	description=#{description},
-		 	install_sno=#{installationAddress.id},
-		 	user3_sno=#{agency.id},
+		 	description=#{description, jdbcType=VARCHAR},
+		 	<choose>
+			    <when test="installationAddress == null">
+			        install_sno=0,
+			    </when>
+			    <otherwise>
+			        install_sno=#{installationAddress.id},
+			    </otherwise>
+			</choose>
+		 	<choose>
+			    <when test="agency == null">
+			        user3_sno=0,
+			    </when>
+			    <otherwise>
+			        user3_sno=#{agency.id},
+			    </otherwise>
+			</choose>
 		 	gsm_sno=#{gsmModule.id},
 		 	chairs_status=#{status.code},
 		 	chairs_updateTime=#{updateTime}
 		WHERE chairs_sno=#{id}
 	</update>
 	
+	<update id="updateStatus" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" >
+		UPDATE tab_massagechairs 
+		SET chairs_status=#{status.code}
+		WHERE chairs_sno=#{id}
+	</update>
+	
+	<update id="updateQRCodeUrl" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" >
+		UPDATE tab_massagechairs 
+		SET chairs_qrcode=#{qrcode}
+		WHERE chairs_sno=#{id}
+	</update>
+	
 	<update id="updateDeleteStatus" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" >
 		UPDATE tab_massagechairs 
-		SET is_del=#{deleteStatus.code},
+		SET is_del=#{deleteStatus.code}
 		WHERE chairs_sno=#{id}
 	</update>
 	
@@ -93,17 +146,23 @@
 		LEFT JOIN tab_gsmmodules g ON m.gsm_sno=g.gsm_sno
 		LEFT JOIN tab_simcards s ON g.simcard_sno=s.simcard_sno
 		WHERE 1 = 1 
-		<if test="param != null and param.agency != null">
-			AND user3_sno = #{param.agency.id}
-		</if>
+	    <if test="param != null and param.agency != null and param.agency.id != 0">
+	        AND m.user3_sno = #{param.agency.id}
+	    </if>
 		<if test="param != null and param.gsmModule != null">
 			AND m.gsm_sno = #{param.gsmModule.id}
 		</if>
-		<if test="param != null and param.gsmModule.simcard != null">
-			AND s.sim LIKE CONCAT('%', #{param.gsmModule.simCard.sim}, '%')
+		<if test="param != null and param.status != null">
+			AND m.chairs_status = #{param.status.code}
+		</if>
+		<if test="param != null and param.deleteStatus != null">
+			AND m.is_del = #{param.deleteStatus.code}
+		</if>
+		<if test="param != null and param.gsmModule != null and param.gsmModule.simcard != null">
+			AND s.sim LIKE  '%' + #{param.gsmModule.simCard.sim} + '%'
 		</if>
 		<if test="param != null and param.name != null">
-			AND m.chairs_name LIKE CONCAT('%', #{param.name}, '%')
+			AND m.chairs_name LIKE '%' + #{param.name} + '%'
 		</if>
 		<if test="param != null and param.installationAddress != null and param.installationAddress.fullAddress != null">
 			AND m.install_sno=#{param.installationAddress.id}

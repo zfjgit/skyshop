@@ -81,9 +81,12 @@ public class AgencyService extends CrudService<IAgencyDao, Agency, AgencyInfo> i
 	public void createOne(AgencyInfo t) {
 		Agency parent = get(t.getParent().getId());
 		Agency agency = new Agency(null, t.getName(), parent, BaseEnum.valueOf(AgencyLevel.class, t.getLevel().getCode()), t.getOrderIncomePercentage(), t.getBalance(),
-				DeleteStatus.NORMAL);
+		                DeleteStatus.NORMAL);
 		agency.calcCheckCode();
 		create(agency);
+
+		agency.calcCheckCode();
+		update(agency);
 	}
 
 	public void updateDeleteStatus(AgencyInfo t) {

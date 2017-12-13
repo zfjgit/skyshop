@@ -5,7 +5,9 @@
 
 	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.record.UseRecord">
 		<id column="log_sno" jdbcType="BIGINT" property="id" />
+		<result column="orders_sno" jdbcType="BIGINT" property="orderId" />
 		<result column="name" jdbcType="VARCHAR" property="name" />
+		<result column="resultCode" jdbcType="VARCHAR" property="resultCode" />
 		<result column="log_from" jdbcType="VARCHAR" property="from" />
 		<result column="response" jdbcType="VARCHAR" property="response" />
 		<result column="imei" jdbcType="VARCHAR" property="imei" />
@@ -16,18 +18,35 @@
 		<result column="addr_name" jdbcType="VARCHAR" property="addr" />
 		<result column="openid" jdbcType="VARCHAR" property="openid" />
 		<result column="nickName" jdbcType="VARCHAR" property="nickName" />
+		<result column="type" jdbcType="VARCHAR" property="type" />
 		<result column="cdate" property="createTime" />
 	</resultMap>
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.record.UseRecord" statementType="PREPARED">
 		INSERT INTO tab_massagechairs_log
-			(name, minutes, log_from, response, imei, sim, price, chair, addr_name, openid, nickName, cdate) 
+			(orders_sno, resultCode, type, name, minutes, log_from, response, imei, sim, price, chair, addr_name, openid, nickName, cdate) 
 		VALUES 
-			(#{name}, #{minutes}, #{from}, #{response}, #{imei}, #{sim}, #{price}, #{chair}, #{addr}, #{openid}, #{nickName}, #{createTime})    
+			(#{orderId}, #{resultCode}, #{type.code}, #{name}, #{minutes}, #{from}, #{response}, #{imei}, #{sim}, #{price}, #{chair}, #{addr}, #{openid}, #{nickName}, #{createTime})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
 		SELECT * FROM tab_massagechairs_log WHERE log_sno=#{id}
+	</select>
+	
+	<select id="getByOrder" resultMap="BaseResultMap" >
+		SELECT TOP 1 * FROM tab_massagechairs_log WHERE orders_sno=#{orderId} AND type=#{type} AND resultCode=#{resultCode}
+	</select>
+	
+	<select id="getLast" resultMap="BaseResultMap" >
+		SELECT TOP 1 * 
+		FROM tab_massagechairs_log 
+		WHERE sim=#{sim} 
+			AND type=#{type} 
+			<choose>
+			    <when test="orderId != null and orderId != ''">AND orders_sno=#{orderId}</when>
+			    <otherwise></otherwise>
+			</choose> 
+		ORDER BY log_sno desc
 	</select>
 
 	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
@@ -35,22 +54,22 @@
 		FROM tab_massagechairs_log m
 		WHERE 1 = 1 
 		<if test="param != null and param.name != null">
-			AND name LIKE CONCAT('%', #{param.name}, '%')
+			AND name LIKE '%' + #{param.name} + '%'
 		</if>
 		<if test="param != null and param.imei != null">
-			AND imei like CONCAT('%', #{param.imei}, '%')
+			AND imei like '%' + #{param.imei}+ '%'
 		</if>
 		<if test="param != null and param.sim != null">
-			AND sim like CONCAT('%', #{param.sim}, '%')
+			AND sim like '%'+ #{param.sim}+ '%'
 		</if>
 		<if test="param != null and param.chair != null">
-			AND chair like CONCAT('%', #{param.chair}, '%')
+			AND chair like '%'+ #{param.chair}+ '%'
 		</if>
 		<if test="param != null and param.addr != null">
-			AND addr_name like CONCAT('%', #{param.addr}, '%')
+			AND addr_name like '%'+ #{param.addr}+ '%'
 		</if>
 		<if test="param != null and param.nickName != null">
-			AND nickname like CONCAT('%', #{param.nickName}, '%')
+			AND nickname like '%'+ #{param.nickName}+ '%'
 		</if>
 		<if test="param != null and param.startDate != null">
 			AND cdate &gt; #{param.startDate}

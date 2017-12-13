@@ -3,6 +3,8 @@
  */
 package com.sitv.skyshop.massagechair.dao.agency;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.sitv.skyshop.dao.ICrudDao;
 import com.sitv.skyshop.dao.IDeleteStatusDao;
 import com.sitv.skyshop.dao.MyBatisDao;
@@ -14,6 +16,6 @@ import com.sitv.skyshop.massagechair.domain.agency.Agency;
 @MyBatisDao
 public interface IAgencyDao extends ICrudDao<Agency>, IDeleteStatusDao<Agency> {
 
-	int getCountByAgency(Long id);
+	int getCountByAgency(@Param("id") Long id);
 
 }

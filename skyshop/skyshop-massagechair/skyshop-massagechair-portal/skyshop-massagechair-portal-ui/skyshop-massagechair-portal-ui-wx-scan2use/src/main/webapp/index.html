@@ -17,74 +17,156 @@
 		
 		<script type="text/javascript" src="plugins/jqweui/lib/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="plugins/jqweui/js/jquery-weui.js"></script>
+		
+		<script type="text/javascript" src="plugins/jquery-custom-params.js"></script>
+		
 		<script type="text/javascript" src="js/ctx.js"></script>
 		<script type="text/javascript" src="js/ui.js"></script>
 		
 		<script type="text/javascript">
 			$(function(){
-			    var imei = window.location.search;
-			    if(!imei) {
-			        window.location.href = 'fault.html?imei_err';
+			    var search = window.location.search;
+			    if(!search || search == '?') {
+			        window.location.href = 'fault.html?chairsno_err';
 			        return;
 			    }
-			    
-		        doAjax('/scan2use/' + imei, function(r){
-		            if(data.code != '200') {
-		                var name = r.data.name;
-		                var prices = r.data.prices;
-		                if(prices && prices.length > 0) {
-		                    for (var i = 0; i < prices.length; i++) {
-                                var p = prices[i];
-                                $('.content').append('<div class="btn"><img chairname="' + name + '" chairid="' + r.data.id + '" mins="' + p.minutes + '" money="' + p.amount + '" title="' + p.name + '" src="' + p.img + '" /></div>');
-                            }
-		                    
-		                    addListeners();
-		                }
-		            } else {
-		                $.alert("这台按摩椅不能使用，试试其他的吧~");
+			    var chairid = search.substring(1);
+			    doAjax('/scan2use/' + chairid, '', function(r){
+			        $('.working').show();
+	                var name = r.data.name;
+	                var prices = r.data.prices;
+	                var contactNumber = r.data.installationAddress.contactNumber;
+	                localStorage.contactNumber = contactNumber;
+	                if(prices && prices.length > 0) {
+	                	$('.content').empty();
+                        var inner = '';
+                        var priceCount = 4;
+                        if(prices.length < 4) {
+                            priceCount = prices.length;
+                        }
+	                    for (var i = 0; i < priceCount; i++) {
+                             var p = prices[i];
+                             if(i % 2 == 0) {
+                                 if(i != 0) {
+                                     inner += '</div>';
+                                 }
+                                 inner += '<div class="row" style="margin: auto;margin-top: 10px;">';
+                             }
+                             inner += '<div style="display: inline-block;width: 45%;' +(i % 2 == 0 ? 'margin-right:5px;' : '')+ '">' +
+	                             	'<div><img src="images/c' + (i + 1) + '.jpg" width="100%"/></div>'+
+	             					'<div style="font-size:20px;">' + p.name + '</div>'+
+	            					'<div>'+
+	            						'<div style="display: inline-block;">'+
+	            							'<div class="weui-btn weui-btn_mini" style="color: red;font-size:15px;padding:0 5px;">' + p.price +'元</div>'+
+	            						'</div>'+
+	            						'<div style="display: inline-block;margin-left:10px;">'+
+	            							'<div style="font-size:15px;" chairname="' + name + '" chairid="' + r.data.id + '" mins="' + p.minutes + '" money="' + p.price + '" title="' + p.name + '" class="weui-btn weui-btn_primary weui-btn_mini btn_pay" >支付</div>'+
+	            						'</div>'+
+	            					'</div>'+
+            					'</div>';
+                        }
+		    			if( priceCount != 1 && priceCount % 2 != 0) {
+		    			    inner += '<div style="display: inline-block;width: 45%;"></div>';
+		    			}
+	                    inner += '</div>';
+	                    
+                        $('.content').append(inner);
+	                    
+	                    addListeners();
+	                } else {
+	                    window.location.href = 'fault.html?price_err';
 	                }
-		        }, 'get');
+		        }, 'GET', function(d){
+		            if(d.code == 601) {
+						$('.working').show();
+						return;
+		            }
+		            // runtime error
+		            window.location.href = 'fault.html?scan_err';
+		        }, true, function(d) {
+		            // net error
+		            //window.location.href = 'fault.html?net_err';
+		        }, '', function(){
+		            // showloading
+		            showloading();
+		        }, function(){
+		            // hideloading
+		            hideloading();
+		        });
 			    
-		        
 		        function addListeners() {
-				    $('.btn > img').click(function(){
-				        // 请求后台，检测设备
+				    $('.btn_pay').click(function(){
 				        var money = $(this).attr('money');
-				        var mins = $(this).attr('mins');
-				        var price = $(this).attr('title');
-				        var chairid = $(this).attr('chairid');
-				        var chairname = $(this).attr('chairname');
+				        var minutes = $(this).attr('mins');
+				        var priceName = $(this).attr('title');
+				        var chairName = $(this).attr('chairname');
 				        
-				        var order = {};
-				        order.minutes = mins;
-				        order.money = money;
-				        order.chair.id = chairid;
-				        order.code = new Date().getTime();
-				        
-				        // 订单
-				        doAjax('/order', order, function(data){
-				            if(data.code == '200') {
-				                pay(chairname + '_' + price, money, mins, ordercode);
-				            } else {
-				                $.alert("订单生成失败，请重新扫码二维码");
+				        doAjax('/scan2use/check/' + chairid, '', function(d){
+				            //if(d.data.code == 1) {
+				             	order(money, minutes, priceName, chairName);
+				            //    return;
+				            //} else {
+					        //    window.location.href = 'fault.html?check_err';
+				            //}
+				        }, 'GET', function(d) {
+				            if(d.code == 601) {
+								$('.working').show();
+								return;
 				            }
-				        }, 'POST');
-				        
+				            // runtime error
+				            window.location.href = 'fault.html?check_err';
+				        }, true, function(d) {
+				         	// net error
+				            //window.location.href = 'fault.html?net_err';
+				        }, '', function(){
+				            showloading('images/qsh2.png');
+				        }, function(){
+				            hideloading();
+				        });
 				    });
 		        }
 		        
-		        function pay(chair_price_name, money, mins, ordercode) {
-		         	// 发起支付
-			        var out_trade_no = ordercode;
-			        var body = chair_price_name;
-			        var total_fee = parseFloat(money) * 100;
-			        var notify_url = api_server_url + '/order/paynotify/';
-			        var backUrl = ui_server_url + '/working.html?mins=' + mins + '&chair_price_name=' + chair_price_name;
+		        function order(money, minutes, priceName, chairName) {
+			        var order = {};
+			        order.minutes = minutes;
+			        order.money = money;
+			        order.chair = {id : chairid};
+			        order.payType = {code : 'A', name : '微信支付'}
 			        
-			        var url = 'http://kehu.tba-taobao.com/WXPayAPI_QQT/PayJsAPIOpenid.aspx?out_trade_no=' + out_trade_no + '&body=' 
-			            + body + '&total_fee=' + total_fee + '&backUrl=' + backUrl + '&notify_url=' + notify_url;
+			        var params = $.customParam(order);
 			        
-			        window.location.href = url;
+			        doAjax('/order/', params, function(d){
+			        	var ordercode = d.data.code;
+			        	var orderid = d.data.id;
+			            var items = chairName + '_' + priceName;
+			            
+				        var notify_url = config.api_server_url + '/order/paynotify/';
+			            var postpayUrl = config.api_server_url + '/order/postpay/?order.id=' + orderid;
+			            var forwardUrl = config.ui_server_url + '/working.html?' + orderid + '_' + chairid;
+			            
+			        	pay(items, money, ordercode, notify_url, postpayUrl, forwardUrl);
+			        }, 'POST', function(d){
+			            window.location.href = 'fault.html?order_err';
+			        }, true, function(d){
+			            window.location.href = 'fault.html?net_err';
+			        }, '', function(){
+			            showloading('images/qsh4.png');
+			        }, function(){
+			            hideloading();
+			        });
+		        }
+		        
+		        function pay(items, money, ordercode, notify_url, postpayUrl, forwardUrl) {
+			        var total_fee = parseFloat(0.01) * 100;
+		            
+			        var url = config.pay_server_url + '?out_trade_no=' + ordercode + 
+			        		'&body=' + items + 
+			        		'&total_fee=' + (parseFloat(0.01) * 100) + 
+			        		'&backUrl=' + forwardUrl + 
+			        		'&notify_url=' + notify_url;
+			        
+			      	window.location.href = forwardUrl;
+			        //window.location.href = url;
 		        }
 			});
 		</script>
@@ -92,12 +174,15 @@
 	<body>
 		<div class="header" >
 		</div>
-		<div class="content">
-			<div>请打开微信，使用“扫一扫”扫描按摩椅的二维码</div>
-<!-- 			<div class="btn"><img mins="5" title="5分钟套餐" src="images/f1.png" /></div> -->
-<!-- 			<div class="btn"><img mins="10" title="10分钟套餐" src="images/f2.png" /></div> -->
-<!-- 			<div class="btn"><img mins="15" title="15分钟套餐" src="images/f3.png" /></div> -->
-<!-- 			<div class="btn"><img mins="20" title="20分钟套餐" src="images/f4.png" /></div> -->
+		<div class="content" style="margin-top: 0px;padding: 0px 0;">
 		</div>
+		<div class="working"  style="position: absolute;top:45%;text-align: center;width: 80%;font-size: 20px;background: url('images/bg8.png');padding:40px;background-position-x: center;background-size: 80%;background-repeat: no-repeat;">
+			设备正在使用中...
+		</div>
+		<div class="weui-loadmore" style="position: fixed;bottom: 20%;text-align: center;width: 100%;display: none;">
+		  	<i class="weui-loading"></i>
+		  	<span class="weui-loadmore__tips" style="font-size: 20px;">正在检测设备状态，请稍候....<span id="count"></span></span>
+		</div>
+		
 	</body>
 </html>

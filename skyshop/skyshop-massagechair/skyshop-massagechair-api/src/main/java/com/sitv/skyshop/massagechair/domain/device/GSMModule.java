@@ -32,7 +32,7 @@ public class GSMModule extends Device {
 
 	public GSMModule(Long id, String imei, String module, GSMModuleStatus status, SIMCard simCard, String description, Calendar createTime, Calendar updateTime,
 	                DeleteStatus deleteStatus) {
-		super(id, null, description, deleteStatus);
+		super(id, imei, description, deleteStatus);
 		this.imei = imei;
 		this.module = module;
 		this.simCard = simCard;
@@ -42,7 +42,7 @@ public class GSMModule extends Device {
 	}
 
 	public enum GSMModuleStatus implements BaseEnum<GSMModuleStatus, String> {
-		USING("A", "使用中"), UNUSED("B", "未使用");
+		NORMAL("A", "未使用"), DISABLED("B", "停用"), USING("C", "使用中");
 
 		private String code;
 		private String name;

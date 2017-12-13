@@ -1,5 +1,7 @@
 package com.sitv.skyshop.massagechair.provider;
 
+import com.sitv.skyshop.common.utils.Utils;
+
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
@@ -22,6 +24,9 @@ public class AppTest extends TestCase {
 		assertTrue(true);
 
 		name = "123";
+
+		String s = Utils.digest("201712150001111015A2017-12-15 11:1700", "SHA-1");
+		System.out.println(s);
 
 		assertTrue(getName(), getName().equals(resetName()));
 		assertEquals(getName(), "234");

@@ -9,8 +9,9 @@
 		<result property="code" jdbcType="VARCHAR" column="user2_no" />
 		<result property="password" jdbcType="VARCHAR" column="user2_pwd" />
 		<result property="type" jdbcType="VARCHAR" column="user_level" />
-		<result property="checkCode" jdbcType="VARCHAR" column="user2_check" />
+		<result property="loginCheckCode" jdbcType="VARCHAR" column="user2_check" />
 		<result property="status" jdbcType="VARCHAR" column="user2_status" />
+		<result property="deleteStatus" jdbcType="INTEGER" column="is_del" />
 		<result property="createTime" column="cdate" jdbcType="TIMESTAMP" javaType="java.util.Calendar"/>
 <!-- 		<result property="workgroup" column="user2_workgroup" /> -->
 		<discriminator column="user_level" javaType="java.lang.String">
@@ -25,9 +26,9 @@
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.user.User" statementType="PREPARED">
 		INSERT INTO tab_user2
-			(user2_name, user_level, user2_no, user2_pwd, user2_status, cdate, user3_sno, user2_check) 
+			(user2_name, user_level, is_del, user2_no, user2_pwd, user2_status, cdate, user3_sno, user2_check) 
 		VALUES 
-			(#{name}, #{type.code}, #{code}, #{password}, #{status.code}, #{createTime}, 
+			(#{name}, #{type.code}, #{deleteStatus.code}, #{code}, #{password}, #{status.code}, #{createTime}, 
 			<choose>
 			    <when test="agency == null" >
 					0,
@@ -36,7 +37,7 @@
 					#{agency.id}, 
 			    </otherwise>
 			</choose>
-			#{checkCode})    
+			#{loginCheckCode})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
@@ -53,12 +54,33 @@
 			user_level=#{type.code}, 
 			user2_no=#{code}, 
 			user2_pwd=#{password}, 
-			user2_status=#{status.code}, 
-			cdate=#{createTime}, 
-			user2_check=#{checkCode}, 
-			<if test="agency != null">
-				user3_sno=#{agency.id} 
-			</if>
+			<choose>
+				<when test="agency != null">
+					user3_sno=#{agency.id}, 
+				</when>
+				<otherwise>
+				    user3_sno=0, 
+				</otherwise>
+			</choose>
+			user2_status=#{status.code}
+		WHERE user2_sno=#{id}
+	</update>
+	
+	<update id="updateDeleteStatus" parameterType="com.sitv.skyshop.massagechair.domain.user.User"  statementType="PREPARED" >
+		UPDATE tab_user2 
+		SET is_del=#{deleteStatus.code}
+		WHERE user2_sno=#{id}
+	</update>
+	
+	<update id="updateStatus" parameterType="com.sitv.skyshop.massagechair.domain.user.User"  statementType="PREPARED" >
+		UPDATE tab_user2 
+		SET user2_status=#{status.code}
+		WHERE user2_sno=#{id}
+	</update>
+	
+	<update id="updateLoginCheckCode"  statementType="PREPARED" >
+		UPDATE tab_user2 
+		SET user2_check=#{loginCheckCode}
 		WHERE user2_sno=#{id}
 	</update>
 	
@@ -70,13 +92,16 @@
 		SELECT *
 		FROM tab_user2  
 		WHERE 1 = 1 
+		<if test="param != null and param.deleteStatus != null">
+			AND is_del = #{param.deleteStatus.code}
+		</if>
 		<if test="param != null and param.code != null">
-			AND user2_no LIKE CONCAT('%', #{param.code}, '%')
+			AND user2_no LIKE '%' + #{param.code} + '%'
 		</if>
 		<if test="param != null and param.name != null">
-			AND user2_name LIKE CONCAT('%', #{param.name}, '%')
+			AND user2_name LIKE '%' + #{param.name} + '%'
 		</if>
-		<if test="param != null and param.level != null">
+		<if test="param != null and param.type != null">
 			AND user_level = #{param.type.code}
 		</if>
 		<if test="param != null and param.agency != null">

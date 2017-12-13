@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>订单详细情况 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/css/jquery-weui.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
+
+		
+		<script type="text/javascript" src="../../plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
+		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		
+		<script type="text/javascript" src="../../js/order/order_detail.js"></script>
+	</head>
+	<body uku-application>
+		<div class="h_nav" >
+			<div class="h_back">&lt;</div>
+			<div class="h_title">订单详情</div>
+		</div>
+		<div class="content">
+			<div class="t_search_results">
+				<table class="t_table">
+					<tr>
+						<td class="t_fieldname">订单号</td>
+						<td class="t_fieldvalue">
+							<input id="" class="t_text" uku-value="orderInfo.code" placeholder="名称" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">金额（元）</td>
+						<td class="t_fieldvalue">
+							<input id="" class="t_text" type="number" uku-value="orderInfo.money" placeholder="金额" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">时长（分钟）</td>
+						<td class="t_fieldvalue"><input class="t_text" type="number" uku-value="orderInfo.minutes" placeholder="时长" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">支付方式</td>
+						<td class="t_fieldvalue">
+							<input class="t_text"  uku-value="orderInfo.payType.name" placeholder="支付方式" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">支付状态</td>
+						<td class="t_fieldvalue">
+							<input class="t_text"  uku-value="orderInfo.payStatus.name" placeholder="支付状态" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">订单时间</td>
+						<td class="t_fieldvalue">
+							<input class="t_text"  uku-value="orderInfo.createTime" placeholder="订单时间" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">代理商</td>
+						<td class="t_fieldvalue">
+							<input class="t_text"  uku-value="orderInfo.agency.name" placeholder="代理商" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">按摩椅</td>
+						<td class="t_fieldvalue">
+							<input class="t_text"  uku-value="orderInfo.chair.name" placeholder="按摩椅" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">场所</td>
+						<td class="t_fieldvalue">
+							<input class="t_text"  uku-value="orderInfo.installationAddress.name" placeholder="场所" readonly="readonly"/>
+						</td>
+					</tr>
+					<tr class="t_deletestatus_field">
+						<td class="t_fieldname">是否已删除</td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="orderInfo.deleteStatus.name" placeholder="是否已删除" readonly="readonly"/></td>
+					</tr>
+				</table>
+			</div>
+			<div style="margin-top: 10px;">
+				<div id="btn_delete" class="weui-btn weui-btn_warn" style="width: 80%">删除</div>
+			</div>
+		</div>
+	</body>
+</html>

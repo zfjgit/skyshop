@@ -28,25 +28,31 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 	private Environment env;
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		log.debug("TOKEN_HEADER CHECK>>>>");
+		log.debug("TOKEN-HEADER CHECK>>>>");
 		log.debug("refer=" + request.getRemoteAddr());
 
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/json;charset=UTF-8");
 
+		String corsOrigin = env.getProperty(Constants.ACCESS_CONTROL_ALLOW_ORIGIN);
 		if (CorsUtils.isCorsRequest(request)) {
 			log.debug("CORS REQUEST>>>");
-			response.addHeader("Access-Control-Allow-Origin", env.getProperty("access-control-allow-origin"));
+			response.addHeader("Access-Control-Allow-Origin", corsOrigin);
 			response.addHeader("Access-Control-Allow-Credentials", "true");
 			response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, HEAD");
 			response.addHeader("Access-Control-Allow-Headers",
-					"Content-Type, X-Requested-With, Token-Header, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods");
+			                "Content-Type, X-Requested-With, Token-Header, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods");
 			response.addHeader("Access-Control-Max-Age", "3600");
 		}
 
 		String url = request.getRequestURL().toString();
 
 		log.debug("url=" + url);
+
+		boolean authInterceptorEnabled = Boolean.valueOf(env.getProperty(Constants.AUTH_INTERCEPTOR_ENABLED));
+		if (!authInterceptorEnabled) {
+			return true;
+		}
 
 		if (url.endsWith("error") || url.endsWith(".html") || url.endsWith(".css")) {
 			return true;
@@ -57,6 +63,11 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 		}
 
 		log.debug("handler=" + handler.getClass().getName());
+
+		if (Constants.SPRING_PROFILES_DEV.equals(env.getProperty("spring.profiles.active"))) {
+			log.debug("开发模式，跳过检查>>>>");
+			return true;
+		}
 
 		HandlerMethod handlerMethod = (HandlerMethod) handler;
 		Method method = handlerMethod.getMethod();
@@ -88,13 +99,14 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 
 	private boolean checkToken(HttpServletRequest request, HttpServletResponse response) throws IOException {
 		UserSessionInfo loginUserInfo = (UserSessionInfo) request.getSession().getAttribute(Constants.USER_KEY);
+		log.debug("loginUserInfo=" + loginUserInfo);
 		if (loginUserInfo == null || loginUserInfo.getToken() == null) {
 			log.debug("SC_UNAUTHORIZED----->登录信息为空");
 			response.getWriter().print(ResponseInfo.UNAUTHORIZED_ERROR("登录信息为空"));
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return false;
 		}
-		if (System.currentTimeMillis() - loginUserInfo.getLastAccessTime() > Constants.TOKEN_LIFETIME) {
+		if (System.currentTimeMillis() - loginUserInfo.getLastAccessTime() > Long.valueOf(env.getProperty(Constants.TOKEN_LIFE_LONG)) * 60 * 1000) {
 			log.debug("SC_UNAUTHORIZED----->TOKEN超时");
 			response.getWriter().print(ResponseInfo.UNAUTHORIZED_ERROR("TOKEN超时"));
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
@@ -107,11 +119,13 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 			return false;
 		}
+		log.debug("OK!!!");
 		UserSessionContext.setSession(loginUserInfo);
 		return true;
 	}
 
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
+		log.debug("TOKEN验证完成>>>");
 		UserSessionContext.setSession(null);
 		super.postHandle(request, response, handler, modelAndView);
 	}

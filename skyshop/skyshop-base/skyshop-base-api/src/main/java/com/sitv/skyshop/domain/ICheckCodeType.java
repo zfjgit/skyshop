@@ -15,6 +15,6 @@ public interface ICheckCodeType {
 	void setCheckCode(String checkCode);
 
 	default boolean verifyCheckCode() {
-		return getCheckCode() != null && getCheckCode().equals(calcCheckCode());
+		return getCheckCode() != null && getCheckCode().equalsIgnoreCase(calcCheckCode());
 	}
 }

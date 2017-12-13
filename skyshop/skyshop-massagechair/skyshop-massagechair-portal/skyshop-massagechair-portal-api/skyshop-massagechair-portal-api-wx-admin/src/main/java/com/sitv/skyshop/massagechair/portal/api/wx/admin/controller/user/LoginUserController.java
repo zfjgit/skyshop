@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sitv.skyshop.common.interceptor.auth.annotation.AuthorizationRequired;
 import com.sitv.skyshop.common.utils.Constants;
-import com.sitv.skyshop.common.utils.Utils;
 import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.ResponseInfo;
 import com.sitv.skyshop.dto.info.EnumInfo;
@@ -54,7 +53,7 @@ public class LoginUserController extends BaseRestController<IUserService<UserInf
 
 		userInfo = service.login(userInfo.getCode(), userInfo.getPassword());
 
-		LoginUserInfo loginUserInfo = new LoginUserInfo(request.getRemoteHost(), userInfo, Utils.UUID(), System.currentTimeMillis());
+		LoginUserInfo loginUserInfo = new LoginUserInfo(request.getRemoteHost(), userInfo, userInfo.getLoginCheckCode(), System.currentTimeMillis());
 		request.getSession().setAttribute(Constants.USER_KEY, loginUserInfo);
 
 		log.debug("账号登录成功");
@@ -63,10 +62,10 @@ public class LoginUserController extends BaseRestController<IUserService<UserInf
 		UserOperateRecordInfo record = null;
 		if (userInfo instanceof AgencyUserInfo) {
 			record = new UserOperateRecordInfo(((AgencyUserInfo) userInfo).getAgency(), userInfo.getCode(), request.getRemoteHost(),
-					EnumInfo.valueOf(OperateType.class, IOperateRecordService.AGENCY), "代理商登录成功", Calendar.getInstance());
+			                EnumInfo.valueOf(OperateType.class, IOperateRecordService.AGENCY), "代理商登录成功", Calendar.getInstance());
 		} else {
 			record = new UserOperateRecordInfo(null, userInfo.getCode(), request.getRemoteHost(), EnumInfo.valueOf(OperateType.class, IOperateRecordService.SYSTEM), "管理员登录成功",
-					Calendar.getInstance());
+			                Calendar.getInstance());
 		}
 		recordService.createOne(record);
 		return ResponseInfo.SUCCESS(loginUserInfo);
@@ -93,10 +92,10 @@ public class LoginUserController extends BaseRestController<IUserService<UserInf
 		UserOperateRecordInfo record = null;
 		if (userInfo instanceof AgencyUserInfo) {
 			record = new UserOperateRecordInfo(((AgencyUserInfo) userInfo).getAgency(), userInfo.getCode(), request.getRemoteHost(),
-					EnumInfo.valueOf(OperateType.class, IOperateRecordService.AGENCY), "代理商退出登录成功", Calendar.getInstance());
+			                EnumInfo.valueOf(OperateType.class, IOperateRecordService.AGENCY), "代理商退出登录成功", Calendar.getInstance());
 		} else {
 			record = new UserOperateRecordInfo(null, userInfo.getCode(), request.getRemoteHost(), EnumInfo.valueOf(OperateType.class, IOperateRecordService.SYSTEM), "管理员退出登录成功",
-					Calendar.getInstance());
+			                Calendar.getInstance());
 		}
 		recordService.createOne(record);
 		return ResponseInfo.DELETED_SUCCESS("退出登录成功");

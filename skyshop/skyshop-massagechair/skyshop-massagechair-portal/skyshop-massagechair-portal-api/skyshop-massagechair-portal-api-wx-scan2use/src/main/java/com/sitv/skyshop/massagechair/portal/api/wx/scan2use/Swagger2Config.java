@@ -7,7 +7,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import com.sitv.skyshop.common.utils.Constants;
-import com.sitv.skyshop.dto.SearchParamInfo;
 
 import springfox.documentation.builders.ApiInfoBuilder;
 import springfox.documentation.builders.ParameterBuilder;
@@ -30,12 +29,12 @@ public class Swagger2Config {
 		tokenPar.name(Constants.TOKEN_HEADER).defaultValue("***").description("token").modelRef(new ModelRef("string")).parameterType("header").required(true).build();
 		List<Parameter> params = new ArrayList<>();
 		params.add(tokenPar.build());
-		return new Docket(DocumentationType.SWAGGER_2).genericModelSubstitutes(SearchParamInfo.class).apiInfo(apiInfo()).select()
-				.apis(RequestHandlerSelectors.basePackage("com.sitv.skyshop")).paths(PathSelectors.any()).build().globalOperationParameters(params);
+		return new Docket(DocumentationType.SWAGGER_2).genericModelSubstitutes().apiInfo(apiInfo()).select().apis(RequestHandlerSelectors.basePackage("com.sitv.skyshop"))
+				.paths(PathSelectors.any()).build().globalOperationParameters(params);
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("chairs-api-wxadmin").description("skyshop massagechair wxadmin api")
+		return new ApiInfoBuilder().title("chairs-api-scan2use").description("skyshop massagechair scan2use api")
 				.termsOfServiceUrl("https://github.com/zfjgit/skyshop/tree/master/skyshop/skyshop-massagechair")
 				.contact(new Contact("skyshop", "https://github.com/zfjgit/skyshop", "zfjemail@qq.com")).version("1.0.0-SNAPSHOT").build();
 	}

@@ -16,16 +16,23 @@ import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
+import com.sitv.skyshop.dto.info.SimpleInfoDto;
 import com.sitv.skyshop.massagechair.dao.agency.IAgencyDao;
 import com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao;
+import com.sitv.skyshop.massagechair.dao.device.IMassageChairDao;
 import com.sitv.skyshop.massagechair.domain.agency.Agency;
 import com.sitv.skyshop.massagechair.domain.device.InstallationAddress;
+import com.sitv.skyshop.massagechair.domain.device.MassageChair;
+import com.sitv.skyshop.massagechair.domain.device.MassageChair.ChairStatus;
 import com.sitv.skyshop.massagechair.dto.device.InstallationAddressInfo;
 import com.sitv.skyshop.service.CrudService;
+
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author zfj20 @ 2017年11月18日
  */
+@Slf4j
 @Service
 public class InstallationAddressService extends CrudService<IInstallationAddressDao, InstallationAddress, InstallationAddressInfo> implements IInstallationAddressService {
 
@@ -34,6 +41,9 @@ public class InstallationAddressService extends CrudService<IInstallationAddress
 
 	@Autowired
 	private IAddressDao addressDao;
+
+	@Autowired
+	private IMassageChairDao chairDao;
 
 	public InstallationAddressInfo getOne(Long id) {
 		return InstallationAddressInfo.create(get(id));
@@ -54,9 +64,9 @@ public class InstallationAddressService extends CrudService<IInstallationAddress
 	public void updateOne(InstallationAddressInfo t) {
 		Agency agency = agencyDao.get(t.getAgency().getId());
 
-		Address province = addressDao.get(t.getProvince().getId());
-		Address city = addressDao.get(t.getCity().getId());
-		Address district = addressDao.get(t.getDistrict() != null ? t.getDistrict().getId() : null);
+		Address province = addressDao.getBy(t.getProvince().getCode());
+		Address city = addressDao.getBy(t.getCity().getCode());
+		Address district = addressDao.getBy(t.getDistrict().getCode());
 
 		InstallationAddress addr = get(t.getId());
 		addr.setAgency(agency);
@@ -73,18 +83,41 @@ public class InstallationAddressService extends CrudService<IInstallationAddress
 		addr.setUpdateTime(Calendar.getInstance());
 
 		update(addr);
+
+		installChairs(addr, t.getChairs());
+	}
+
+	private void installChairs(InstallationAddress addr, List<SimpleInfoDto> chairInfos) {
+		if (chairInfos != null) {
+			for (SimpleInfoDto chairInfo : chairInfos) {
+				MassageChair massageChair = chairDao.get(chairInfo.getId());
+				if (massageChair.getStatus() != ChairStatus.NOTINSTALLED) {
+					log.warn("按摩椅不是未投放状态：" + massageChair.getName());
+					continue;
+				}
+				if (massageChair.getDeleteStatus() != DeleteStatus.NORMAL) {
+					log.warn("按摩椅已删除：" + massageChair.getName());
+					continue;
+				}
+				massageChair.setInstallationAddress(addr);
+				massageChair.setStatus(ChairStatus.NORMAL);
+				chairDao.update(massageChair);
+			}
+		}
 	}
 
 	public void createOne(InstallationAddressInfo t) {
 		Agency agency = agencyDao.get(t.getAgency().getId());
 
-		Address province = addressDao.get(t.getProvince().getId());
-		Address city = addressDao.get(t.getCity().getId());
-		Address district = addressDao.get(t.getDistrict() != null ? t.getDistrict().getId() : null);
+		Address province = addressDao.getBy(t.getProvince().getCode());
+		Address city = addressDao.getBy(t.getCity().getCode());
+		Address district = addressDao.getBy(t.getDistrict().getCode());
 
 		InstallationAddress installationAddress = new InstallationAddress(null, agency, province, city, district, t.getDetailAddress(), t.getDescription(), t.getLocation(),
-		                t.getContact(), t.getContactNumber(), Calendar.getInstance(), null, DeleteStatus.NORMAL);
+		                t.getContact(), t.getContactNumber(), Calendar.getInstance(), Calendar.getInstance(), DeleteStatus.NORMAL);
 		create(installationAddress);
+
+		installChairs(installationAddress, t.getChairs());
 	}
 
 	public void updateDeleteStatus(InstallationAddressInfo t) {

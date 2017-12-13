@@ -3,6 +3,8 @@
  */
 package com.sitv.skyshop.massagechair.domain.record;
 
+import java.util.Calendar;
+
 import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject;
 
@@ -17,6 +19,10 @@ import lombok.ToString;
 @Setter
 @ToString(callSuper = true)
 public class UseRecord extends DomainObject {
+
+	private Long orderId;
+
+	private String resultCode;
 
 	private String from;
 	private String response;
@@ -33,13 +39,16 @@ public class UseRecord extends DomainObject {
 
 	private String addr;
 	private UseRecordType type;
+	private String url;
 
 	protected UseRecord() {
 	}
 
-	public UseRecord(Long id, String from, String response, UseRecordType type, String imei, String sim, String price, String minutes, String chair, String openid, String nickName,
-	                String addr) {
-		super(id, "");
+	public UseRecord(Long id, Long orderId, String resultCode, String from, String response, UseRecordType type, String imei, String sim, String price, String minutes,
+	                String chair, String openid, String nickName, String addr, String url) {
+		super(id, type.getName());
+		this.orderId = orderId;
+		this.resultCode = resultCode;
 		this.type = type;
 		this.from = from;
 		this.response = response;
@@ -51,6 +60,9 @@ public class UseRecord extends DomainObject {
 		this.openid = openid;
 		this.nickName = nickName;
 		this.addr = addr;
+		this.url = url;
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
 	}
 
 	public enum UseRecordType implements BaseEnum<UseRecordType, String> {

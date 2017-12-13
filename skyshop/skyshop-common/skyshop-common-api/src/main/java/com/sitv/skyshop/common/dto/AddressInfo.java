@@ -28,19 +28,19 @@ public class AddressInfo extends FullInfoDto {
 	private AddressInfo parent;
 	private int level;
 
-	protected AddressInfo() {
+	public AddressInfo() {
 		super();
 	}
 
-	public AddressInfo(Long id, String name, int level, Address parent) {
-		super(id, name);
+	public AddressInfo(Long id, String code, String name, int level, Address parent) {
+		super(id, name, code);
 		this.level = level;
 		this.parent = create(parent);
 		this.parentId = parent == null ? 0l : parent.getId();
 	}
 
 	protected AddressInfo(Address address) {
-		this(address.getId(), address.getName(), address.getLevel(), address.getParent());
+		this(address.getId(), address.getCode(), address.getName(), address.getLevel(), address.getParent());
 	}
 
 	public static AddressInfo create(Address address) {

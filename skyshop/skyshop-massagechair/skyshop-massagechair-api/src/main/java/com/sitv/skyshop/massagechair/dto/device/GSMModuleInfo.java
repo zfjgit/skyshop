@@ -7,10 +7,6 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotBlank;
-
 import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.massagechair.domain.device.GSMModule;
@@ -30,19 +26,20 @@ public class GSMModuleInfo extends DeviceInfo {
 
 	private static final long serialVersionUID = 1510842333944062983L;
 
-	@NotBlank
 	private String imei;
 
-	@NotNull
 	private SIMCardInfo simCard;
 
 	private String module;
 
 	private EnumInfo<GSMModuleStatus, String> status;
 
+	public GSMModuleInfo() {
+	}
+
 	public GSMModuleInfo(Long id, String description, String module, String imei, SIMCardInfo sim, EnumInfo<GSMModuleStatus, String> status, Calendar createTime,
 	                Calendar updateTime, EnumInfo<DeleteStatus, Integer> deleteStatus) {
-		super(id, null, description, createTime, updateTime, deleteStatus);
+		super(id, imei, description, createTime, updateTime, deleteStatus);
 		this.imei = imei;
 		this.module = module;
 		this.simCard = sim;

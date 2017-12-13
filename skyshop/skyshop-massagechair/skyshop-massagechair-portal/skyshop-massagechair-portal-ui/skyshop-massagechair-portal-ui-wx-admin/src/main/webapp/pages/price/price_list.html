@@ -21,12 +21,17 @@
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
-		<script type="text/javascript">
-			
-		</script>
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		
+		<script type="text/javascript" src="../../js/price/price_list.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
 			<div class="h_title">价格管理</div>
@@ -38,11 +43,11 @@
 				<table class="t_table">
 					<tr>
 						<td class="t_fieldname">输入价格关键字</td>
-						<td class="t_fieldvalue"><input class="t_text" value="" placeholder="查询关键字" /></td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="priceManage.priceName" placeholder="查询关键字" /></td>
 					</tr>
 				</table>
 				<div class="t_area_btn">
-					<div class="t_table_title">价格列表</div><div class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+					<div class="t_table_title">价格列表</div><div id="btn_search" class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
 				</div>
 			</div>
 			<div class="t_search_results">
@@ -58,26 +63,12 @@
 							</tr>
 						</thead>
 						<tbody class="t_table_body">
-							<tr>
-								<td>5元10分钟</td>
-								<td>5</td>
-								<td>10</td>
-								<td><img src="../../images/f1.png" style="width: 100%;" /></td>
-								<td><a href="price_detail.html?id=1">&gt;</a></td>
-							</tr>
-							<tr>
-								<td>10元20分钟</td>
-								<td>10</td>
-								<td>20</td>
-								<td><img src="../../images/f1.png" style="width: 100%;"/></td>
-								<td><a href="price_detail.html?id=1">&gt;</a></td>
-							</tr>
-							<tr>
-								<td>15元30分钟</td>
-								<td>15</td>
-								<td>30</td>
-								<td><img src="../../images/f1.png" style="width: 100%;"/></td>
-								<td><a href="price_detail.html?id=1">&gt;</a></td>
+							<tr uku-repeat="item in priceManage.prices">
+								<td>{{item.name}}</td>
+								<td>{{item.money}}</td>
+								<td>{{item.minutes}}</td>
+								<td><img uku-src="item.img" style="width: 100%;" /></td>
+								<td><a uku-href="item.detailUrl">{{item.id ? '&gt;' : ''}}</a></td>
 							</tr>
 						</tbody>
 					</table>

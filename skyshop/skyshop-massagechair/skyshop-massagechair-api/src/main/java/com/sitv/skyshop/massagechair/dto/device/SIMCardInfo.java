@@ -7,11 +7,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotNull;
-
-import org.hibernate.validator.constraints.NotBlank;
-
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.massagechair.domain.device.SIMCard;
@@ -32,23 +28,23 @@ public class SIMCardInfo extends DeviceInfo {
 
 	private static final long serialVersionUID = -4372937544847496856L;
 
-	@NotNull
 	private EnumInfo<SIMCardOperator, String> operator;
 
-	@NotBlank
 	private String sim;
 
-	@NotBlank
-	@DecimalMin("1")
 	private int dataFlow;
 
+	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Calendar dueDate;
 
 	private EnumInfo<SIMCardStatus, String> status;
 
+	public SIMCardInfo() {
+	}
+
 	public SIMCardInfo(Long id, String description, String sim, int dataFlow, Calendar dueDate, EnumInfo<SIMCardOperator, String> operator, EnumInfo<SIMCardStatus, String> status,
 	                Calendar createTime, Calendar updateTime, EnumInfo<DeleteStatus, Integer> deleteStatus) {
-		super(id, null, description, createTime, updateTime, deleteStatus);
+		super(id, sim, description, createTime, updateTime, deleteStatus);
 		this.dataFlow = dataFlow;
 		this.dueDate = dueDate;
 		this.operator = operator;

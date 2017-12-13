@@ -20,6 +20,11 @@
 		</dependency>
 		<dependency>
 			<groupId>com.sitv</groupId>
+			<artifactId>skyshop-common-utils</artifactId>
+			<version>${common.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.sitv</groupId>
 			<artifactId>skyshop-base-api</artifactId>
 			<version>${base.version}</version>
 		</dependency>

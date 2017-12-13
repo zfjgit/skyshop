@@ -8,6 +8,7 @@
 		<result property="status" jdbcType="VARCHAR" column="simcard_status" />
 		<result property="description" jdbcType="VARCHAR" column="description" />
 		<result property="sim" jdbcType="VARCHAR" column="simcard_sim" />
+		<result property="name" jdbcType="VARCHAR" column="simcard_name" />
 		<result property="dataFlow" jdbcType="INTEGER" column="simcard_dataFlow" />
 		<result property="dueDate" column="simcard_dueDate" />
 		<result property="deleteStatus" jdbcType="INTEGER" column="is_del" />
@@ -18,20 +19,27 @@
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.SIMCard" statementType="PREPARED">
 		INSERT INTO tab_simcards
-			(simcard_status, description, simcard_sim, simcard_dataFlow, simcard_dueDate, simcard_createTime, simcard_operator) 
+			(simcard_status, is_del, description, simcard_name, simcard_sim, simcard_dataFlow, simcard_dueDate, simcard_createTime,simcard_updateTime, simcard_operator) 
 		VALUES 
-			(#{status.code}, #{description}, #{sim}, #{dataFlow}, #{dueDate}, #{createTime}, #{operator.code})    
+			(#{status.code}, #{deleteStatus.code}, #{description, jdbcType=VARCHAR}, #{name}, #{sim}, #{dataFlow}, #{dueDate}, #{createTime}, #{updateTime}, #{operator.code})    
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
 		SELECT * FROM tab_simcards WHERE simcard_sno=#{id}
 	</select>
 	
+	<update id="updateStatus" parameterType="com.sitv.skyshop.massagechair.domain.device.SIMCard" statementType="PREPARED" >
+		UPDATE tab_simcards 
+		SET simcard_status=#{status.code}
+		WHERE simcard_sno=#{id}
+	</update>
+	
 	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.device.SIMCard" statementType="PREPARED" >
 		UPDATE tab_simcards 
 		SET simcard_status=#{status.code}, 
-		 	description=#{description},
+		 	description=#{description, jdbcType=VARCHAR},
 		 	simcard_sim=#{sim},
+		 	simcard_name=#{name},
 		 	simcard_dataFlow=#{dataFlow},
 		 	simcard_dueDate=#{dueDate},
 		 	simcard_operator=#{operator.code},
@@ -41,7 +49,7 @@
 	
 	<update id="updateDeleteStatus" parameterType="com.sitv.skyshop.massagechair.domain.device.SIMCard" statementType="PREPARED" >
 		UPDATE tab_simcards 
-		SET is_del=#{deleteStatus.code},
+		SET is_del=#{deleteStatus.code}
 		WHERE simcard_sno=#{id}
 	</update>
 	
@@ -53,11 +61,14 @@
 		SELECT m.*
 		FROM tab_simcards m
 		WHERE 1 = 1 
+		<if test="param != null and param.deleteStatus != null">
+			AND is_del = #{param.deleteStatus.code}
+		</if>
 		<if test="param != null and param.status != null">
 			AND simcard_status = #{param.status.code}
 		</if>
 		<if test="param != null and param.sim != null">
-			AND simcard_sim like CONCAT('%', #{param.sim}, '%')
+			AND simcard_sim like '%' + #{param.sim} + '%'
 		</if>
 		<if test="param != null and param.dueDate != null">
 			AND simcard_dueDate &lt;= #{param.dueDate}

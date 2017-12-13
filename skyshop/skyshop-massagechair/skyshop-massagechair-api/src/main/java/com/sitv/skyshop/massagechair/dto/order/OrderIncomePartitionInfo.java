@@ -40,6 +40,9 @@ public class OrderIncomePartitionInfo extends FullInfoDto {
 	@JsonFormat(pattern = "yyyy-MM-dd")
 	private Calendar endDate;
 
+	public OrderIncomePartitionInfo() {
+	}
+
 	public OrderIncomePartitionInfo(Long id, OrderInfo order, AgencyInfo agency, int percentage, BigDecimal money, BigDecimal totalMoney, String checkCode, Calendar createTime,
 	                Calendar updateTime) {
 		super(id, createTime, updateTime);

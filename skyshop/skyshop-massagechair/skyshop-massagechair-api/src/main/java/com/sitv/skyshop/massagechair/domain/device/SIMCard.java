@@ -29,16 +29,18 @@ public class SIMCard extends Device {
 	}
 
 	public SIMCard(Long id, String description, int dataFlow, Calendar dueDate, String sim, SIMCardOperator simCardOperator, SIMCardStatus status, DeleteStatus deleteStatus) {
-		super(id, null, description, deleteStatus);
+		super(id, sim, description, deleteStatus);
 		this.sim = sim;
 		this.status = status;
 		this.dueDate = dueDate;
 		this.dataFlow = dataFlow;
 		this.operator = simCardOperator;
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
 	}
 
 	public enum SIMCardStatus implements BaseEnum<SIMCardStatus, String> {
-		USING("A", "使用中"), UNUSED("B", "未使用");
+		NORMAL("A", "未使用"), DISABLED("B", "停用"), USING("C", "使用中");
 
 		private String code;
 		private String name;

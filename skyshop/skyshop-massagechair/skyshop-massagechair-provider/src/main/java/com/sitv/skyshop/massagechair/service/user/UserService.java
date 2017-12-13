@@ -24,7 +24,7 @@ public class UserService extends DefaultUserService<IUserDao<User>, UserInfo, Us
 	}
 
 	public UserInfo login(String code, String pwd) {
-		User user = dao.getBy(code, Utils.digest(code + pwd, "MD5"));
+		User user = dao.getBy(code, Utils.digest(code + pwd, "SHA-1"));
 		if (user == null) {
 			throw new EntityNotFoundException("账号或密码错误");
 		}
@@ -32,6 +32,8 @@ public class UserService extends DefaultUserService<IUserDao<User>, UserInfo, Us
 			throw new EntityStatusException("账号状态不正常");
 		}
 
+		user.setLoginCheckCode(Utils.UUID());
+		dao.updateLoginCheckCode(user.getId(), user.getLoginCheckCode());
 		return UserInfo.create(user);
 	}
 }

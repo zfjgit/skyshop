@@ -11,7 +11,7 @@
 	<modules>
 		
 		
-		<module>skyshop-massagechair-portal-ui-admin</module>
+		
 		<module>skyshop-massagechair-portal-ui-wx-admin</module>
 		<module>skyshop-massagechair-portal-ui-wx-scan2use</module>
 	</modules>

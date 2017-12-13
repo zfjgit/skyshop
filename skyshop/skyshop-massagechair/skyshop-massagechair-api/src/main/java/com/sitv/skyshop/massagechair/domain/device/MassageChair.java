@@ -3,6 +3,7 @@
  */
 package com.sitv.skyshop.massagechair.domain.device;
 
+import java.util.Calendar;
 import java.util.List;
 
 import com.sitv.skyshop.domain.BaseEnum;
@@ -33,20 +34,26 @@ public class MassageChair extends Device {
 
 	private Agency agency;
 
+	private String qrcode;
+
 	protected MassageChair() {
 	}
 
 	public MassageChair(Long id, String name, String description, String brand, ChairStatus status, GSMModule gsmModule, InstallationAddress installationAddress, Agency agency,
-	                DeleteStatus deleteStatus) {
+	                DeleteStatus deleteStatus, String qrcode) {
 		super(id, name, description, deleteStatus);
 		this.agency = agency;
 		this.brand = brand;
+		this.qrcode = qrcode;
+		this.status = status;
 		this.gsmModule = gsmModule;
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
 		this.installationAddress = installationAddress;
 	}
 
 	public enum ChairStatus implements BaseEnum<ChairStatus, String> {
-		OFFLINE("A", "未投放"), ONLINE("B", "正常未使用"), WORKING("C", "正常使用中"), FAULT("D", "故障");
+		NOTINSTALLED("A", "未投放"), NORMAL("B", "正常未使用"), WORKING("C", "正常使用中"), FAULT("D", "故障");
 
 		private String code;
 		private String name;

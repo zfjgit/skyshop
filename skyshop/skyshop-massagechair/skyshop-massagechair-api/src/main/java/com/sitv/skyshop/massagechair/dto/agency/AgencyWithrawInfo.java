@@ -28,6 +28,9 @@ public class AgencyWithrawInfo extends WithrawInfo {
 	private static final long serialVersionUID = -232028056019230325L;
 	private AgencyInfo agency;
 
+	public AgencyWithrawInfo() {
+	}
+
 	public AgencyWithrawInfo(Long id, AgencyInfo agency, BigDecimal money, EnumInfo<WithrawStatus, String> status, String bank, String account, String accountName,
 	                String checkCode, Calendar createTime, Calendar updateTime) {
 		super(id, money, status, bank, account, accountName, checkCode, createTime, updateTime);

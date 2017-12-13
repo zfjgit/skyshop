@@ -18,17 +18,36 @@
 		<association property="province" column="install_provinceid" select="com.sitv.skyshop.common.dao.IAddressDao.get"/>
 		<association property="city" column="install_cityid" select="com.sitv.skyshop.common.dao.IAddressDao.get"/>
 		<association property="district" column="install_districtid" select="com.sitv.skyshop.common.dao.IAddressDao.get"/>
+		<collection property="chairs" column="install_sno" select="getChairs" ofType="com.sitv.skyshop.massagechair.domain.device.MassageChair"/>
 	</resultMap>
 	
-	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.InstallationAddress" statementType="PREPARED">
+	<select id="getChairs" resultMap="com.sitv.skyshop.massagechair.dao.device.IMassageChairDao.BaseResultMap" parameterType="long">
+		SELECT *
+		FROM tab_massagechairs
+		WHERE install_sno=#{id}
+	</select>
+	
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.InstallationAddress" statementType="PREPARED" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO tab_installationaddresses
-			(install_fulladdress, install_provinceid, install_cityid, install_districtid, install_detailAddress, description, install_location, install_contact, install_contactNumber,install_createTime, user3_sno) 
+			(install_fulladdress, is_del, install_provinceid, install_cityid, install_districtid, install_detailAddress, description, install_contact, install_contactNumber,install_createTime, install_updateTime, user3_sno) 
 		VALUES 
-			(#{fullAddress}, #{province.id}, #{city.id}, #{district.id}, #{detailAddress}, #{description}, #{location}, #{contact}, #{contactNumber}, #{createTime}, #{agency.id})    
+			(#{fullAddress}, #{deleteStatus.code}, #{province.id}, #{city.id}, #{district.id}, #{detailAddress}, #{description, jdbcType=VARCHAR}, #{contact}, #{contactNumber}, #{createTime}, #{updateTime}, 
+			<choose>
+				<when test="agency != null">
+					#{agency.id} 
+				</when>
+				<otherwise>
+				    0 
+				</otherwise>
+			</choose>
+			)    
 	</insert>
 	
 	<select id="findByAgency" resultMap="BaseResultMap" parameterType="long">
-		SELECT * FROM tab_installationaddresses WHERE user3_sno=#{agencyId}
+		SELECT * FROM tab_installationaddresses WHERE 1=1
+		<if test="id != 0">
+		    AND user3_sno=#{id}
+		</if>
 	</select>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
@@ -36,12 +55,15 @@
 	</select>
 	
 	<select id="getCountByAgency" resultType="int" parameterType="long">
-		SELECT count(1) FROM tab_installationaddresses WHERE user3_sno=#{id}
+		SELECT count(1) FROM tab_installationaddresses WHERE 1=1
+		<if test="id != 0">
+		    AND user3_sno=#{id}
+		</if>
 	</select>
 	
 	<update id="updateDeleteStatus"  parameterType="com.sitv.skyshop.massagechair.domain.device.InstallationAddress" statementType="PREPARED" >
 		UPDATE tab_installationaddresses 
-		SET is_del=#{deleteStatus.code},
+		SET is_del=#{deleteStatus.code}
 		WHERE install_sno=#{id}
 	</update>
 	
@@ -49,11 +71,18 @@
 		UPDATE tab_installationaddresses 
 		SET install_fulladdress=#{fullAddress}, 
 		 	install_provinceid=#{province.id}, 
-		 	user3_sno=#{agency.id}, 
+		 	<choose>
+				<when test="agency != null">
+					user3_sno=#{agency.id}, 
+				</when>
+				<otherwise>
+				    user3_sno=0, 
+				</otherwise>
+			</choose>
 		 	install_cityid=#{city.id}, 
 		 	install_districtid=#{district.id}, 
 		 	install_detailAddress=#{detailAddress}, 
-		 	description=#{description}, 
+		 	description=#{description, jdbcType=VARCHAR}, 
 		 	install_location=#{location},
 		 	install_contact=#{contact},
 		 	install_contactNumber=#{contactNumber},
@@ -69,14 +98,17 @@
 		SELECT m.*
 		FROM tab_installationaddresses m
 		WHERE 1 = 1 
-		<if test="param != null and param.agency != null">
+		<if test="param != null and param.deleteStatus != null">
+			AND is_del = #{param.deleteStatus.code}
+		</if>
+		<if test="param != null and param.agency != null and param.agency.id != 0">
 			AND user3_sno = #{param.agency.id}
 		</if>
 		<if test="param != null and param.fullAddress != null">
-			AND install_fullAddress LIKE CONCAT('%', #{param.fullAddress}, '%')
+			AND install_fullAddress LIKE '%' + #{param.fullAddress} + '%'
 		</if>
 		<if test="param != null and param.contact != null">
-			AND install_contact like CONCAT('%', #{param.contact}, '%')
+			AND install_contact like '%' + #{param.contact} + '%'
 		</if>
 		<if test="sortField != null and sortDir != null">
 			ORDER BY ${sortField} ${sortDir}

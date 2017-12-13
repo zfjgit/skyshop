@@ -29,8 +29,9 @@ public class ManagerInfo extends UserInfo {
 	}
 
 	public ManagerInfo(Long id, String code, String name, String description, String password, String email, String mobile, Calendar createTime, Calendar updateTime,
-	                EnumInfo<User.UserStatus, String> status, EnumInfo<User.UserType, String> type, EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode) {
-		super(id, code, name, description, createTime, updateTime, password, email, mobile, status, type, deleteStatus, checkCode);
+	                EnumInfo<User.UserStatus, String> status, EnumInfo<User.UserType, String> type, EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode,
+	                String loginCheckCode) {
+		super(id, code, name, description, createTime, updateTime, password, email, mobile, status, type, deleteStatus, checkCode, loginCheckCode);
 	}
 
 	public static ManagerInfo create(Manager m) {
@@ -38,7 +39,7 @@ public class ManagerInfo extends UserInfo {
 			return null;
 		}
 		return new ManagerInfo(m.getId(), m.getCode(), m.getName(), m.getDescription(), m.getPassword(), m.getEmail(), m.getMobile(), m.getCreateTime(), m.getUpdateTime(),
-		                new EnumInfo<>(m.getStatus()), new EnumInfo<>(m.getType()), new EnumInfo<>(m.getDeleteStatus()), m.getCheckCode());
+		                new EnumInfo<>(m.getStatus()), new EnumInfo<>(m.getType()), new EnumInfo<>(m.getDeleteStatus()), m.getCheckCode(), m.getLoginCheckCode());
 	}
 
 }

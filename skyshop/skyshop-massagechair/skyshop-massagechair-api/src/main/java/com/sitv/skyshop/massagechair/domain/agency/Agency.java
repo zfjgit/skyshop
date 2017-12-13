@@ -4,7 +4,9 @@
 package com.sitv.skyshop.massagechair.domain.agency;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 
+import com.sitv.skyshop.common.utils.Utils;
 import com.sitv.skyshop.domain.BaseEnum;
 import com.sitv.skyshop.domain.DomainObject;
 import com.sitv.skyshop.domain.ICheckCodeType;
@@ -13,10 +15,12 @@ import com.sitv.skyshop.domain.IDeleteStatus;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 
 /**
  * @author zfj20 @ 2017年12月4日
  */
+@Slf4j
 @Getter
 @Setter
 @ToString(callSuper = true)
@@ -41,8 +45,11 @@ public class Agency extends DomainObject implements ICheckCodeType, IDeleteStatu
 		super(id, name);
 		this.parent = parent;
 		this.level = level;
-		this.orderIncomePercentage = orderIncomePercentage;
 		this.balance = balance;
+		this.deleteStatus = deleteStatus;
+		this.orderIncomePercentage = orderIncomePercentage;
+		setCreateTime(Calendar.getInstance());
+		setUpdateTime(Calendar.getInstance());
 		calcCheckCode();
 	}
 
@@ -51,9 +58,11 @@ public class Agency extends DomainObject implements ICheckCodeType, IDeleteStatu
 	}
 
 	public String calcCheckCode() {
-		String newCheckCode = "";
-		setCheckCode(newCheckCode);
-		return newCheckCode;
+		String raw = this.getId() + "" + (parent == null ? 0 : parent.getId()) + getLevel().getCode() + getOrderIncomePercentage() + getBalance();
+		log.debug("raw=" + raw);
+		String chc = Utils.digest(raw, "SHA-1");
+		setCheckCode(chc);
+		return chc;
 	}
 
 	public enum AgencyLevel implements BaseEnum<AgencyLevel, String> {
@@ -74,6 +83,11 @@ public class Agency extends DomainObject implements ICheckCodeType, IDeleteStatu
 		public String getName() {
 			return name;
 		}
+	}
+
+	public BigDecimal getBalance() {
+		balance.setScale(2);
+		return balance;
 	}
 
 }

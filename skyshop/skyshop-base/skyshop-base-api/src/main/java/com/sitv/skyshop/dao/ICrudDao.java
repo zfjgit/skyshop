@@ -2,6 +2,8 @@ package com.sitv.skyshop.dao;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.sitv.skyshop.domain.IBaseType;
 import com.sitv.skyshop.dto.SearchParamInfo;
 
@@ -18,7 +20,7 @@ public interface ICrudDao<T extends IBaseType> {
 	 * @param id
 	 * @return
 	 */
-	public T get(Long id);
+	public T get(@Param("id") Long id);
 
 	/**
 	 * 获取单条数据
@@ -70,16 +72,16 @@ public interface ICrudDao<T extends IBaseType> {
 	public int update(T entity);
 
 	/**
-	 * 删除数据（一般为逻辑删除，更新del_flag字段为1）
+	 * 删除数据
 	 *
 	 * @param id
 	 * @see public int delete(T entity)
 	 * @return
 	 */
-	public int delete(Long id);
+	public int delete(@Param("id") Long id);
 
 	/**
-	 * 删除数据（一般为逻辑删除，更新del_flag字段为1）
+	 * 删除数据
 	 *
 	 * @param entity
 	 * @return

@@ -26,6 +26,9 @@ public class AgencyBankAccountInfo extends BankAccountInfo {
 
 	private AgencyInfo agency;
 
+	public AgencyBankAccountInfo() {
+	}
+
 	public AgencyBankAccountInfo(Long id, AgencyInfo agency, String bank, String account, String accountName, String checkCode, Calendar createTime, Calendar updateTime) {
 		super(id, bank, account, accountName, checkCode, createTime, updateTime);
 		this.setAgency(agency);

@@ -25,9 +25,12 @@ public class SystemUserInfo extends UserInfo {
 
 	private static final long serialVersionUID = 6301961093278687007L;
 
+	public SystemUserInfo() {
+	}
+
 	public SystemUserInfo(Long id, String code, String name, String pwd, EnumInfo<User.UserStatus, String> status, EnumInfo<User.UserType, String> type,
-	                EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode, Calendar createTime, Calendar updateTime) {
-		super(id, code, name, pwd, status, type, deleteStatus, checkCode, createTime, updateTime);
+	                EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode, String loginCheckCode, Calendar createTime, Calendar updateTime) {
+		super(id, code, name, pwd, status, type, deleteStatus, checkCode, loginCheckCode, createTime, updateTime);
 	}
 
 	public static SystemUserInfo create(SystemUser systemUser) {
@@ -36,6 +39,7 @@ public class SystemUserInfo extends UserInfo {
 		}
 
 		return new SystemUserInfo(systemUser.getId(), systemUser.getCode(), systemUser.getName(), "*", new EnumInfo<>(systemUser.getStatus()), new EnumInfo<>(systemUser.getType()),
-		                new EnumInfo<>(systemUser.getDeleteStatus()), systemUser.getCheckCode(), systemUser.getCreateTime(), systemUser.getUpdateTime());
+		                new EnumInfo<>(systemUser.getDeleteStatus()), systemUser.getCheckCode(), systemUser.getLoginCheckCode(), systemUser.getCreateTime(),
+		                systemUser.getUpdateTime());
 	}
 }

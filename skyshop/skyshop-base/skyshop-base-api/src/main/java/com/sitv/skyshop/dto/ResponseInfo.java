@@ -32,6 +32,8 @@ public class ResponseInfo<T> extends Dto {
 	public static final int UNNORMAL_STATUS_CODE = 601;
 	public static final int DISCONNECTED_CODE = 602;
 
+	public static final int ORDER_EXPIRED_CODE = 603;
+
 	private int code;
 
 	private String url;
@@ -43,17 +45,22 @@ public class ResponseInfo<T> extends Dto {
 	protected ResponseInfo() {
 	}
 
-	protected ResponseInfo(T data, int code) {
-		this.data = data;
-		this.code = code;
-	}
-
 	protected ResponseInfo(int code) {
 		this.code = code;
 	}
 
 	protected ResponseInfo(int code, String message) {
-		this.code = code;
+		this(code);
+		this.message = message;
+	}
+
+	protected ResponseInfo(T data, int code) {
+		this(code);
+		this.data = data;
+	}
+
+	protected ResponseInfo(T data, int code, String message) {
+		this(data, code);
 		this.message = message;
 	}
 
@@ -85,6 +92,14 @@ public class ResponseInfo<T> extends Dto {
 			return new ResponseInfo<>(CREATED_SUCCESS_CODE, "修改成功");
 		}
 		return new ResponseInfo<>(UPDATED_SUCCESS_CODE, message[0]);
+	}
+
+	public static <T> ResponseInfo<T> CREATED_SUCCESS(T t) {
+		return new ResponseInfo<>(t, CREATED_SUCCESS_CODE, "创建成功");
+	}
+
+	public static <T> ResponseInfo<T> UPDATED_SUCCESS(T t) {
+		return new ResponseInfo<>(t, UPDATED_SUCCESS_CODE, "修改成功");
 	}
 
 	public static <T> ResponseInfo<T> DELETED_SUCCESS(String... message) {
@@ -120,6 +135,10 @@ public class ResponseInfo<T> extends Dto {
 
 	public String toString() {
 		return new JSONObject(this).toString();
+	}
+
+	public static <T> ResponseInfo<T> ORDER_EXPIRED_ERROR(String message) {
+		return new ResponseInfo<>(ORDER_EXPIRED_CODE, message);
 	}
 
 }

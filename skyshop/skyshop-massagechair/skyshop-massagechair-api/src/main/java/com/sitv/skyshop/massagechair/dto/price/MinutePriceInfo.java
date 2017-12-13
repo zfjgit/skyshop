@@ -17,14 +17,11 @@ import lombok.ToString;
 @ToString(callSuper = true)
 public class MinutePriceInfo extends PriceInfo {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -124350725826771712L;
 
-	/**
-	 * @param p
-	 */
+	public MinutePriceInfo() {
+	}
+
 	public MinutePriceInfo(MinutePrice p) {
 		super(p);
 	}

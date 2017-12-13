@@ -20,56 +20,20 @@
 		<script type="text/javascript" src="../../plugins/jqweui/lib/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
-		<script type="text/javascript">
-			$(function(){
-			    var search = window.location.search;
-			    if(!search) {
-			        $('.h_title').text('新增场所');
-			        $('#btn_delete').hide();
-			        $('#btn_chairs').hide();
-			    }
-			    
-			    $("#city-picker").cityPicker({
-			        title: "请选择地址"
-			    });
-			    
-			    $('#btn_delete').click(function(){
-			        $.confirm("确认删除这个场所？", function() {
-			            //点击确认后的回调函数
-			        }, function() {
-			            //点击取消后的回调函数
-			        });
-			    });
-			    
-			    $("#chair-picker").select({
-			        title: "请选择设备",
-			        multi: true,
-			        items: [
-			          {
-			            title: "按摩椅--12321",
-			            value: '12321'
-			          },
-			          {
-			              title: "按摩椅--12322",
-				            value: '12322'
-			          },
-			          {
-			              title: "按摩椅--12323",
-				            value: '12323'
-			          }
-			        ]
-			      });
-			});
-			
-		</script>
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		
+		<script type="text/javascript" src="../../js/addr/addr_detail.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
 			<div class="h_title">场所详情</div>
-<!-- 			<div class=" t_nav_btn" onclick="">保存</div> -->
 		</div>
 		<div class="content">
 			<div class="t_search_results">
@@ -83,27 +47,31 @@
 					<tr>
 						<td class="t_fieldname">详细地址</td>
 						<td class="t_fieldvalue">
-							<input id="" class="t_text" value="" placeholder="详细地址" />
+							<input id="" class="t_text" uku-value="addrInfo.detailAddress" placeholder="详细地址" />
 						</td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">联系人</td>
-						<td class="t_fieldvalue"><input class="t_text" value="" placeholder="联系人" /></td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="addrInfo.contact" placeholder="联系人" /></td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">联系电话</td>
-						<td class="t_fieldvalue"><input type="number" class="t_text" value="" placeholder="联系电话" /></td>
+						<td class="t_fieldvalue"><input type="number" class="t_text" uku-value="addrInfo.contactNumber" placeholder="联系电话" /></td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">分配设备</td>
 						<td class="t_fieldvalue"><input id="chair-picker" class="t_text" value="" placeholder="分配设备" /></td>
+					</tr>
+					<tr class="t_deletestatus_field">
+						<td class="t_fieldname">是否已删除</td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="addrInfo.deleteStatus.name" placeholder="是否已删除" readonly="readonly"/></td>
 					</tr>
 				</table>
 			</div>
 			<div style="margin-top: 10px;">
 				<div id="btn_save" class="weui-btn weui-btn_primary" style="width: 80%">保存</div>
 				<div id="btn_delete" class="weui-btn weui-btn_warn" style="width: 80%">删除</div>
-				<div id="btn_chairs" class="weui-btn weui-btn_default" style="width: 80%" onclick="window.location.href='../income/income_by_addr_detail.html';">查看场所收益</div>
+				<div id="btn_income" class="weui-btn weui-btn_default" style="width: 80%">查看场所收益</div>
 			</div>
 		</div>
 	</body>

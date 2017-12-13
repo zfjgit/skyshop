@@ -21,6 +21,8 @@ public class FixedPriceService extends DefaultPriceService<IPriceDao<FixedPrice>
 		FixedPrice fixedPrice = new FixedPrice(null, t.getName(), t.getPrice(), t.getImg(), t.getMinutes());
 		fixedPrice.setAgency(agency);
 		create(fixedPrice);
+
+		t.setId(fixedPrice.getId());
 	}
 
 	public void updateOne(FixedPriceInfo t) {

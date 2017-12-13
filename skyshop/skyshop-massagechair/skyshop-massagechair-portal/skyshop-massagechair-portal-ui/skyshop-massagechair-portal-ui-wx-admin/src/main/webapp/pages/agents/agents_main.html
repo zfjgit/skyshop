@@ -21,84 +21,17 @@
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
-		<script type="text/javascript">
-		$(function(){
-		    $('#item-agents').click(function(){
-		        $.showLoading();
-		        
-		        $('#item-content').load('agents_list.html', function(){
-		            $.hideLoading();
-		        });
-		        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
-		        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
-		        
-		        sessionStorage.agents_tab = 'item-agents';
-		    });
-		    $('#item-chair').click(function(){
-		        $.showLoading();
-		        $('#item-content').load('agents_chair_list.html', function(){
-		            $.hideLoading();
-		        });
-		        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
-		        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
-		        
-		        sessionStorage.agents_tab = 'item-chair';
-		    });
-		    $('#item-addr').click(function(){
-		        $.showLoading();
-		        $('#item-content').load('agents_addr_list.html', function(){
-		            $.hideLoading();
-		        });
-		        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
-		        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
-		        
-		        sessionStorage.agents_tab = 'item-addr';
-		    });
-		    $('#item-income').click(function(){
-		        $.showLoading();
-		        $('#item-content').load('agents_income_list.html', function(){
-		            $.hideLoading();
-		        });
-		        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
-		        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
-		        
-		        sessionStorage.agents_tab = 'item-income';
-		    });
-		    
-		    if(!sessionStorage.agents_tab) {
-			    $('#item-agents').click();
-		    } else {
-		        $('#' + sessionStorage.agents_tab).click();
-		    }
-		    
-		    $("#sub-picker").select({
-		        title: "请选择下级",
-		        multi: true,
-		        items: [
-		          {
-		            title: "代理商--1",
-		            value: '1'
-		          },
-		          {
-		            title: "代理商--2",
-		            value: '2'
-		          },
-		          {
-		            title: "代理商--3",
-		            value: '3'
-		          },
-		          {
-		            title: "代理商--4",
-		            value: '4'
-		          }
-		        ]
-		      });
-		    
-		});
-		</script>
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		
+		<script type="text/javascript" src="../../js/agency/agency_main.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
 			<div class="h_title">代理商管理</div>
@@ -107,17 +40,17 @@
 			<table class="t_table">
 				<tr>
 					<td class="t_fieldname">代理商名称</td>
-					<td class=" t_bg_white t_fieldvalue">沃尔玛</td>
+					<td class=" t_bg_white t_fieldvalue"><span>{{agency.name}}</span></td>
 				</tr>
 				<tr>
 					<td class="t_fieldname">代理商级别</td>
-					<td class=" t_bg_white t_fieldvalue">区域总代</td>
+					<td class=" t_bg_white t_fieldvalue">{{agency['level'] ? (agency['level'].code + ' - ' + agency['level'].name) : ''}}</td>
 				</tr>
 			</table>
 			
 			<div style="margin-bottom: 10px;">
-				<div class="weui-btn weui-btn_mini weui-btn_primary" onclick="window.location.href='agents_detail.html?id=1';">查看详情</div> 
-				<div id="sub-picker" class="weui-btn weui-btn_mini weui-btn_primary" style="margin-left: 20px;">新增下级</div>
+				<div id="btn_view" class="weui-btn weui-btn_mini weui-btn_primary" >查看详情</div> 
+				<div class="weui-btn weui-btn_mini weui-btn_primary" style="margin-left: 20px;" onclick="window.location.href='agents_detail.html';">新增下级</div>
 			</div>
 			
 			<div class="weui-tab">
@@ -140,6 +73,5 @@
 				</div>
 			</div>	
 		</div>
-		
 	</body>
 </html>

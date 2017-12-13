@@ -68,4 +68,9 @@ public abstract class Withraw extends DomainObject implements ICheckCodeType {
 			return name;
 		}
 	}
+
+	public BigDecimal getMoney() {
+		money.setScale(2);
+		return money;
+	}
 }
