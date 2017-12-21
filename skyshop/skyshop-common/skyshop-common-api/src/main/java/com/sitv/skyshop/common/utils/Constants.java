@@ -51,7 +51,8 @@ public final class Constants {
 	public static final String KUAIDI_URL = "http://api.kuaidi.com/openapi.html?id={0}&com={1}&nu={2}&show={3}&muti={4}&order={5}";
 
 	public static final String TOKEN_HEADER = "Token-Header";
-	public static final String TOKEN_LIFE_LONG = "token.life.long";
+	public static final String HTTP_METHOD_OVERRIDE_HEADER = "X-HTTP-Method-Override";
+	public static final String TOKEN_LIFE_LONG = "token.life.long.minutes";
 	public static final String SPRING_PROFILES_DEV = "dev";
 	public static final String SPRING_PROFILES_PROD = "prod";
 
@@ -77,6 +78,7 @@ public final class Constants {
 	public static final String SMS_YUNPIAN_CHAIR_COMMAND_ARG_URL = "sms.yunpian.chair.command.arg.url";
 	public static final String SMS_YUNPIAN_CHAIR_COMMAND_ARG_CONCAT = "sms.yunpian.chair.command.arg.concat";
 	public static final String SMS_YUNPIAN_CHAIR_COMMAND_ARG_ORDERID = "sms.yunpian.chair.command.arg.orderid";
+	public static final String SMS_YUNPIAN_CHAIR_COMMAND_ARG_SIM = "sms.yunpian.chair.command.arg.sim";
 
 	public static final String SMS_YUNPIAN_CHAIR_COMMAND_RESULT_FAIL = "sms.yunpian.chair.command.result.fail";
 	public static final String SMS_YUNPIAN_CHAIR_COMMAND_RESULT_OK = "sms.yunpian.chair.command.result.ok";
@@ -84,18 +86,29 @@ public final class Constants {
 	public static final String AGENCY_OVERVIEW_EXPIRED_TIME = "agency.overview.expired.time";
 
 	public static final String REDIS_ORDERID_KEY_PREFIX = "ORDERID_KEY";
+	public static final String REDIS_ORDER_SECONDS_ADJUST_KEY = "ADJUST_SECONDS";
+	public static final String REDIS_ORDER_PAY_RESULT_KEY_PREFIX = "ORDER_PAY_RESULT";
 
 	public static final String AUTH_INTERCEPTOR_ENABLED = "auth.interceptor.enabled";
 
 	public static final String ACCESS_CONTROL_ALLOW_ORIGIN = "access-control-allow-origin";
 
+	public static final String OPERATE_RESULT_WAIT_ADJUST_SECONDS = "operate.result.wait.adjust.seconds";
+	public static final String OPERATE_RESULT_CHECK_POLL_RETRIES = "operate.result.check.poll.retries";
 	public static final String OPERATE_RESULT_CACHE_EXPIRED_MINUTES = "operate.result.cache.expired.minutes";
-	public static final String OPERATE_RESULT_CHECK_PERIOD_MILLISECONDS = "operate.result.check.period.milliseconds";
+	public static final String OPERATE_RESULT_POLL_PERIOD_MILLISECONDS = "operate.result.poll.period.milliseconds";
+
+	public static final String ORDER_PAY_RESULT_POLL_PERIOD_MILLISECONDS = "order.pay.result.poll.period.milliseconds";
+	public static final String ORDER_PAY_RESULT_CHECK_POLL_RETRIES = "order.pay.result.check.poll.retries";
 
 	public static final String ORDER_SERVICE_PARTITION_SERVER_URL = "order.service.partition.server.url";
 
 	public static final String HTTP4_CONNECTION_TIMEOUT_MILLILSEONDS = "http4.connection.timeout.milliseconds";
 	public static final String HTTP4_SOCKET_TIMEOUT_MILLILSEONDS = "http4.socket.timeout.milliseconds";
 	public static final String HTTP4_REQUEST_TIMEOUT_MILLILSEONDS = "http4.request.timeout.milliseconds";
+
+	public static final String POSTPAY_ORDERID_SESSION_KEY = "postpay_orderid";
+
+	public static final String CHAIR_AUTO_CREATE_ADDRESS_ID = "chair.auto.create.address.id";
 
 }

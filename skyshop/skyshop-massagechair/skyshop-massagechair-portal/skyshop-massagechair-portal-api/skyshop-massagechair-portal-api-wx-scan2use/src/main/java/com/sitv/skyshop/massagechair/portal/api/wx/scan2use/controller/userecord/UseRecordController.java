@@ -32,8 +32,8 @@ public class UseRecordController extends BaseRestController<IUseRecordService, U
 
 	@PostMapping("/")
 	public ResponseInfo<UseRecordInfo> create(@NotNull @Valid @ModelAttribute UseRecordInfo info) {
-		UseRecordInfo recordInfo = new UseRecordInfo(null, info.getOrderId(), "", info.getType(), "测试", "发送检测指令", info.getImei(), info.getSim(), "", "", "", "", "", "",
-		                info.getUrl(), Calendar.getInstance());
+		UseRecordInfo recordInfo = new UseRecordInfo(null, info.getOrderId(), "", info.getType(), "测试", "手动发送指令", info.getImei(), info.getSim(), "", "", "", "", "", "",
+		                info.getUrl(), Calendar.getInstance(), null);
 		service.createRecord(recordInfo);
 		return ResponseInfo.SUCCESS(recordInfo);
 	}

@@ -74,7 +74,7 @@ function initSIMPicker() {
         var names = [];
         if (gsmInfo.id != 0 && gsmInfo.simCard) {
             names.push(gsmInfo.simCard.name);
-            chairInfo.gsmPairs[gsmInfo.simCard.name] = gsmInfo.simCard.id;
+            gsmInfo.simPairs[gsmInfo.simCard.name] = gsmInfo.simCard.id;
         }
         
         for (var i = 0; i < sims.length; i++) {

@@ -13,7 +13,7 @@ import com.sitv.skyshop.service.IBaseService;
  * @author zfj20 @ 2017年11月20日
  */
 public interface IUseRecordService extends IBaseService<UseRecordInfo> {
-	void saveOperateResult(String command, String imei, String code, String orderId);
+	void saveOperateResult(String command, String imei, String sim, String code, String orderId, String chairStartTime);
 
 	void createOpenRecord(UseRecordInfo recordInfo);
 

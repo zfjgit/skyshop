@@ -74,6 +74,9 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 	@Autowired
 	private IUseRecordService recordService;
 
+	// @Autowired
+	// private OperateResultPollRunner operateResultRunner;
+
 	public MassageChairInfo getOne(Long id) {
 		MassageChair massageChair = get(id);
 		return MassageChairInfo.create(massageChair);
@@ -94,9 +97,6 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 	public void updateOne(MassageChairInfo t) {
 		GSMModule gsmModule = gsmModuleDao.get(t.getGsmModule().getId());
 
-		if (gsmModule.getStatus() != GSMModuleStatus.NORMAL) {
-			throw new EntityStatusException("GSM模块状态不是正常状态");
-		}
 		if (gsmModule.getDeleteStatus() != DeleteStatus.NORMAL) {
 			throw new EntityStatusException("GSM模块已删除，不能使用");
 		}
@@ -237,23 +237,35 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 		if (chair.getStatus() == MassageChair.ChairStatus.FAULT) {
 			throw new EntityStatusException("设备处于故障状态，不能进行操作");
 		}
-		String sim = chair.getGsmModule().getSimCard().getSim();
 
-		OperateResultInfo operateResultInfo = recordService.getCheckOperateResult(sim, 3);
-		log.debug("operateResultInfo=" + operateResultInfo);
-		if (operateResultInfo == null) {
-			UseRecordInfo recordInfo = new UseRecordInfo(null, null, "", EnumInfo.valueOf(UseRecordType.class, UseRecordType.CHECK.getCode()), "管理后台", "发送检测指令",
-			                chair.getGsmModule().getImei(), sim, "", "", chair.getName(), "", "", chair.getInstallationAddress().getFullAddress(), "", Calendar.getInstance());
+		String operateOk = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_RESULT_OK);
+
+		String sim = chair.getGsmModule().getSimCard().getSim();
+		int retries = Integer.valueOf(env.getProperty(Constants.OPERATE_RESULT_CHECK_POLL_RETRIES).trim());
+
+		log.debug("thread=" + Thread.currentThread().getId());
+
+		OperateResultInfo operateResultInfo = recordService.getCheckOperateResult(sim, retries);
+
+		log.debug("首次查询检测结果=" + operateResultInfo);
+
+		if (operateResultInfo == null || !operateResultInfo.getCode().equals(operateOk)) {
+			log.debug("首次查询检测结果为：失败，将重新发送检测指令");
+			UseRecordInfo recordInfo = new UseRecordInfo(null, null, "", EnumInfo.valueOf(UseRecordType.class, UseRecordType.CHECK.getCode()), "同步检测设备状态", "发送检测指令",
+			                chair.getGsmModule().getImei(), sim, "", "", chair.getName(), "", "", chair.getInstallationAddress().getFullAddress(), "", Calendar.getInstance(),
+			                null);
 			recordService.createCheckRecord(recordInfo);
 
-			operateResultInfo = recordService.getCheckOperateResult(sim, 3);
-			log.debug("operateResultInfo=" + operateResultInfo);
+			operateResultInfo = recordService.getCheckOperateResult(sim, retries);
+
+			log.debug("第二次查询检测指令结果=" + operateResultInfo);
 		}
 		return operateResultInfo;
 	}
 
 	public void asyncCheckServiceStatus(Long id) {
 		log.debug("异步检测设备>>>");
+
 		MassageChair chair = get(id);
 		if (chair == null) {
 			throw new EntityNotFoundException(String.format("没有找到ID为%s的设备", id));
@@ -264,11 +276,13 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 		String sim = chair.getGsmModule().getSimCard().getSim();
 
 		OperateResultInfo operateResultInfo = recordService.getCheckOperateResult(sim, 0);
-		log.debug("operateResultInfo=" + operateResultInfo);
+		log.debug("查询异步检测结果=" + operateResultInfo);
 		String operateFail = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_RESULT_FAIL);
 		if (operateResultInfo == null || operateFail.equals(operateResultInfo.getCode())) {
-			UseRecordInfo recordInfo = new UseRecordInfo(null, null, "", EnumInfo.valueOf(UseRecordType.class, UseRecordType.CHECK.getCode()), "扫码使用", "发送检测指令",
-			                chair.getGsmModule().getImei(), sim, "", "", chair.getName(), "", "", chair.getInstallationAddress().getFullAddress(), "", Calendar.getInstance());
+			log.debug("查询异步检测结果为：失败，将重新发送检测指令");
+			UseRecordInfo recordInfo = new UseRecordInfo(null, null, "", EnumInfo.valueOf(UseRecordType.class, UseRecordType.CHECK.getCode()), "异步检测设备状态", "发送检测指令",
+			                chair.getGsmModule().getImei(), sim, "", "", chair.getName(), "", "", chair.getInstallationAddress().getFullAddress(), "", Calendar.getInstance(),
+			                null);
 			recordService.createAsyncCheckRecord(recordInfo);
 		}
 	}
@@ -277,5 +291,18 @@ public class MassageChairService extends CrudService<IMassageChairDao, MassageCh
 		MassageChair massageChair = get(chairInfo.getId());
 		massageChair.setStatus(BaseEnum.valueOf(ChairStatus.class, chairInfo.getStatus().getCode()));
 		dao.updateStatus(massageChair);
+	}
+
+	public void asyncAutoCreateChair(String sim) {
+		UseRecordInfo recordInfo = new UseRecordInfo(null, null, "", EnumInfo.valueOf(UseRecordType.class, UseRecordType.CHECK.getCode()), "自动添加按摩椅信息", "检测设备IMEI", "", sim, "", "",
+		                sim, "", "", "", "", Calendar.getInstance(), null);
+		recordService.createCheckRecord(recordInfo);
+	}
+
+	public MassageChairInfo createQRCode(Long id) {
+		MassageChair massageChair = get(id);
+		massageChair.setQrcode(drawQRCode(massageChair.getId().toString()));
+		dao.updateQRCodeUrl(massageChair);
+		return MassageChairInfo.create(massageChair);
 	}
 }

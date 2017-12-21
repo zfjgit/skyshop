@@ -3,6 +3,7 @@
  */
 package com.sitv.skyshop.dto;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import lombok.Getter;
@@ -42,19 +43,27 @@ public class PageInfo<T> extends Dto {
 
 	private List<T> datas;
 
-	/**
-	 * @param list
-	 * @param pageNum
-	 * @param pageSize2
-	 * @param pages2
-	 * @param total2
-	 */
+	private BigDecimal sum;
+
 	public PageInfo(List<T> list, int pageNum, int pageSize, int pages, long total) {
 		this.datas = list;
 		this.current = pageNum;
 		this.pages = pages;
 		this.pageSize = pageSize;
 		this.total = total;
+
+		calcPage();
+
+		judgePageBoudary();
+	}
+
+	public PageInfo(List<T> list, int pageNum, int pageSize, int pages, long total, BigDecimal sum) {
+		this.datas = list;
+		this.current = pageNum;
+		this.pages = pages;
+		this.pageSize = pageSize;
+		this.total = total;
+		this.sum = sum;
 
 		calcPage();
 

@@ -3,14 +3,12 @@
  */
 package com.sitv.skyshop.massagechair.portal.api.wx.admin.controller.device;
 
-import javax.validation.Valid;
 import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
 
+import org.apache.commons.lang3.math.NumberUtils;
 import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -39,9 +37,26 @@ public class MassageChairController extends BaseRestController<IMassageChairServ
 	}
 
 	@PostMapping("/restart/{id}")
-	public ResponseInfo<?> restart(@NotNull @Valid @ModelAttribute MassageChairInfo info) {
+	public ResponseInfo<?> restart(@NotBlank @PathVariable String id) {
+		MassageChairInfo info = service.getOne(Long.valueOf(id));
 		info.setStatus(new EnumInfo<>(IMassageChairService.NORMAL, "正常未使用"));
 		service.updateStatus(info);
 		return ResponseInfo.SUCCESS(info);
+	}
+
+	@PostMapping("/autocreate/{sim}")
+	public ResponseInfo<?> asyncAutoCreate(@NotBlank @PathVariable String sim) {
+		String[] sims = sim.split(",");
+		for (String s : sims) {
+			if (s != null && s.trim().length() == 11 && NumberUtils.isDigits(s.trim())) {
+				service.asyncAutoCreateChair(s);
+			}
+		}
+		return ResponseInfo.SUCCESS(null);
+	}
+
+	@PostMapping("/createqrcode/{id}")
+	public ResponseInfo<?> createQRCode(@NotBlank @PathVariable String id) {
+		return ResponseInfo.SUCCESS(service.createQRCode(Long.valueOf(id)));
 	}
 }

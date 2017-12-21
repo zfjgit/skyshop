@@ -53,10 +53,10 @@
 			description=#{description, jdbcType=VARCHAR}, 
 			<choose>
 			    <when test="parent == null" >
-					user3_parent_sno=0,
+					user3_parent_sno=0
 			    </when>
 			    <otherwise>
-					user3_parent_sno=#{parent.id}, 
+					user3_parent_sno=#{parent.id}
 			    </otherwise>
 			</choose>
 		WHERE user3_sno=#{id}

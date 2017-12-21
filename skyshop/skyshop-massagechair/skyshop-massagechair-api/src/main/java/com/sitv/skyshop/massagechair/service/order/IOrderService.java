@@ -16,8 +16,12 @@ public interface IOrderService extends IBaseService<OrderInfo>, IDeleteStatusSer
 	String PAYSTATUS_PAID = PayStatus.PAID.getCode();
 	String PAYSTATUS_UNPAID = PayStatus.UNPAID.getCode();
 
-	void pay(OrderInfo t);
+	void postPay(OrderInfo t);
 
 	OrderInfo getOrderServiceInfo(Long id);
+
+	void updatePayStatus(String orderCode, String payStatus);
+
+	void partition(Long id);
 
 }

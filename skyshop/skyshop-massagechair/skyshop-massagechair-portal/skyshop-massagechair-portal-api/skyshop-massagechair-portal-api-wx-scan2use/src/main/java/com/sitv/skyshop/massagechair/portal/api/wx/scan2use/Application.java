@@ -28,7 +28,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @EnableAutoConfiguration
 @SpringBootApplication
 @ComponentScan({ "com.sitv.skyshop" })
-@ServletComponentScan
+@ServletComponentScan({ "com.sitv.skyshop" })
 @EnableAspectJAutoProxy(proxyTargetClass = true)
 public class Application extends SpringBootServletInitializer {
 

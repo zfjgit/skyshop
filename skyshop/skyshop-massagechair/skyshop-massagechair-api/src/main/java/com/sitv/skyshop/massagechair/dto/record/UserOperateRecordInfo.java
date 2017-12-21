@@ -32,10 +32,10 @@ public class UserOperateRecordInfo extends FullInfoDto {
 	private AgencyInfo agency;
 	private EnumInfo<OperateType, String> type;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private Calendar startDate;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private Calendar endDate;
 
 	public UserOperateRecordInfo() {

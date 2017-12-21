@@ -24,4 +24,8 @@ public interface IMassageChairService extends IBaseService<MassageChairInfo>, ID
 
 	void asyncCheckServiceStatus(Long id);
 
+	void asyncAutoCreateChair(String sim);
+
+	MassageChairInfo createQRCode(Long id);
+
 }

@@ -45,8 +45,8 @@ function loadOne() {
             code : 0,
             name : '未删除'
         };
-        initLevelPicker();
-        initParentPicker();
+        // initLevelPicker();
+        // initParentPicker();
         
         config.uku.refresh('agencyInfo');
     } else if (agencyInfo.id != -1) {

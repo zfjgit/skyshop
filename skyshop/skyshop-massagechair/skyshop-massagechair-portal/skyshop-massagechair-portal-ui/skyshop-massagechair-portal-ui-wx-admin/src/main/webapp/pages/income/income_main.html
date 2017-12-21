@@ -21,35 +21,16 @@
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
-		<script type="text/javascript">
-			$(function(){
-			    
-			    $('#item-chair').click(function(){
-			        $('#item-content').load('income_by_chair.html');
-			        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
-			        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
-			        
-			        sessionStorage.income_tab = 'item-chair';
-			    });
-			    $('#item-addr').click(function(){
-			        $('#item-content').load('income_by_addr.html');
-			        $('.weui-navbar__item').removeClass('weui-bar__item--on weui-tab__bd-item--active');
-			        $(this).addClass('weui-bar__item--on weui-tab__bd-item--active');
-			        
-			        sessionStorage.income_tab = 'item-addr';
-			    });
-			    
-			    if(!sessionStorage.income_tab) {
-				    $('#item-chair').click();
-			    } else {
-			        $('#' + sessionStorage.income_tab).click();
-			    }
-			    
-			});
-		</script>
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js"></script>
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		
+		<script type="text/javascript" src="../../js/income/income_main.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
 			<div class="h_title">收益查询</div>
@@ -67,8 +48,6 @@
 		        <div id="item-content">
 				
 				</div>
-			    
-				
 			</div>
 		</div>
 	</body>

@@ -16,19 +16,32 @@
 		
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 		<script type="text/javascript" src="plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="js/ctx.js?v=1.0.0.1"></script>
 		<script type="text/javascript">
 			$(function(){
 				var contactNumber = localStorage.contactNumber;				
 			    $('#contactNumber').attr('href', 'tel:' + contactNumber);
+			    
+			    var err = '';
+			    var search = window.location.search;
+			    if(search && search.length > 1) {
+				    var err = search.substring(1);
+			    }
+		        $('.err_msg').html('设备发生故障<br/><span style="font-size:15px;">错误码：' + err+ '</span>');
+			    
+			    $('#return').on('click', function(){
+			        window.location.href = config.ui_server_url + '/index.html?' + localStorage.chairId;
+			    });
 			});
 		</script>
 	</head>
-	<body style="background-image: url('images/bg5.jpg');background-size: 100%;">
+	<body style="background-image: url('images/bg91.jpg');background-size: 100%;">
 		<div class="header" >
 		</div>
 		<div class="content" style="margin-top: 45%;">
-			<div style="text-align: left;margin-left: 10%;font-size: 25px;">设备发生故障</div>
-			<div class="weui-btn weui-btn_warn" style="width: 80%;margin-top: 20%;"><a id="contactNumber" href="tel:075538969888" style="color: white;">请稍后重试或联系客服</a></div>
+			<div class="err_msg" style="text-align: left;margin-left: 10%;font-size: 25px;">设备发生故障</div>
+			<div id="return" class="weui-btn weui-btn_primary" style="width: 80%;margin-top: 30%;"><a href="javascript:void(0);" style="color: white;">再试一次</a></div>
+			<div class="weui-btn weui-btn_warn" style="width: 80%;margin-top: 25px;"><a id="contactNumber" href="tel:075538969888" style="color: white;">联系客服</a></div>
 		</div>
 	</body>
 </html>

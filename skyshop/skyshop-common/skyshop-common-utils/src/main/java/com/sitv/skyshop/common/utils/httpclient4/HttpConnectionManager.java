@@ -49,7 +49,6 @@ public class HttpConnectionManager {
 	private Environment environment;
 
 	@Bean
-	@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE)
 	public PoolingHttpClientConnectionManager poolManager() {
 		SSLContextBuilder builder = new SSLContextBuilder();
 		SSLConnectionSocketFactory sslsf = null;
@@ -98,7 +97,7 @@ public class HttpConnectionManager {
 		CloseableHttpClient httpClient = HttpClients.custom().setConnectionManager(poolConnManager).setDefaultRequestConfig(requestConfig)
 		                .setRetryHandler(new DefaultHttpRequestRetryHandler(2, false)).build();
 		if (poolConnManager != null && poolConnManager.getTotalStats() != null) {
-			log.info("now client pool " + poolConnManager.getTotalStats().toString());
+			log.debug("now client pool " + poolConnManager.getTotalStats().toString());
 		}
 
 		return httpClient;

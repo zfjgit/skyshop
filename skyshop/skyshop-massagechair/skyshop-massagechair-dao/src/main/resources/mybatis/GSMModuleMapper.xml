@@ -16,7 +16,7 @@
 		<association property="simCard" column="simcard_sno" select="com.sitv.skyshop.massagechair.dao.device.ISIMCardDao.get"/>
 	</resultMap>
 	
-	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.GSMModule" statementType="PREPARED">
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.GSMModule" statementType="PREPARED" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tab_gsmmodules
 			(gsm_status, is_del, gsm_name, description, gsm_imei, gsm_module, simcard_sno, gsm_createTime, gsm_updateTime) 
 		VALUES 
@@ -29,6 +29,10 @@
 	
 	<select id="getBySIM" resultMap="BaseResultMap" parameterType="long">
 		SELECT * FROM tab_gsmmodules WHERE simcard_sno=#{id}
+	</select>
+	
+	<select id="getByIMEI" resultMap="BaseResultMap" parameterType="string">
+		SELECT * FROM tab_gsmmodules WHERE gsm_imei=#{imei}
 	</select>
 	
 	<update id="updateStatus" parameterType="com.sitv.skyshop.massagechair.domain.device.GSMModule" statementType="PREPARED" >

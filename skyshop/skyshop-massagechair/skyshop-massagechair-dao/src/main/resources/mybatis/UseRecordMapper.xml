@@ -20,13 +20,28 @@
 		<result column="nickName" jdbcType="VARCHAR" property="nickName" />
 		<result column="type" jdbcType="VARCHAR" property="type" />
 		<result column="cdate" property="createTime" />
+		<result column="chairStartTime" jdbcType="TIMESTAMP" property="chairStartTime" />
 	</resultMap>
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.record.UseRecord" statementType="PREPARED">
 		INSERT INTO tab_massagechairs_log
-			(orders_sno, resultCode, type, name, minutes, log_from, response, imei, sim, price, chair, addr_name, openid, nickName, cdate) 
+			(orders_sno, resultCode, type, name, minutes, log_from, response, imei, sim, price, chair, addr_name, openid, nickName, cdate
+			<choose>
+			    <when test="chairStartTime != null">
+					, chairStartTime
+				</when>
+				<otherwise></otherwise>
+			</choose>
+			) 
 		VALUES 
-			(#{orderId}, #{resultCode}, #{type.code}, #{name}, #{minutes}, #{from}, #{response}, #{imei}, #{sim}, #{price}, #{chair}, #{addr}, #{openid}, #{nickName}, #{createTime})    
+			(#{orderId}, #{resultCode}, #{type.code}, #{name}, #{minutes}, #{from}, #{response}, #{imei}, #{sim}, #{price}, #{chair}, #{addr}, #{openid}, #{nickName}, #{createTime,jdbcType=TIMESTAMP} 
+			<choose>
+			    <when test="chairStartTime != null">
+			        ,#{chairStartTime,jdbcType=TIMESTAMP}
+			    </when>
+			    <otherwise></otherwise>
+			</choose>
+			)  
 	</insert>
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">

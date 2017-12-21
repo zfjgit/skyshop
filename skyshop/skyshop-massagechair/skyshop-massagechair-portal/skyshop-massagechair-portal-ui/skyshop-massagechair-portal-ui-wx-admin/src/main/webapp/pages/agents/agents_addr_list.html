@@ -10,23 +10,9 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
 		
-<!-- 		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/lib/weui.css"/> -->
-<!-- 		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/css/jquery-weui.css"/> -->
-		
-<!-- 		<link rel="stylesheet" type="text/css" href="../../css/style.css"/> -->
-<!-- 		<link rel="stylesheet" type="text/css" href="../../css/list.css"/> -->
-
-		
-<!-- 		<script type="text/javascript" src="../../plugins/jqweui/lib/jquery-2.1.4.js"></script> -->
-<!-- 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script> -->
-<!-- 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script> -->
-		
-<!-- 		<script type="text/javascript" src="../../js/admin.js"></script> -->
-		<script type="text/javascript">
-			
-		</script>
+		<script type="text/javascript" src="../../js/agency/agency_addr_list.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" style="display: none;">
 			<div class="h_back">&lt;</div>
 			<div class="h_title">场所管理</div>
@@ -38,36 +24,32 @@
 				<table class="t_table">
 					<tr>
 						<td class="t_fieldname">输入场所名称</td>
-						<td class="t_fieldvalue"><input class="t_text" value="" placeholder="场所名称" /></td>
+						<td class="t_fieldvalue"><input class="t_text" uku-value="addrManage.addrName" placeholder="场所名称" /></td>
 					</tr>
 				</table>
 				<div class="t_area_btn">
-					<div class="t_table_title">场所列表</div><div class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+					<div class="t_table_title">场所列表</div><div id="btn_search" class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
 				</div>
 			</div>
 			<div class="t_search_results">
 				<table class="t_table">
 					<thead class="t_table_head">
 						<tr>
-							<td width="80%">场所名称</td>
-							<td>操作</td>
+							<td width="75%">场所名称</td>
+							<td width="15%">操作</td>
 						</tr>
 					</thead>
 					<tbody class="t_table_body">
-						<tr>
-							<td>沃尔玛</td>
-							<td><a href="addr_detail.html?id=1">&gt;</a></td>
-						</tr>
-						<tr>
-							<td>沃尔玛</td>
-							<td><a href="addr_detail.html?id=1">&gt;</a></td>
-						</tr>
-						<tr>
-							<td>沃尔玛</td>
-							<td><a href="addr_detail.html?id=1">&gt;</a></td>
+						<tr uku-repeat="item in addrManage.addrs">
+							<td>{{item.fullAddress}}</td>
+							<td><a uku-href="item.detailUrl">{{item.id ? '&gt;' : ''}}</a></td>
 						</tr>
 					</tbody>
 				</table>
+				<div class="weui-loadmore">
+				  	<i class="weui-loading"></i>
+				  	<span class="weui-loadmore__tips">正在加载</span>
+				</div>
 			</div>
 		</div>
 	</body>

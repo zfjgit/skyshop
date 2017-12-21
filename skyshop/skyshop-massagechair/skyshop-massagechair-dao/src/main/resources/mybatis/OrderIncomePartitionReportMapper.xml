@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.massagechair.dao.report.IOrderIncomePartitionReportDao" >
+	
+	<select id="getAddrIncomeTotalMoney" resultType="java.math.BigDecimal" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT ISNULL(SUM(m.detailed_money),0)
+		FROM tab_orders_Detailed m 
+		LEFT JOIN tab_orders o on m.orders_sno=o.orders_sno
+		LEFT JOIN tab_installationaddresses a on o.install_sno=a.install_sno
+		WHERE m.orders_sno=o.orders_sno
+			AND o.install_sno=a.install_sno
+		<if test="param != null and param.agency != null">
+			AND m.user3_sno=#{param.agency.id}
+		</if>
+		<if test="param != null and param.agency != null">
+			AND o.user3_sno=#{param.agency.id}
+		</if>
+		<if test="param != null and param.agency != null">
+			AND a.user3_sno=#{param.agency.id}
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND o.orders_createtime &gt;= #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND o.orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.order != null and param.order.payStatus != null">
+			AND o.orders_payStatus= 'A'
+		</if>
+		<if test="param != null and param.order != null and param.order.payType != null">
+			AND o.orders_paytype= #{param.order.payType.code}
+		</if>
+		<if test="param != null and param.order != null and param.order.installationAddress != null ">
+			AND o.install_sno=#{param.order.installationAddress.id}
+		</if>
+	</select>
+	
+	<select id="findAddrIncomes" resultType="com.sitv.skyshop.massagechair.report.AddrOrderPartitionReportVO" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT a.install_sno addrId , 
+			max(a.install_fulladdress) addrName,  
+			sum(d.detailed_money) money,
+			count(distinct o.orders_sno) orderCount
+		FROM tab_orders_Detailed d , tab_orders o , tab_installationaddresses a 
+		WHERE o.orders_sno=d.orders_sno
+			AND a.install_sno=o.install_sno
+		<if test="param != null and param.agency != null">
+			AND d.user3_sno = #{param.agency.id}
+		</if>
+		<if test="param != null and param.agency != null">
+			AND a.user3_sno = #{param.agency.id}
+		</if>
+		<if test="param != null and param.agency != null">
+			AND o.user3_sno = #{param.agency.id}
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND o.orders_createtime &gt;= #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND o.orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.order != null and param.order.payStatus != null">
+			AND o.orders_payStatus= 'A'
+		</if>
+		<if test="param != null and param.order != null and param.order.payType != null">
+			AND o.orders_paytype= #{param.order.payType.code}
+		</if>
+		GROUP BY a.install_sno
+		ORDER BY addrId
+	</select>
+	
+	<select id="findAddrOrders" resultMap="com.sitv.skyshop.massagechair.dao.order.IOrderDao.BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT o.*
+		FROM tab_orders o 
+		LEFT JOIN tab_installationaddresses a on o.install_sno=a.install_sno
+		WHERE 
+			o.install_sno=a.install_sno
+			AND o.install_sno=#{param.order.installationAddress.id}
+		<if test="param != null and param.agency != null">
+			AND a.user3_sno=#{param.agency.id}
+		</if>
+		<if test="param != null and param.agency != null">
+			AND o.user3_sno = #{param.agency.id}
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND o.orders_createtime &gt;= #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND o.orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.order != null and param.order.payStatus != null">
+			AND o.orders_payStatus= 'A'
+		</if>
+		<if test="param != null and param.order != null and param.order.payType != null">
+			AND o.orders_paytype= #{param.order.payType.code}
+		</if>
+		ORDER BY o.orders_sno DESC
+	</select>
+
+	
+	<select id="getAddrOrderTotalMoney" resultType="java.math.BigDecimal" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT ISNULL(SUM(o.orders_money),0)
+		FROM tab_orders o 
+		LEFT JOIN tab_installationaddresses a on o.install_sno=a.install_sno
+		WHERE 
+			o.install_sno=a.install_sno
+			AND o.install_sno=#{param.order.installationAddress.id}
+		<if test="param != null and param.agency != null">
+			AND a.user3_sno=#{param.agency.id}
+		</if>
+		<if test="param != null and param.agency != null">
+			AND o.user3_sno=#{param.agency.id}
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND o.orders_createtime &gt;= #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND o.orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.order != null and param.order.payStatus != null">
+			AND o.orders_payStatus= 'A'
+		</if>
+		<if test="param != null and param.order != null and param.order.payType != null">
+			AND o.orders_paytype= #{param.order.payType.code}
+		</if>
+		<if test="param != null and param.order != null and param.order.installationAddress != null ">
+			AND o.install_sno=#{param.order.installationAddress.id}
+		</if>
+	</select>
+	
+	<select id="findAddrIncomeDetail" resultMap="com.sitv.skyshop.massagechair.dao.order.IOrderIncomePartitionDao.BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT m.*
+		FROM tab_orders_Detailed m 
+		LEFT JOIN tab_orders o on m.orders_sno=o.orders_sno
+		LEFT JOIN tab_installationaddresses c on o.install_sno=c.install_sno
+		WHERE m.orders_sno=o.orders_sno
+			AND o.install_sno=#{param.order.installationAddress.id}
+		<if test="param != null and param.agency != null">
+			AND m.user3_sno = #{param.agency.id}
+		</if>
+		<if test="param != null and param.agency != null">
+			AND o.user3_sno = #{param.agency.id}
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND o.orders_createtime &gt;= #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND o.orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.order != null and param.order.payStatus != null">
+			AND o.orders_payStatus= 'A'
+		</if>
+		<if test="param != null and param.order != null and param.order.payType != null">
+			AND o.orders_paytype= #{param.order.payType.code}
+		</if>
+		ORDER BY m.orders_sno DESC
+	</select>
+</mapper>

@@ -52,13 +52,13 @@
 			</div>
 			<div class="t_search_results">
 				<div class="tb_search_table">
-					<table class="t_table" style="width: 600px;">
+					<table class="t_table" style="width: 500px;">
 						<thead class="t_table_head">
 							<tr>
 								<td width="20%">名称</td>
-								<td width="20%">金额（元）</td>
-								<td width="20%">时长（分钟）</td>
-								<td width="20%">图片</td>
+								<td width="15%">金额（元）</td>
+								<td width="15%">时长（分钟）</td>
+<!-- 								<td width="20%">图片</td> -->
 								<td width="10%">操作</td>
 							</tr>
 						</thead>
@@ -67,11 +67,15 @@
 								<td>{{item.name}}</td>
 								<td>{{item.money}}</td>
 								<td>{{item.minutes}}</td>
-								<td><img uku-src="item.img" style="width: 100%;" /></td>
+<!-- 								<td><img uku-src="item.img" style="width: 100%;" /></td> -->
 								<td><a uku-href="item.detailUrl">{{item.id ? '&gt;' : ''}}</a></td>
 							</tr>
 						</tbody>
 					</table>
+					<div class="weui-loadmore">
+					  	<i class="weui-loading"></i>
+					  	<span class="weui-loadmore__tips">正在加载</span>
+					</div>
 				</div>
 			</div>
 		</div>

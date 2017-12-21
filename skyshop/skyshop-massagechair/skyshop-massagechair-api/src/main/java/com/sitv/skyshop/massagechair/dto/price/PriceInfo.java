@@ -49,7 +49,7 @@ public class PriceInfo extends FullInfoDto {
 	}
 
 	public String getType() {
-		throw new RuntimeException("需要重写");
+		return PriceInfo.class.getSimpleName();
 	}
 
 	@SuppressWarnings("unchecked")

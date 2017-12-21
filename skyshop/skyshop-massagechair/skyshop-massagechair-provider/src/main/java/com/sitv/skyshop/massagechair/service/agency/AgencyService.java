@@ -99,7 +99,7 @@ public class AgencyService extends CrudService<IAgencyDao, Agency, AgencyInfo> i
 
 	public AgencyOverviewInfo getOverview(Long id) {
 		// 今日收益
-		BigDecimal total = orderDao.getTotalMoney(id, Utils.getTodayStartTime(), Utils.getTodayEndTime());
+		BigDecimal total = orderIncomePartitionDao.getTodayTotalMoney(id, Utils.getTodayStartTime(), Utils.getTodayEndTime());
 
 		// 收益分成
 		int orderPartitionCount = orderIncomePartitionDao.getCountByAgency(id);

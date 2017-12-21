@@ -21,27 +21,25 @@
 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
 		
-		<script type="text/javascript" src="../../js/ui.js"></script>
-		<script type="text/javascript">
-			$(function(){
-			    $('.t_date').calendar();
-			});
-		</script>
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js"></script>
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		
+		<script type="text/javascript" src="../../js/income/income_by_addr_detail.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" >
 			<div class="h_back">&lt;</div>
-			<div class="h_title">场所收益详细情况</div>
+			<div class="h_title">场所收益详情</div>
 		</div>
 		<div class="content">
 			<table class="t_table">
 				<tr>
 					<td class="t_fieldname">场所名称</td>
-					<td class=" t_bg_white t_fieldvalue">沃尔玛</td>
-				</tr>
-				<tr>
-					<td class="t_fieldname">场所编号</td>
-					<td class=" t_bg_white t_fieldvalue">A231939</td>
+					<td class=" t_bg_white t_fieldvalue">{{addrOrderManage.addr.name}}</td>
 				</tr>
 			</table>
 				
@@ -50,46 +48,48 @@
 				<table class="t_table">
 					<tr>
 						<td class="t_fieldname">选择开始时间</td>
-						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-21" readonly="readonly"/></td>
+						<td class="t_fieldvalue"><input id="startDate" class="t_text t_date" uku-value="addrOrderManage.startDate" readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">选择结束时间</td>
-						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-22" readonly="readonly"/></td>
+						<td class="t_fieldvalue"><input id="endDate" class="t_text t_date" uku-value="addrOrderManage.endDate" readonly="readonly"/></td>
 					</tr>
 				</table>
 				<div class="t_area_btn">
-					<div class="t_table_title">场所设备收益详情</div><div class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+					<div class="t_table_title">场所设备收益详情</div><div id="btn_search" class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
 				</div>
 			</div>
 			<div class="t_search_results">
-				<div class="t_search_total">场所总收益：<span class="money">100.00</span> 元</div>
+				<div class="t_search_total">查询总收益：<span class="money">{{addrOrderManage.total}}</span> 元</div>
 				<div class="tb_search_table">
-					<table class="t_table" style="">
+					<table class="t_table" style="width: 950px;">
 						<thead class="t_table_head">
 							<tr>
-								<td>设备编号</td>
-								<td>订单数</td>
-								<td>收益（元）</td>
+								<td width="35%">订单号</td>
+								<td width="30%">订单时间</td>
+								<td width="20%">设备编号</td>
+								<td width="20%">时长（分钟）</td>
+								<td width="25%">订单金额（元）</td>
+<!-- 								<td width="25%">分成比例</td> -->
+								<td width="20%">收益（元）</td>
 							</tr>
 						</thead>
 						<tbody class="t_table_body">
-							<tr>
-								<td><a href="income_by_chair_detail.html">C121223</a></td>
-								<td>15</td>
-								<td>300.00</td>
-							</tr>
-							<tr>
-								<td><a href="income_by_chair_detail.html">C121224</a></td>
-								<td>12</td>
-								<td>200.00</td>
-							</tr>
-							<tr>
-								<td><a href="income_by_chair_detail.html">C121225</a></td>
-								<td>25</td>
-								<td>500.00</td>
+							<tr uku-repeat="item in addrOrderManage.orderPartitions">
+								<td class="t_wrap_text t_order_no">{{item.order.code}}</td>
+								<td>{{item.order.createTime}}</td>
+								<td>{{item.order.chair.name}}</td>
+								<td>{{item.order.minutes}}</td>
+								<td>{{item.order.money}}</td>
+<!-- 								<td>{{item.percentage}}<span>%</span></td> -->
+								<td>{{item.money}}</td>
 							</tr>
 						</tbody>
 					</table>
+					<div class="weui-loadmore">
+					  	<i class="weui-loading"></i>
+					  	<span class="weui-loadmore__tips">正在加载</span>
+					</div>
 				</div>
 			</div>
 		</div>

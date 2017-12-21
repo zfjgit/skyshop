@@ -43,7 +43,13 @@ function loadOne() {
 }
 
 function addListeners() {
-    
+    $('#btn_partition').on('click', function() {
+        post('/order/partition/' + orderInfo.id, '', function() {
+            showOkMsg('订单分成成功', function() {
+                
+            });
+        });
+    });
     $('#btn_delete').on('click', function() {
         showConfirmMsg('是否确定要删除此信息？', function() {
             del('/order/' + orderInfo.id, '', function(d) {

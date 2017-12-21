@@ -34,6 +34,8 @@ public class ResponseInfo<T> extends Dto {
 
 	public static final int ORDER_EXPIRED_CODE = 603;
 
+	public static final int ORDER_NOTPAID_CODE = 604;
+
 	private int code;
 
 	private String url;
@@ -139,6 +141,10 @@ public class ResponseInfo<T> extends Dto {
 
 	public static <T> ResponseInfo<T> ORDER_EXPIRED_ERROR(String message) {
 		return new ResponseInfo<>(ORDER_EXPIRED_CODE, message);
+	}
+
+	public static <T> ResponseInfo<T> ORDER_NOTPAID_ERROR(String message) {
+		return new ResponseInfo<>(ORDER_NOTPAID_CODE, message);
 	}
 
 }

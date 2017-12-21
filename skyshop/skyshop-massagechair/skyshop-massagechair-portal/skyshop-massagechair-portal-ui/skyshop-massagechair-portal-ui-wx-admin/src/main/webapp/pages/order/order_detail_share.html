@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>订单分成 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		<script type="text/javascript" src="../../js/order/order_detail_share.js"></script>
+	</head>
+	<body>
+		<div class="content" style="margin-top: 0;">
+			<div class="search">
+				<div class="t_search">代理商收益计算方式：本级代理商收益 = 分成金额 x (1 - 下级代理商分成比例)</div>
+			</div>
+			<div class="t_search_results">
+				<div class="tb_search_table">
+					<table class="t_table" style="width: 600px;">
+						<thead class="t_table_head">
+							<tr>
+								<td width="35%">代理商</td>
+								<td width="30%">分成金额（元）</td>
+								<td width="20%">分成比例</td>
+								<td width="30%">分成金额（元）</td>
+							</tr>
+						</thead>
+						<tbody class="t_table_body">
+							<tr uku-repeat="item in orderPartitionManageInfo.orderPartitions">
+								<td>{{item.agency.name}}</td>
+								<td>{{item.totalMoney}}</td>
+								<td>{{item.percentage}}<span>%</span></td>
+								<td>{{item.money}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

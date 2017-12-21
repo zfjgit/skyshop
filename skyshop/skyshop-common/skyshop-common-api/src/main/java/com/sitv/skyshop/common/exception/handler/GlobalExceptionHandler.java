@@ -16,6 +16,7 @@ import com.sitv.skyshop.common.exception.EntityNotFoundException;
 import com.sitv.skyshop.common.exception.EntityStatusException;
 import com.sitv.skyshop.common.exception.OperateResultReceivException;
 import com.sitv.skyshop.common.exception.OrderExpiredException;
+import com.sitv.skyshop.common.exception.OrderNotPaidException;
 import com.sitv.skyshop.common.exception.ParamValidException;
 import com.sitv.skyshop.common.exception.PlainReponseException;
 import com.sitv.skyshop.dto.ResponseInfo;
@@ -40,6 +41,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	private <T> ResponseInfo<T> entityVarificationFailedExceptionHandler(CheckCodeVerificationFailedException e) {
 		log.error("---------> 实体对象CHECKCODE校验错误!!!", e);
 		return ResponseInfo.CHECKCODE_VARIFY_ERROR(e.getMessage());
+	}
+
+	@ResponseBody
+	@ExceptionHandler(OrderNotPaidException.class)
+	private <T> ResponseInfo<T> orderNotPaidExceptionHandler(OrderNotPaidException e) {
+		log.error("---------> 订单未支付!!!", e);
+		return ResponseInfo.ORDER_NOTPAID_ERROR(e.getMessage());
 	}
 
 	@ResponseBody

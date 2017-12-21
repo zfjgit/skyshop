@@ -34,15 +34,18 @@ public class ReceivOperateResultController extends BaseController<IUseRecordServ
 
 	@GetMapping("/receiv")
 	@ApiOperation(httpMethod = "GET", value = "系统向设备发送操作指令后，设备通过此接口向系统发送指令执行结果", response = String.class)
-	public ResponseEntity<String> receiv(@RequestParam String type, @RequestParam("imei") String imei, @RequestParam String code, @RequestParam(required = false) String orderid) {
+	public ResponseEntity<String> receiv(@RequestParam String type, @RequestParam String imei, @RequestParam String code, @RequestParam(required = false) String sim,
+	                @RequestParam(required = false) String orderid, @RequestParam(required = false) String starttime) {
 		ResponseEntity<String> result = null;
 		try {
 			log.debug("接收操作指令结果>>>");
 			log.debug("type=" + type);
 			log.debug("imei=" + imei);
 			log.debug("code=" + code);
-			log.debug("orderId=" + orderid);
-			service.saveOperateResult(type, imei, code, orderid);
+			log.debug("orderid=" + orderid);
+			log.debug("starttime=" + starttime);
+			log.debug("sim=" + sim);
+			service.saveOperateResult(type, imei, sim, code, orderid, starttime);
 			result = new ResponseEntity<>("code=1", HttpStatus.OK);
 		} catch (Exception e) {
 			throw new OperateResultReceivException("发生错误", e);

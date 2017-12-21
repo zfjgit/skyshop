@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>自动新增按摩椅 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+		
+		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/lib/weui.css"/>
+		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/css/jquery-weui.css"/>
+		
+		<link rel="stylesheet" type="text/css" href="../../css/style.css"/>
+		<link rel="stylesheet" type="text/css" href="../../css/list.css"/>
+
+		
+		<script type="text/javascript" src="../../plugins/jqweui/lib/jquery-2.1.4.js"></script>
+		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script>
+		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/ukulelejs/dist/uku.js" charset="utf-8"></script>
+		
+		<script type="text/javascript" src="../../plugins/jquery-custom-params.js"></script>
+		<script type="text/javascript" src="../../js/common/ctx.js"></script>
+		<script type="text/javascript" src="../../js/common/ui.js"></script>
+		<script type="text/javascript" src="../../js/common/data.js"></script>
+		<script type="text/javascript" src="../../js/chair/chair_autocreate.js"></script>
+	</head>
+	<body>
+		<div class="h_nav" >
+			<div class="h_back">&lt;</div>
+			<div class="h_title">自动新增按摩椅</div>
+		</div>
+		<div class="content">
+			<div class="search">
+				<div class="t_search">
+					1、新增之前请确保SIM卡已安装到设备且设备已正常通电。<br/>
+					2、多个SIM卡号之间用换行符分隔，即每行一个只输入一个SIM卡号。<br/>
+					3、点击确定之后您无需等待，请稍后登录Admin账号到设备管理中查询即可看到新增成功的设备。
+				</div>
+			</div>
+			<table class="t_table">
+				<tr>
+					<td class="t_fieldname">SIM卡号</td>
+					<td class="t_fieldvalue"><textarea id="sim" class="t_text" placeholder="请输入SIM卡号" style="height: 50px;" ></textarea></td>
+				</tr>
+			</table>
+			<div style="margin-top: 10px;">
+				<div id="btn_ok" class="weui-btn weui-btn_primary" style="width: 80%">确定</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -15,28 +15,36 @@
 		
 		<link rel="stylesheet" type="text/css" href="css/style.css"/>
 		
+		<script type="text/javascript" src="plugins/store.legacy.min.js"></script>
 		<script type="text/javascript" src="plugins/jqweui/lib/jquery-2.1.4.js"></script>
 		<script type="text/javascript" src="plugins/jqweui/js/jquery-weui.js"></script>
 		
 		<script type="text/javascript" src="plugins/jquery-custom-params.js"></script>
 		
-		<script type="text/javascript" src="js/ctx.js"></script>
-		<script type="text/javascript" src="js/ui.js"></script>
+		<script type="text/javascript" src="js/ctx.js?1.0.0.1"></script>
+		<script type="text/javascript" src="js/ui.js?1.0.0.1"></script>
 		
 		<script type="text/javascript">
 			$(function(){
 			    var search = window.location.search;
 			    if(!search || search == '?') {
-			        window.location.href = 'fault.html?chairsno_err';
+		       		window.location.href = config.ui_server_url + '/fault.html?CHAIRSNO_ERR';
 			        return;
 			    }
-			    var chairid = search.substring(1);
-			    doAjax('/scan2use/' + chairid, '', function(r){
-			        $('.working').show();
+			    localStorage.chairId = search.substring(1);
+			    
+			    if(localStorage.orderId) {
+			        getServiceInfo(localStorage.orderId);
+			    } else {
+			        getPrices();
+			    }
+			});
+			
+			function getPrices() {
+		        doAjax('/scan2use/' + localStorage.chairId, '', function(r){
 	                var name = r.data.name;
 	                var prices = r.data.prices;
-	                var contactNumber = r.data.installationAddress.contactNumber;
-	                localStorage.contactNumber = contactNumber;
+	                localStorage.contactNumber = r.data.installationAddress.contactNumber;
 	                if(prices && prices.length > 0) {
 	                	$('.content').empty();
                         var inner = '';
@@ -60,7 +68,7 @@
 	            							'<div class="weui-btn weui-btn_mini" style="color: red;font-size:15px;padding:0 5px;">' + p.price +'元</div>'+
 	            						'</div>'+
 	            						'<div style="display: inline-block;margin-left:10px;">'+
-	            							'<div style="font-size:15px;" chairname="' + name + '" chairid="' + r.data.id + '" mins="' + p.minutes + '" money="' + p.price + '" title="' + p.name + '" class="weui-btn weui-btn_primary weui-btn_mini btn_pay" >支付</div>'+
+	            							'<div style="font-size:15px;" chairname="' + name + '" mins="' + p.minutes + '" money="' + p.price + '" title="' + p.name + '" class="weui-btn weui-btn_primary weui-btn_mini btn_pay" >支付</div>'+
 	            						'</div>'+
 	            					'</div>'+
             					'</div>';
@@ -74,18 +82,18 @@
 	                    
 	                    addListeners();
 	                } else {
-	                    window.location.href = 'fault.html?price_err';
+                    	window.location.href = config.ui_server_url + '/fault.html?PRICE_ERR';
 	                }
 		        }, 'GET', function(d){
 		            if(d.code == 601) {
-						$('.working').show();
+		                showMsg('设备正在使用中');
 						return;
 		            }
 		            // runtime error
-		            window.location.href = 'fault.html?scan_err';
+	            	window.location.href = config.ui_server_url + '/fault.html?SCAN_ERR';
 		        }, true, function(d) {
 		            // net error
-		            //window.location.href = 'fault.html?net_err';
+		            window.location.href = config.ui_server_url + '/fault.html?SCAN_NET_ERR';
 		        }, '', function(){
 		            // showloading
 		            showloading();
@@ -93,82 +101,110 @@
 		            // hideloading
 		            hideloading();
 		        });
-			    
-		        function addListeners() {
-				    $('.btn_pay').click(function(){
-				        var money = $(this).attr('money');
-				        var minutes = $(this).attr('mins');
-				        var priceName = $(this).attr('title');
-				        var chairName = $(this).attr('chairname');
-				        
-				        doAjax('/scan2use/check/' + chairid, '', function(d){
-				            //if(d.data.code == 1) {
-				             	order(money, minutes, priceName, chairName);
-				            //    return;
-				            //} else {
-					        //    window.location.href = 'fault.html?check_err';
-				            //}
-				        }, 'GET', function(d) {
-				            if(d.code == 601) {
-								$('.working').show();
-								return;
-				            }
-				            // runtime error
-				            window.location.href = 'fault.html?check_err';
-				        }, true, function(d) {
-				         	// net error
-				            //window.location.href = 'fault.html?net_err';
-				        }, '', function(){
-				            showloading('images/qsh2.png');
-				        }, function(){
-				            hideloading();
-				        });
-				    });
-		        }
-		        
-		        function order(money, minutes, priceName, chairName) {
-			        var order = {};
-			        order.minutes = minutes;
-			        order.money = money;
-			        order.chair = {id : chairid};
-			        order.payType = {code : 'A', name : '微信支付'}
+		    }
+			
+			function getServiceInfo(orderId) {
+			    doAjax('/order/serviceinfo/' + orderId, '', function(d){
+			    	var order = d.data;
+			    	
+			    	var leftSeconds = order.leftSeconds;
+			    	if(leftSeconds <= 0) {
+			    	    localStorage.orderId = '';
+			    	    
+			    	    getPrices();
+			    	    return;
+			    	}
+			    	localStorage.orderId = orderId;
+			    	window.location.href = config.ui_server_url + '/working.html?' + orderId + '_' + localStorage.chairId;
+			    }, 'GET', function(d) {
+		            // runtime error
+		            getPrices();
+		        }, true, function() {
+		            // net error
+	            	window.location.href = config.ui_server_url + '/fault.html?SERVICE_NET_ERR';
+		        }, '查询服务信息中', function() {
+		            showloading('images/qsh1.png');
+		        }, function() {
+		            hideloading();
+		        });
+			}
+		    
+	        function addListeners() {
+			    $('.btn_pay').click(function(){
+			        var money = $(this).attr('money');
+			        var minutes = $(this).attr('mins');
+			        var priceName = $(this).attr('title');
+			        var chairName = $(this).attr('chairname');
 			        
-			        var params = $.customParam(order);
-			        
-			        doAjax('/order/', params, function(d){
-			        	var ordercode = d.data.code;
-			        	var orderid = d.data.id;
-			            var items = chairName + '_' + priceName;
+			        doAjax('/scan2use/check/' + localStorage.chairId, '', function(d){
+			            //order(money, minutes, priceName, chairName);
 			            
-				        var notify_url = config.api_server_url + '/order/paynotify/';
-			            var postpayUrl = config.api_server_url + '/order/postpay/?order.id=' + orderid;
-			            var forwardUrl = config.ui_server_url + '/working.html?' + orderid + '_' + chairid;
-			            
-			        	pay(items, money, ordercode, notify_url, postpayUrl, forwardUrl);
-			        }, 'POST', function(d){
-			            window.location.href = 'fault.html?order_err';
-			        }, true, function(d){
-			            window.location.href = 'fault.html?net_err';
-			        }, '', function(){
-			            showloading('images/qsh4.png');
+			            if(d.data.code == 1) {
+			             	order(money, minutes, priceName, chairName);
+			                return;
+			            } else {
+			                showMsg('设备连接失败，请稍后再试');
+			            }
+			        }, 'GET', function(d) {
+			            if(d.code == 601) {
+			                showMsg('设备正在使用中');
+							return;
+			            }
+			            // runtime error
+		            	window.location.href = config.ui_server_url + '/fault.html?CHECK_ERR';
+			        }, true, function(d) {
+			         	// net error
+		            	window.location.href = config.ui_server_url + '/fault.html?CHECK_NET_ERR';
+			        }, '', function() {
+			            showloading('images/qsh2.png');
 			        }, function(){
 			            hideloading();
 			        });
-		        }
+			    });
+	        }
+	        
+	        function order(money, minutes, priceName, chairName) {
+		        var order = {};
+		        order.minutes = minutes;
+		        order.money = money;
+		        order.chair = {id : localStorage.chairId};
+		        order.payType = {code : 'A', name : '微信支付'}
 		        
-		        function pay(items, money, ordercode, notify_url, postpayUrl, forwardUrl) {
-			        var total_fee = parseFloat(0.01) * 100;
+		        var params = $.customParam(order);
+		        
+		        doAjax('/order/', params, function(d){
+		        	var ordercode = d.data.code;
+		        	var orderid = d.data.id;
+		            var items = chairName + '_' + priceName;
 		            
-			        var url = config.pay_server_url + '?out_trade_no=' + ordercode + 
-			        		'&body=' + items + 
-			        		'&total_fee=' + (parseFloat(0.01) * 100) + 
-			        		'&backUrl=' + forwardUrl + 
-			        		'&notify_url=' + notify_url;
-			        
-			      	window.location.href = forwardUrl;
-			        //window.location.href = url;
-		        }
-			});
+			        var notify_url = config.api_server_url + '/order/paynotify/';
+		            var postpayUrl = config.api_server_url + '/order/postpay/?order.id=' + orderid;
+		            var forwardUrl = config.ui_server_url + '/working.html?' + orderid + '_' + localStorage.chairId;
+		            
+		        	pay(items, money, ordercode, notify_url, postpayUrl, forwardUrl);
+		        }, 'POST', function(d){
+	            	window.location.href = config.ui_server_url + '/fault.html?ORDER_ERR';
+		        }, true, function(d){
+	            	window.location.href = config.ui_server_url + '/fault.html?ORDER_NET_ERR';
+		        }, '', function(){
+		            showloading('images/qsh4.png');
+		        }, function(){
+		            hideloading();
+		        });
+	        }
+	        
+	        function pay(items, money, ordercode, notify_url, postpayUrl, forwardUrl) {
+		        var total_fee = parseFloat(0.01) * 100;
+	            
+		        var url = config.pay_server_url + '?out_trade_no=' + ordercode + 
+		        		'&body=' + items + 
+		        		'&total_fee=' + (parseFloat(0.01) * 100) + 
+		        		'&backUrl=' + forwardUrl + 
+		        		'&notify_url=' + notify_url;
+		        
+		      	//window.location.href = forwardUrl;
+		        window.location.href = url;
+	        }
 		</script>
 	</head>
 	<body>
@@ -176,13 +212,5 @@
 		</div>
 		<div class="content" style="margin-top: 0px;padding: 0px 0;">
 		</div>
-		<div class="working"  style="position: absolute;top:45%;text-align: center;width: 80%;font-size: 20px;background: url('images/bg8.png');padding:40px;background-position-x: center;background-size: 80%;background-repeat: no-repeat;">
-			设备正在使用中...
-		</div>
-		<div class="weui-loadmore" style="position: fixed;bottom: 20%;text-align: center;width: 100%;display: none;">
-		  	<i class="weui-loading"></i>
-		  	<span class="weui-loadmore__tips" style="font-size: 20px;">正在检测设备状态，请稍候....<span id="count"></span></span>
-		</div>
-		
 	</body>
 </html>

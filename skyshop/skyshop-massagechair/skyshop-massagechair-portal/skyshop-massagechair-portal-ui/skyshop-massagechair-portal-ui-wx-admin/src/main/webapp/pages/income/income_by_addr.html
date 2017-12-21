@@ -10,15 +10,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
 		
-<!-- 		<link rel="stylesheet" type="text/css" href="css/style.css"/> -->
-<!-- 		<link rel="stylesheet" type="text/css" href="css/list.css"/> -->
-<!-- 		<script type="text/javascript" src="../plugins/jquery-3.2.1.min.js"></script> -->
-<!-- 		<script type="text/javascript" src="js/admin.js"></script> -->
-		<script type="text/javascript">
-			$(function(){
-			    $('.t_date').calendar();
-			});
-		</script>
+		<script type="text/javascript" src="../../js/income/income_by_addr.js"></script>
 	</head>
 	<body>
 		<div class="h_nav" style="display: none;">
@@ -31,58 +23,46 @@
 				<table class="t_table">
 					<tr>
 						<td class="t_fieldname">选择开始时间</td>
-						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-21" readonly="readonly"/></td>
+						<td class="t_fieldvalue"><input id="startDate" class="t_text t_date" uku-value="addrIncomeManage.startDate" readonly="readonly"/></td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">选择结束时间</td>
-						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-22" readonly="readonly"/></td>
+						<td class="t_fieldvalue"><input id="endDate" class="t_text t_date" uku-value="addrIncomeManage.endDate" readonly="readonly"/></td>
 					</tr>
 				</table>
 				<div class="t_area_btn">
-					<div class="t_table_title">场所收益明细</div><div class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+					<div class="t_table_title">场所收益明细</div><div id="btn_search" class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
 				</div>
 			</div>
 			<div class="t_search_results">
-				<div class="t_search_total">查询总收益：<span class="money">100.00</span> 元</div>
+				<div class="t_search_total">查询总收益：<span class="money">{{addrIncomeManage.total}}</span> 元</div>
 				<div class="tb_search_table">
 					<table class="t_table" style="width: 650px;">
 						<thead class="t_table_head">
 							<tr>
-								<td>场所</td>
-								<td>设备</td>
-								<td>订单数</td>
-								<td>收益（元）</td>
-								<td>均收（元）</td>
-								<td>详情</td>
+								<td width="30%">场所</td>
+								<td width="15%">设备数</td>
+								<td width="15%">订单数</td>
+								<td width="20%">收益（元）</td>
+								<td width="30%">场所均收（元）</td>
+								<td width="10%">详情</td>
 							</tr>
 						</thead>
 						<tbody class="t_table_body">
-							<tr>
-								<td>电影院</td>
-								<td>15</td>
-								<td>20</td>
-								<td>300.00</td>
-								<td>20.00</td>
-								<td><a href="income_by_addr_detail.html">&gt;</a></td>
-							</tr>
-							<tr>
-								<td>沃尔玛</td>
-								<td>10</td>
-								<td>20</td>
-								<td>300.00</td>
-								<td>20.00</td>
-								<td><a href="income_by_addr_detail.html">&gt;</a></td>
-							</tr>
-							<tr>
-								<td>公园</td>
-								<td>15</td>
-								<td>20</td>
-								<td>300.00</td>
-								<td>20.00</td>
-								<td><a href="income_by_addr_detail.html">&gt;</a></td>
+							<tr uku-repeat="item in addrIncomeManage.addrIncomes">
+								<td>{{item.addr.name}}</td>
+								<td>{{item.chairCount}}</td>
+								<td>{{item.orderCount}}</td>
+								<td>{{item.money}}</td>
+								<td>{{item.chairAvgMoney}}</td>
+								<td><a uku-href="item.detailUrl">{{item.addr ? '&gt;' : ''}}</a></td>
 							</tr>
 						</tbody>
 					</table>
+					<div class="weui-loadmore">
+					  	<i class="weui-loading"></i>
+					  	<span class="weui-loadmore__tips">正在加载</span>
+					</div>
 				</div>
 			</div>
 		</div>

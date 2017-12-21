@@ -9,18 +9,22 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.validator.constraints.NotBlank;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sitv.skyshop.common.utils.Constants;
 import com.sitv.skyshop.common.utils.Utils;
 import com.sitv.skyshop.controller.BaseRestController;
 import com.sitv.skyshop.dto.ResponseInfo;
-import com.sitv.skyshop.dto.info.EnumInfo;
 import com.sitv.skyshop.massagechair.dto.order.OrderInfo;
 import com.sitv.skyshop.massagechair.service.order.IOrderService;
 
@@ -39,25 +43,27 @@ public class OrderController extends BaseRestController<IOrderService, OrderInfo
 
 	@PostMapping("/postpay/")
 	public ResponseInfo<OrderInfo> postpay(@Valid @NotNull @ModelAttribute OrderInfo orderInfo) {
+		log.debug("支付成功，发送开机指令>>>");
+		log.debug("order=" + orderInfo.getId());
 		// 校验参数，防止未支付订单调用
-		orderInfo.setPayStatus(new EnumInfo<>(IOrderService.PAYSTATUS_PAID, "已支付"));
-		service.pay(orderInfo);
-		orderInfo = service.getOrderServiceInfo(orderInfo.getId());
+		if (request.getSession().getAttribute(Constants.POSTPAY_ORDERID_SESSION_KEY + orderInfo.getId()) == null) {
+			service.postPay(orderInfo);
+			request.getSession().setAttribute(Constants.POSTPAY_ORDERID_SESSION_KEY + orderInfo.getId(), System.currentTimeMillis());
+		}
 		return ResponseInfo.SUCCESS(orderInfo);
 	}
 
-	@PostMapping("/restart/{chairId}")
-	public ResponseInfo<OrderInfo> restart(@Valid @NotNull Long chairId) {
-		return ResponseInfo.SUCCESS(null);
+	@GetMapping("/serviceinfo/{id}")
+	public ResponseInfo<OrderInfo> serviceinfo(@NotBlank @Min(0) @PathVariable String id) {
+		log.debug("开机成功，查询服务信息>>>");
+		OrderInfo orderInfo = service.getOrderServiceInfo(Long.valueOf(id));
+		return ResponseInfo.SUCCESS(orderInfo);
 	}
 
 	@PostMapping("/paynotify")
 	public void payNotify(HttpServletResponse response) {
-		BufferedReader reader = null;
-		try {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(request.getInputStream()))) {
 			log.debug("处理微信通知.....");
-
-			reader = new BufferedReader(new InputStreamReader(request.getInputStream()));
 
 			StringBuilder result = new StringBuilder();
 
@@ -75,9 +81,11 @@ public class OrderController extends BaseRestController<IOrderService, OrderInfo
 					String out_trade_no = resultData.get("out_trade_no");
 					String total_fee = resultData.get("total_fee");
 					String transaction_id = resultData.get("transaction_id");
-					log.debug("out_trade_no=" + out_trade_no);
-					log.debug("total_fee=" + total_fee);
-					log.debug("transaction_id=" + transaction_id);
+					log.debug("订单号=" + out_trade_no);
+					log.debug("金额=" + total_fee);
+					log.debug("微信流水号=" + transaction_id);
+
+					service.updatePayStatus(out_trade_no, IOrderService.PAYSTATUS_PAID);
 
 					log.debug("返回微信通知处理结果.....");
 					response.getWriter().print("<xml><return_code><![CDATA[SUCCESS]]></return_code></xml>");
@@ -85,14 +93,6 @@ public class OrderController extends BaseRestController<IOrderService, OrderInfo
 			}
 		} catch (Exception e) {
 			log.error(e.getMessage(), e);
-		} finally {
-			if (reader != null) {
-				try {
-					reader.close();
-				} catch (Exception e) {
-					log.error(e.getMessage(), e);
-				}
-			}
 		}
 	}
 }

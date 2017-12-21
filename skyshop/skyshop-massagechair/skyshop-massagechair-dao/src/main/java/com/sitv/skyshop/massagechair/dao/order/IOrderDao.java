@@ -12,7 +12,10 @@ import org.apache.ibatis.annotations.Param;
 import com.sitv.skyshop.dao.ICrudDao;
 import com.sitv.skyshop.dao.IDeleteStatusDao;
 import com.sitv.skyshop.dao.MyBatisDao;
+import com.sitv.skyshop.dto.SearchParamInfo;
 import com.sitv.skyshop.massagechair.domain.order.Order;
+import com.sitv.skyshop.massagechair.domain.order.Order.PayStatus;
+import com.sitv.skyshop.massagechair.dto.order.OrderInfo;
 
 /**
  * @author zfj20 @ 2017年11月20日
@@ -25,7 +28,13 @@ public interface IOrderDao extends ICrudDao<Order>, IDeleteStatusDao<Order> {
 
 	int getCountByAgency(@Param("id") Long id);
 
-	void updateStatus(Order order);
+	void updatePayStatus(Order order);
 
-	BigDecimal getTotalMoney(@Param("id") Long id, @Param("startTime") Calendar startTime, @Param("endTime") Calendar endTime);
+	void updateChairStartTime(@Param("chairStartTime") Calendar chairStartTime, @Param("id") Long id);
+
+	Order getByPayStatus(@Param("id") Long id, @Param("payStatus") PayStatus payStatus);
+
+	Order getByCode(@Param("orderCode") String orderCode);
+
+	BigDecimal getAgencyOrderTotalMoney(SearchParamInfo<OrderInfo> info);
 }

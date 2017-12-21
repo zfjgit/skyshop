@@ -1,7 +1,7 @@
 /**
  *
  */
-package com.sitv.skyshop.massagechair.portal.api.wx.admin.controller.servlet;
+package com.sitv.skyshop.common.filters;
 
 import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;

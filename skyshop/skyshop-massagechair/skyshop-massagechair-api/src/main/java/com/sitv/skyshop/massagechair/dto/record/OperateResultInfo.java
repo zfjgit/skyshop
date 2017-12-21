@@ -2,11 +2,9 @@ package com.sitv.skyshop.massagechair.dto.record;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 public class OperateResultInfo extends UseRecordInfo {
 
 	private static final long serialVersionUID = 2147666083019726993L;
@@ -18,5 +16,9 @@ public class OperateResultInfo extends UseRecordInfo {
 		super();
 		setCode(code);
 		setName(name);
+	}
+
+	public String toString() {
+		return "code=" + this.getCode() + "/name=" + this.getName();
 	}
 }

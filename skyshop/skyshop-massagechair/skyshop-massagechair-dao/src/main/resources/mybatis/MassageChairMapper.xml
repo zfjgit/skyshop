@@ -23,7 +23,7 @@
 		SELECT p.* 
 		FROM tab_pricepackages pp 
 		LEFT JOIN tab_prices p ON pp.prices_sno=p.prices_sno
-		WHERE pp.chairs_sno=#{id} order by p.prices_amount
+		WHERE pp.chairs_sno=#{id} order by p.prices_amount,p.prices_minutes
 	</select>
 	
 	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" useGeneratedKeys="true" keyProperty="id">
@@ -120,19 +120,22 @@
 	
 	<update id="updateStatus" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" >
 		UPDATE tab_massagechairs 
-		SET chairs_status=#{status.code}
+		SET chairs_status=#{status.code},
+			chairs_updateTime=#{updateTime}
 		WHERE chairs_sno=#{id}
 	</update>
 	
 	<update id="updateQRCodeUrl" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" >
 		UPDATE tab_massagechairs 
-		SET chairs_qrcode=#{qrcode}
+		SET chairs_qrcode=#{qrcode},
+			chairs_updateTime=#{updateTime}
 		WHERE chairs_sno=#{id}
 	</update>
 	
 	<update id="updateDeleteStatus" parameterType="com.sitv.skyshop.massagechair.domain.device.MassageChair" statementType="PREPARED" >
 		UPDATE tab_massagechairs 
-		SET is_del=#{deleteStatus.code}
+		SET is_del=#{deleteStatus.code},
+			chairs_updateTime=#{updateTime}
 		WHERE chairs_sno=#{id}
 	</update>
 	

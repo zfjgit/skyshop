@@ -60,11 +60,11 @@
 			AND record_status = #{param.status.code}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND cdate &lt; #{param.endDate}
+			AND cdate &lt;= #{param.endDate}
 		</if>
 		
 		<if test="param != null and param.startDate != null">
-			AND cdate &gt; #{param.startDate}
+			AND cdate &gt;= #{param.startDate}
 		</if>
 		<if test="sortField != null and sortDir != null">
 			ORDER BY ${sortField} ${sortDir}

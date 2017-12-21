@@ -50,7 +50,7 @@ public class OrderTimeoutCheckTask {
 			for (String key : orderIDkeys) {
 				String orderId = redisTemplate.opsForValue().get(key);
 				if (Utils.isNull(orderId)) {
-					log.error("获取订单缓存出错：sim=" + key);
+					log.error("获取订单缓存出错：key=" + key);
 					continue;
 				}
 				OrderInfo orderInfo = orderService.getOne(Long.valueOf(orderId));
@@ -59,18 +59,33 @@ public class OrderTimeoutCheckTask {
 					continue;
 				}
 
-				long beginInMillis = orderInfo.getCreateTime().getTimeInMillis();
+				long beginInMillis = orderInfo.getChairStartTime().getTimeInMillis();
 				if (System.currentTimeMillis() < beginInMillis) {
 					log.error("OS系统时间不正确，请及时同步时间！！！！");
 					break;
 				}
-				log.debug("ordermins=" + orderInfo.getMinutes());
-				log.debug("ordertime=" + Utils.time2String(orderInfo.getCreateTime(), Constants.DATETIME_FORMAT_1));
-				log.debug("now=" + Utils.time2String(Calendar.getInstance(), Constants.DATETIME_FORMAT_1));
-				if (System.currentTimeMillis() - beginInMillis >= orderInfo.getMinutes() * 60 * 1000) {
+
+				MassageChairInfo chairInfo = massageChairService.getOne(orderInfo.getChair().getId());
+
+				log.debug("chairstart=" + Utils.time2String(orderInfo.getChairStartTime(), Constants.DATETIME_FORMAT_1));
+				log.debug("       now=" + Utils.time2String(Calendar.getInstance(), Constants.DATETIME_FORMAT_1));
+				log.debug(" ordermins=" + orderInfo.getMinutes());
+
+				String adjustSecondsKey = Constants.REDIS_ORDER_SECONDS_ADJUST_KEY + orderId + chairInfo.getGsmModule().getSimCard().getSim();
+				String adjustedSeconds = redisTemplate.opsForValue().get(adjustSecondsKey);
+				int totalSeconds = orderInfo.getMinutes() * 60;
+				if (!Utils.isNull(adjustedSeconds)) {
+					log.debug("补偿时间（s）：" + adjustedSeconds);
+					totalSeconds += Integer.valueOf(adjustedSeconds);
+				}
+				log.debug("totalSeconds=" + totalSeconds);
+				long pastSeconds = (System.currentTimeMillis() - beginInMillis) / (1000);
+				log.debug("pastSeconds=" + pastSeconds);
+				if (System.currentTimeMillis() - beginInMillis >= totalSeconds * 1000) {
 					log.debug("超时关机>>>");
 
 					redisTemplate.delete(key);
+					redisTemplate.delete(adjustSecondsKey);
 
 					String operateOk = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_RESULT_OK);
 
@@ -80,12 +95,10 @@ public class OrderTimeoutCheckTask {
 						continue;
 					}
 
-					MassageChairInfo chairInfo = massageChairService.getOne(orderInfo.getChair().getId());
-
 					String sim = chairInfo.getGsmModule().getSimCard().getSim();
 					UseRecordInfo recordInfo = new UseRecordInfo(null, orderInfo.getId(), "", EnumInfo.valueOf(UseRecordType.class, UseRecordType.CLOSE.getCode()), "设备超时检查",
 					                "发送关机指令", chairInfo.getGsmModule().getImei(), sim, orderInfo.getMoney().toString(), orderInfo.getMinutes() + "", chairInfo.getName(), "", "",
-					                chairInfo.getInstallationAddress().getFullAddress(), "", Calendar.getInstance());
+					                chairInfo.getInstallationAddress().getFullAddress(), "", Calendar.getInstance(), orderInfo.getChairStartTime());
 					recordService.createCloseRecord(recordInfo);
 
 					log.debug("更新按摩椅状态");

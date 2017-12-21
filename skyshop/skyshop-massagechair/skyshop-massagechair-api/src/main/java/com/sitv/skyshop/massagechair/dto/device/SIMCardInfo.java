@@ -39,6 +39,8 @@ public class SIMCardInfo extends DeviceInfo {
 
 	private EnumInfo<SIMCardStatus, String> status;
 
+	private boolean needRecharge;
+
 	public SIMCardInfo() {
 	}
 

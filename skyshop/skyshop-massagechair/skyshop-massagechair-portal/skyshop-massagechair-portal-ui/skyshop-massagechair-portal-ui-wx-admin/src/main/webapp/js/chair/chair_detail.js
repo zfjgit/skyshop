@@ -12,6 +12,7 @@ $(function() {
         $('#btn_qrcode').hide();
         $('.t_deletestatus_field').hide();
     } else {
+        $('#btn_autocreate').hide();
         chairInfo.id = search.substring(1);
     }
     
@@ -45,6 +46,8 @@ function loadOne() {
             initStatusPicker();
             initAddressPicker();
             initGSMPicker();
+            
+            showQRCodeBtns();
         });
     } else {
         initStatusPicker();
@@ -93,10 +96,6 @@ function initPricePicker() {
                 }
                 priceNames += p.name;
                 
-                priceItems.push({
-                    title : p.name,
-                    value : p.id
-                });
                 chairInfo.pricePairs[p.name] = p.id;
             }
         }
@@ -215,6 +214,16 @@ function addListeners() {
         $("#popup-qrcode").popup();
     });
     
+    $('#btn_createqrcode').click(function() {
+        post('/chair/createqrcode/' + chairInfo.id, '', function(d) {
+            if (d.data.qrcode) {
+                showOkMsg('二维码已生成', function() {
+                    window.location.reload();
+                });
+            }
+        });
+    });
+    
     $('#btn_save').on('click', function() {
         if (chairInfo.name == '') {
             showMsg('请输入编号');
@@ -310,6 +319,7 @@ function addListeners() {
         });
     });
     
+    /*
     $('#btn_check').on('click', function() {
         get('/chair/check/' + chairInfo.id, '', function(d) {
             showConfirmMsg('正在检测设备，可能需要几分钟才能确认结果，是否继续等待？', function() {
@@ -317,8 +327,23 @@ function addListeners() {
             });
         });
     });
+    */
+
+    $('#btn_autocreate').on('click', function() {
+        window.location.href = 'chair_autocreate.html';
+    });
     
     $('#btn_download').on('click', function() {
         window.location.href = chairInfo.qrcode;
     });
+}
+
+function showQRCodeBtns() {
+    if (!chairInfo.qrcode) {
+        $('#btn_download').hide();
+        $('#btn_createqrcode').show();
+    } else {
+        $('#btn_download').show();
+        $('#btn_createqrcode').hide();
+    }
 }

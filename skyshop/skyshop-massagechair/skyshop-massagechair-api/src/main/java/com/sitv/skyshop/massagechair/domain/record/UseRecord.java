@@ -41,11 +41,13 @@ public class UseRecord extends DomainObject {
 	private UseRecordType type;
 	private String url;
 
+	private Calendar chairStartTime;
+
 	protected UseRecord() {
 	}
 
 	public UseRecord(Long id, Long orderId, String resultCode, String from, String response, UseRecordType type, String imei, String sim, String price, String minutes,
-	                String chair, String openid, String nickName, String addr, String url) {
+	                String chair, String openid, String nickName, String addr, String url, Calendar chairStartTime) {
 		super(id, type.getName());
 		this.orderId = orderId;
 		this.resultCode = resultCode;
@@ -61,6 +63,7 @@ public class UseRecord extends DomainObject {
 		this.nickName = nickName;
 		this.addr = addr;
 		this.url = url;
+		this.chairStartTime = chairStartTime;
 		setCreateTime(Calendar.getInstance());
 		setUpdateTime(Calendar.getInstance());
 	}

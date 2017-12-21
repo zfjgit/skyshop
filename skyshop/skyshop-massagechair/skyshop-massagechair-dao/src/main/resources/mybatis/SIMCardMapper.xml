@@ -17,7 +17,7 @@
 		<result property="operator" jdbcType="VARCHAR" column="simcard_operator" />
 	</resultMap>
 	
-	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.SIMCard" statementType="PREPARED">
+	<insert id="insert" parameterType="com.sitv.skyshop.massagechair.domain.device.SIMCard" statementType="PREPARED" useGeneratedKeys="true" keyProperty="id">
 		INSERT INTO tab_simcards
 			(simcard_status, is_del, description, simcard_name, simcard_sim, simcard_dataFlow, simcard_dueDate, simcard_createTime,simcard_updateTime, simcard_operator) 
 		VALUES 
@@ -26,6 +26,10 @@
 	
 	<select id="get" resultMap="BaseResultMap" parameterType="long">
 		SELECT * FROM tab_simcards WHERE simcard_sno=#{id}
+	</select>
+	
+	<select id="getBySIM" resultMap="BaseResultMap" parameterType="string">
+		SELECT * FROM tab_simcards WHERE simcard_sim=#{sim}
 	</select>
 	
 	<update id="updateStatus" parameterType="com.sitv.skyshop.massagechair.domain.device.SIMCard" statementType="PREPARED" >
@@ -61,6 +65,9 @@
 		SELECT m.*
 		FROM tab_simcards m
 		WHERE 1 = 1 
+		<if test="param != null and param.needRecharge">
+			AND simcard_dueDate &lt; (getdate() + 3)
+		</if>
 		<if test="param != null and param.deleteStatus != null">
 			AND is_del = #{param.deleteStatus.code}
 		</if>

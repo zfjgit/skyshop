@@ -47,9 +47,9 @@ public class InstallationAddressInfo extends FullInfoDto {
 	public InstallationAddressInfo() {
 	}
 
-	public InstallationAddressInfo(Long id, String description, AddressInfo province, AddressInfo city, AddressInfo district, String detailAddress, AgencyInfo agency,
-	                String location, String contact, String contactNumber, Calendar createTime, Calendar updateTime, EnumInfo<DeleteStatus, Integer> deleteStatus,
-	                List<SimpleInfoDto> chairs) {
+	public InstallationAddressInfo(Long id, String description, AddressInfo province, AddressInfo city, AddressInfo district, String detailAddress, String fullAddress,
+	                AgencyInfo agency, String location, String contact, String contactNumber, Calendar createTime, Calendar updateTime,
+	                EnumInfo<DeleteStatus, Integer> deleteStatus, List<SimpleInfoDto> chairs) {
 		super(id, description, createTime, updateTime);
 
 		this.location = location;
@@ -62,7 +62,7 @@ public class InstallationAddressInfo extends FullInfoDto {
 		this.agency = agency;
 		this.chairs = chairs;
 		setDeleteStatus(deleteStatus);
-		this.fullAddress = province.getName() + city.getName() + (district == null ? "" : district.getName()) + detailAddress;
+		this.fullAddress = fullAddress;
 	}
 
 	public static InstallationAddressInfo create(InstallationAddress addr) {
@@ -78,8 +78,9 @@ public class InstallationAddressInfo extends FullInfoDto {
 		for (MassageChair c : addr.getChairs()) {
 			chairInfos.add(new SimpleInfoDto(c.getId(), c.getName()));
 		}
-		return new InstallationAddressInfo(addr.getId(), addr.getDescription(), province, city, district, addr.getDetailAddress(), agencyInfo, addr.getLocation(),
-		                addr.getContact(), addr.getContactNumber(), addr.getCreateTime(), addr.getUpdateTime(), new EnumInfo<>(addr.getDeleteStatus()), chairInfos);
+		return new InstallationAddressInfo(addr.getId(), addr.getDescription(), province, city, district, addr.getDetailAddress(), addr.getFullAddress(), agencyInfo,
+		                addr.getLocation(), addr.getContact(), addr.getContactNumber(), addr.getCreateTime(), addr.getUpdateTime(), new EnumInfo<>(addr.getDeleteStatus()),
+		                chairInfos);
 	}
 
 	public static List<InstallationAddressInfo> creates(List<InstallationAddress> addrs) {

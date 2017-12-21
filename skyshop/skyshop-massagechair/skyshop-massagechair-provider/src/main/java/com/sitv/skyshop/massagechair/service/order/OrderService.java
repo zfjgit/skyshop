@@ -6,6 +6,7 @@ package com.sitv.skyshop.massagechair.service.order;
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import javax.persistence.EntityNotFoundException;
 
@@ -13,10 +14,12 @@ import org.apache.commons.lang3.RandomUtils;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
 import com.sitv.skyshop.common.exception.OrderExpiredException;
+import com.sitv.skyshop.common.exception.OrderNotPaidException;
 import com.sitv.skyshop.common.utils.Constants;
 import com.sitv.skyshop.common.utils.Utils;
 import com.sitv.skyshop.common.utils.httpclient4.HttpConnectionManager;
@@ -29,6 +32,7 @@ import com.sitv.skyshop.massagechair.dao.agency.IAgencyDao;
 import com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao;
 import com.sitv.skyshop.massagechair.dao.device.IMassageChairDao;
 import com.sitv.skyshop.massagechair.dao.order.IOrderDao;
+import com.sitv.skyshop.massagechair.dao.order.IOrderIncomePartitionDao;
 import com.sitv.skyshop.massagechair.domain.device.InstallationAddress;
 import com.sitv.skyshop.massagechair.domain.device.MassageChair;
 import com.sitv.skyshop.massagechair.domain.device.MassageChair.ChairStatus;
@@ -39,6 +43,7 @@ import com.sitv.skyshop.massagechair.domain.record.UseRecord.UseRecordType;
 import com.sitv.skyshop.massagechair.dto.order.OrderInfo;
 import com.sitv.skyshop.massagechair.dto.record.OperateResultInfo;
 import com.sitv.skyshop.massagechair.dto.record.UseRecordInfo;
+import com.sitv.skyshop.massagechair.runner.OrderPayStatusPollRunner;
 import com.sitv.skyshop.massagechair.service.userecord.IUseRecordService;
 import com.sitv.skyshop.service.CrudService;
 
@@ -60,6 +65,9 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 	private IInstallationAddressDao addressDao;
 
 	@Autowired
+	private IOrderIncomePartitionDao orderIncomePartitionDao;
+
+	@Autowired
 	private IUseRecordService recordService;
 
 	@Autowired
@@ -67,6 +75,12 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 
 	@Autowired
 	private HttpConnectionManager httpConnectionManager;
+
+	@Autowired
+	private StringRedisTemplate redisTemplate;
+
+	@Autowired
+	private OrderPayStatusPollRunner orderPayStatusPollRunner;
 
 	public OrderInfo getOne(Long id) {
 		return OrderInfo.create(get(id));
@@ -77,11 +91,13 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 
 		List<Order> orders = dao.search(q);
 
+		BigDecimal totalMoney = dao.getAgencyOrderTotalMoney(q);
+
 		com.github.pagehelper.PageInfo<Order> pageInfo = new com.github.pagehelper.PageInfo<>(orders, 5);
 
 		List<OrderInfo> orderInfos = OrderInfo.creates(pageInfo.getList());
 
-		return new PageInfo<>(orderInfos, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal());
+		return new PageInfo<>(orderInfos, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), totalMoney);
 	}
 
 	public void updateOne(OrderInfo t) {
@@ -140,18 +156,24 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 		dao.updateDeleteStatus(order);
 	}
 
-	public void pay(OrderInfo t) {
+	public void postPay(OrderInfo t) {
 		log.debug("订单支付成功，发送开机指令>>>");
 		Order order = get(t.getId());
 		if (order == null) {
 			throw new EntityNotFoundException("未找到订单：id=" + t.getId());
 		}
 
-		if (System.currentTimeMillis() - order.getCreateTime().getTimeInMillis() >= order.getMinutes() * 60 * 1000) {
-			log.debug("ordermins=" + order.getMinutes());
-			log.debug("ordertime=" + Utils.time2String(order.getCreateTime(), Constants.DATETIME_FORMAT_1));
-			log.debug("now=" + Utils.time2String(Calendar.getInstance(), Constants.DATETIME_FORMAT_1));
+		if (System.currentTimeMillis() - order.getChairStartTime().getTimeInMillis() >= order.getMinutes() * 60 * 1000) {
+			log.debug("charistart=" + Utils.time2String(order.getCreateTime(), Constants.DATETIME_FORMAT_1));
+			log.debug("       now=" + Utils.time2String(Calendar.getInstance(), Constants.DATETIME_FORMAT_1));
+			log.debug(" ordermins=" + order.getMinutes());
 			throw new OrderExpiredException("订单已过期");
+		}
+
+		String retries = env.getProperty(Constants.ORDER_PAY_RESULT_CHECK_POLL_RETRIES).trim();
+		boolean hasPaid = orderPayStatusPollRunner.run(t.getId(), Integer.valueOf(retries));
+		if (!hasPaid) {
+			throw new OrderNotPaidException("订单未支付");
 		}
 
 		String operateOk = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_RESULT_OK);
@@ -169,17 +191,18 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 
 		orderPartition(order);
 
-		order.setPayStatus(BaseEnum.valueOf(PayStatus.class, t.getPayStatus().getCode()));
-		dao.update(order);
-
 		MassageChair chair = order.getChair();
 		chair.setStatus(ChairStatus.WORKING);
 		massageChairDao.updateStatus(chair);
 
-		UseRecordInfo record = new UseRecordInfo(null, order.getId(), "", EnumInfo.valueOf(UseRecordType.class, UseRecordType.OPEN.getCode()), "扫码", "发送开机指令",
-		                chair.getGsmModule().getImei(), chair.getGsmModule().getSimCard().getSim(), order.getMoney().toString(), order.getMinutes() + "", chair.getName(), "", "",
-		                chair.getInstallationAddress().getFullAddress(), "", Calendar.getInstance());
+		UseRecordInfo record = new UseRecordInfo(null, order.getId(), "", EnumInfo.valueOf(UseRecordType.class, UseRecordType.OPEN.getCode()), "微信扫码", "发送开机指令",
+		                chair.getGsmModule().getImei(), chair.getGsmModule().getSimCard().getSim(), order.getMoney().toString(), order.getMinutes() + "", chair.getName(),
+		                t.getOpenid(), t.getNickName(), chair.getInstallationAddress().getFullAddress(), "", Calendar.getInstance(), null);
 		recordService.createOpenRecord(record);
+
+		Calendar chairStartTime = Calendar.getInstance();
+		log.debug("chairstart=" + Utils.time2String(chairStartTime, Constants.DATETIME_FORMAT_1));
+		dao.updateChairStartTime(chairStartTime, order.getId());
 	}
 
 	private void orderPartition(Order order) {
@@ -209,7 +232,7 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 	}
 
 	public OrderInfo getOrderServiceInfo(Long id) {
-		log.debug("获取订单开机信息>>>");
+		log.debug("获取开机时间信息>>>");
 		Order order = get(id);
 		if (order == null) {
 			throw new EntityNotFoundException("未找到订单：id=" + id);
@@ -217,27 +240,84 @@ public class OrderService extends CrudService<IOrderDao, Order, OrderInfo> imple
 		OrderInfo t = OrderInfo.create(order);
 		t.setContactNumber(order.getInstallationAddress().getContactNumber());
 
+		if (System.currentTimeMillis() - order.getChairStartTime().getTimeInMillis() >= order.getMinutes() * 60 * 1000) {
+			log.debug("charistart=" + Utils.time2String(order.getChairStartTime(), Constants.DATETIME_FORMAT_1));
+			log.debug("       now=" + Utils.time2String(Calendar.getInstance(), Constants.DATETIME_FORMAT_1));
+			log.debug(" ordermins=" + order.getMinutes());
+			throw new OrderExpiredException("订单已过期");
+		}
+
+		if (!order.getPayStatus().getCode().equals(PayStatus.PAID.getCode())) {
+			throw new OrderNotPaidException("订单未支付");
+		}
+
 		String operateOk = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_RESULT_OK);
 		UseRecordInfo closeRecord = recordService.getByOrder(order.getId(), UseRecordType.CLOSE.getCode(), operateOk);
 		if (closeRecord != null) {
 			log.warn("设备已经关机，订单已完成");
-			t.setLeftMinutes(0);
+			t.setLeftSeconds(0);
 			return t;
 		}
 
-		log.debug("ordertime=" + Utils.time2String(order.getCreateTime(), Constants.DATETIME_FORMAT_1));
-		log.debug("now=" + Utils.time2String(Calendar.getInstance(), Constants.DATETIME_FORMAT_1));
-		long leftMinutes = order.getMinutes() - (System.currentTimeMillis() - order.getCreateTime().getTimeInMillis()) / (60 * 1000);
-		leftMinutes = Math.min(leftMinutes, order.getMinutes());
-		leftMinutes = Math.max(leftMinutes, 0);
-		log.debug("leftMinutes=" + leftMinutes);
-		t.setLeftMinutes(leftMinutes);
-
 		MassageChair chair = order.getChair();
 
-		OperateResultInfo operateResultInfo = recordService.getOpenOperateResult(chair.getGsmModule().getSimCard().getSim(), t.getId().toString(), 3);
+		OperateResultInfo operateResultInfo = recordService.getOpenOperateResult(chair.getGsmModule().getSimCard().getSim(), t.getId().toString(), 1);
 		t.setOperateResultInfo(operateResultInfo);
-		log.debug("获取订单开机信息完成：operateResultInfo=" + operateResultInfo);
+		log.debug("开机指令结果：=" + operateResultInfo);
+
+		log.debug("chairstart=" + Utils.time2String(order.getChairStartTime(), Constants.DATETIME_FORMAT_1));
+		log.debug("       now=" + Utils.time2String(Calendar.getInstance(), Constants.DATETIME_FORMAT_1));
+
+		long pastSeconds = (System.currentTimeMillis() - order.getChairStartTime().getTimeInMillis()) / 1000;
+		pastSeconds = Math.max(pastSeconds, 0);
+		long leftSeconds = order.getMinutes() * 60 - pastSeconds;
+		leftSeconds = Math.min(leftSeconds, order.getMinutes() * 60);
+		leftSeconds = Math.max(leftSeconds, 0);
+
+		String adjustSecondsKey = Constants.REDIS_ORDER_SECONDS_ADJUST_KEY + id + chair.getGsmModule().getSimCard().getSim();
+
+		String adjustSeconds = env.getProperty(Constants.OPERATE_RESULT_WAIT_ADJUST_SECONDS).trim();
+
+		int totalSeconds = order.getMinutes() * 60 + Integer.valueOf(adjustSeconds);
+
+		if (operateResultInfo == null || !operateOk.equals(operateResultInfo.getCode())) {
+			if (pastSeconds >= totalSeconds) {
+				leftSeconds = 0;
+			} else {
+				leftSeconds = Math.max(totalSeconds - pastSeconds, 0);
+			}
+			redisTemplate.opsForValue().set(adjustSecondsKey, adjustSeconds);
+		} else {
+			String adjustedSeconds = redisTemplate.opsForValue().get(adjustSecondsKey);
+			if (!Utils.isNull(adjustedSeconds)) {
+				leftSeconds = Math.max(totalSeconds - pastSeconds, 0);
+			}
+		}
+		log.debug("leftSeconds=" + leftSeconds);
+		t.setLeftSeconds(leftSeconds);
 		return t;
+	}
+
+	public void updatePayStatus(String orderCode, String payStatus) {
+		if (Utils.isNull(orderCode) || Utils.isNull(payStatus)) {
+			throw new IllegalArgumentException("参数错误：orderCode=" + orderCode + "/payStatus=" + payStatus);
+		}
+		Order order = dao.getByCode(orderCode);
+		if (order == null) {
+			throw new EntityNotFoundException("未找到订单：orderCode=" + orderCode);
+		}
+		order.setPayStatus(BaseEnum.valueOf(PayStatus.class, payStatus));
+		dao.updatePayStatus(order);
+
+		redisTemplate.opsForValue().set(Constants.REDIS_ORDER_PAY_RESULT_KEY_PREFIX + order.getId(), PayStatus.PAID.getCode(), order.getMinutes(), TimeUnit.MINUTES);
+	}
+
+	public void partition(Long id) {
+		Order order = get(id);
+		if (order == null) {
+			throw new EntityNotFoundException("未找到订单：id=" + id);
+		}
+		orderIncomePartitionDao.deleteByOrder(id);
+		orderPartition(order);
 	}
 }

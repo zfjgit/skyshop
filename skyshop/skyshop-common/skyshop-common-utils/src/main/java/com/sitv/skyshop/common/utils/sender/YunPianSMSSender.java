@@ -93,7 +93,9 @@ public class YunPianSMSSender extends SMSSender {
 		String prefix = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_PREFIX);
 		String argType = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_ARG_TYPE);
 		String command = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_CHECK);
-		check = String.format(check, prefix + argType + command);
+		String argConcat = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_ARG_CONCAT);
+		String argSim = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_ARG_SIM);
+		check = String.format(check, prefix + argType + command + argConcat + argSim + mobile);
 		send(mobile, check);
 	}
 

@@ -41,6 +41,8 @@ public class Order extends DomainObject implements ICheckCodeType, IDeleteStatus
 
 	private String checkCode;
 
+	private Calendar chairStartTime;
+
 	private DeleteStatus deleteStatus;
 
 	protected Order() {
@@ -59,6 +61,7 @@ public class Order extends DomainObject implements ICheckCodeType, IDeleteStatus
 		this.installationAddress = installationAddress;
 		setCreateTime(Calendar.getInstance());
 		setUpdateTime(Calendar.getInstance());
+		setChairStartTime(Calendar.getInstance());
 		calcCheckCode();
 	}
 

@@ -3,6 +3,7 @@
  */
 package com.sitv.skyshop.massagechair.service.order;
 
+import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.List;
 
@@ -42,6 +43,20 @@ public class OrderIncomPartitionService extends CrudService<IOrderIncomePartitio
 
 		List<OrderIncomePartition> entitys = dao.search(q);
 
+		BigDecimal totalMoney = dao.getTotalMoney(q);
+
+		com.github.pagehelper.PageInfo<OrderIncomePartition> pageInfo = new com.github.pagehelper.PageInfo<>(entitys, 5);
+
+		List<OrderIncomePartitionInfo> infos = OrderIncomePartitionInfo.creates(pageInfo.getList());
+
+		return new PageInfo<>(infos, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), totalMoney);
+	}
+
+	public PageInfo<OrderIncomePartitionInfo> findOrderPartitions(SearchParamInfo<OrderIncomePartitionInfo> q) {
+		PageHelper.startPage(q.getPage(), q.getPageSize(), true);
+
+		List<OrderIncomePartition> entitys = dao.findOrderPartitions(q);
+
 		com.github.pagehelper.PageInfo<OrderIncomePartition> pageInfo = new com.github.pagehelper.PageInfo<>(entitys, 5);
 
 		List<OrderIncomePartitionInfo> infos = OrderIncomePartitionInfo.creates(pageInfo.getList());
@@ -71,6 +86,34 @@ public class OrderIncomPartitionService extends CrudService<IOrderIncomePartitio
 		Order order = orderDao.get(t.getOrder().getId());
 		OrderIncomePartition partition = new OrderIncomePartition(order, agency, t.getPercentage(), t.getMoney(), t.getTotalMoney());
 		create(partition);
+	}
+
+	public PageInfo<OrderIncomePartitionInfo> findChairIncome(SearchParamInfo<OrderIncomePartitionInfo> q) {
+		PageHelper.startPage(q.getPage(), q.getPageSize(), true);
+
+		List<OrderIncomePartition> entitys = dao.findChairIncomes(q);
+
+		BigDecimal totalMoney = dao.getChairTotalMoney(q);
+
+		com.github.pagehelper.PageInfo<OrderIncomePartition> pageInfo = new com.github.pagehelper.PageInfo<>(entitys, 5);
+
+		List<OrderIncomePartitionInfo> infos = OrderIncomePartitionInfo.creates(pageInfo.getList());
+
+		return new PageInfo<>(infos, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), totalMoney);
+	}
+
+	public PageInfo<OrderIncomePartitionInfo> findChairIncomeDetail(SearchParamInfo<OrderIncomePartitionInfo> q) {
+		PageHelper.startPage(q.getPage(), q.getPageSize(), true);
+
+		List<OrderIncomePartition> entitys = dao.findChairIncomeDetail(q);
+
+		BigDecimal totalMoney = dao.getChairTotalMoney(q);
+
+		com.github.pagehelper.PageInfo<OrderIncomePartition> pageInfo = new com.github.pagehelper.PageInfo<>(entitys, 5);
+
+		List<OrderIncomePartitionInfo> infos = OrderIncomePartitionInfo.creates(pageInfo.getList());
+
+		return new PageInfo<>(infos, pageInfo.getPageNum(), pageInfo.getPageSize(), pageInfo.getPages(), pageInfo.getTotal(), totalMoney);
 	}
 
 }

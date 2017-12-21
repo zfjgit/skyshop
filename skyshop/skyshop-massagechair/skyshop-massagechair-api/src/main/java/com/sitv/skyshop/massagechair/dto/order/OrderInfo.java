@@ -18,6 +18,7 @@ import com.sitv.skyshop.massagechair.domain.order.Order;
 import com.sitv.skyshop.massagechair.domain.order.Order.PayStatus;
 import com.sitv.skyshop.massagechair.domain.order.Order.PayType;
 import com.sitv.skyshop.massagechair.dto.agency.AgencyInfo;
+import com.sitv.skyshop.massagechair.dto.device.MassageChairInfo;
 import com.sitv.skyshop.massagechair.dto.record.OperateResultInfo;
 
 import lombok.Getter;
@@ -38,7 +39,7 @@ public class OrderInfo extends FullInfoDto {
 
 	private BigDecimal money;
 
-	private SimpleInfoDto chair;
+	private MassageChairInfo chair;
 
 	private EnumInfo<PayStatus, String> payStatus;
 
@@ -46,26 +47,35 @@ public class OrderInfo extends FullInfoDto {
 
 	private EnumInfo<PayType, String> payType;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private Calendar startDate;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private Calendar endDate;
 
 	private SimpleInfoDto installationAddress;
 
 	private OperateResultInfo operateResultInfo;
 
-	private long leftMinutes;
+	private long leftSeconds;
 
 	private String contactNumber;
+
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Calendar chairStartTime;
+
+	private String openid;
+
+	private String nickName;
+
+	private String headImgUrl;
 
 	public OrderInfo() {
 	}
 
 	public OrderInfo(Long id, String code, int minutes, BigDecimal money, EnumInfo<PayStatus, String> payStatus, EnumInfo<PayType, String> payType, Calendar createTime,
-	                Calendar updateTime, String description, SimpleInfoDto massageChairInfo, SimpleInfoDto address, AgencyInfo agency, EnumInfo<DeleteStatus, Integer> deleteStatus,
-	                String checkCode) {
+	                Calendar updateTime, Calendar chairStartTime, String description, MassageChairInfo massageChairInfo, SimpleInfoDto address, AgencyInfo agency,
+	                EnumInfo<DeleteStatus, Integer> deleteStatus, String checkCode) {
 		super(id, code, null, description, createTime, updateTime);
 		this.minutes = minutes;
 		this.money = money;
@@ -74,6 +84,7 @@ public class OrderInfo extends FullInfoDto {
 		this.payType = payType;
 		this.installationAddress = address;
 		this.agency = agency;
+		this.chairStartTime = chairStartTime;
 		if (this.agency == null) {
 			this.agency = new AgencyInfo();
 			this.agency.setId(0l);
@@ -87,9 +98,14 @@ public class OrderInfo extends FullInfoDto {
 		if (order == null) {
 			return null;
 		}
+
+		SimpleInfoDto addr = null;
+		if (order.getInstallationAddress() != null) {
+			addr = new SimpleInfoDto(order.getInstallationAddress().getId(), order.getInstallationAddress().getFullAddress());
+		}
+		MassageChairInfo chairInfo = MassageChairInfo.create(order.getChair());
 		return new OrderInfo(order.getId(), order.getCode(), order.getMinutes(), order.getMoney(), new EnumInfo<>(order.getPayStatus()), new EnumInfo<>(order.getPayType()),
-		                order.getCreateTime(), order.getUpdateTime(), order.getDescription(), new SimpleInfoDto(order.getChair().getId(), order.getChair().getName()),
-		                new SimpleInfoDto(order.getInstallationAddress().getId(), order.getInstallationAddress().getFullAddress()), AgencyInfo.create(order.getAgency()),
+		                order.getCreateTime(), order.getUpdateTime(), order.getChairStartTime(), order.getDescription(), chairInfo, addr, AgencyInfo.create(order.getAgency()),
 		                new EnumInfo<>(order.getDeleteStatus()), order.getCheckCode());
 	}
 

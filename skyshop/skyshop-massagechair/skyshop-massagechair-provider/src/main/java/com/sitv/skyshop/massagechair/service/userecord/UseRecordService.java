@@ -4,6 +4,7 @@
 package com.sitv.skyshop.massagechair.service.userecord;
 
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -13,23 +14,34 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import com.github.pagehelper.PageHelper;
-import com.sitv.skyshop.common.exception.EntityNotFoundException;
 import com.sitv.skyshop.common.utils.Constants;
 import com.sitv.skyshop.common.utils.Utils;
 import com.sitv.skyshop.common.utils.sender.SMSSender;
 import com.sitv.skyshop.domain.BaseEnum;
+import com.sitv.skyshop.domain.DomainObject.DeleteStatus;
 import com.sitv.skyshop.dto.PageInfo;
 import com.sitv.skyshop.dto.SearchParamInfo;
+import com.sitv.skyshop.massagechair.dao.device.IGSMModuleDao;
+import com.sitv.skyshop.massagechair.dao.device.IInstallationAddressDao;
 import com.sitv.skyshop.massagechair.dao.device.IMassageChairDao;
+import com.sitv.skyshop.massagechair.dao.device.ISIMCardDao;
 import com.sitv.skyshop.massagechair.dao.order.IOrderDao;
 import com.sitv.skyshop.massagechair.dao.userecord.IUseRecordDao;
+import com.sitv.skyshop.massagechair.domain.agency.Agency;
+import com.sitv.skyshop.massagechair.domain.device.GSMModule;
+import com.sitv.skyshop.massagechair.domain.device.GSMModule.GSMModuleStatus;
+import com.sitv.skyshop.massagechair.domain.device.InstallationAddress;
 import com.sitv.skyshop.massagechair.domain.device.MassageChair;
 import com.sitv.skyshop.massagechair.domain.device.MassageChair.ChairStatus;
+import com.sitv.skyshop.massagechair.domain.device.SIMCard;
+import com.sitv.skyshop.massagechair.domain.device.SIMCard.SIMCardOperator;
+import com.sitv.skyshop.massagechair.domain.device.SIMCard.SIMCardStatus;
 import com.sitv.skyshop.massagechair.domain.order.Order;
 import com.sitv.skyshop.massagechair.domain.record.UseRecord;
 import com.sitv.skyshop.massagechair.domain.record.UseRecord.UseRecordType;
 import com.sitv.skyshop.massagechair.dto.record.OperateResultInfo;
 import com.sitv.skyshop.massagechair.dto.record.UseRecordInfo;
+import com.sitv.skyshop.massagechair.runner.OperateResultPollRunner;
 import com.sitv.skyshop.service.CrudService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -52,8 +64,21 @@ public class UseRecordService extends CrudService<IUseRecordDao, UseRecord, UseR
 
 	@Autowired
 	private IMassageChairDao chairDao;
+
 	@Autowired
 	private IOrderDao orderDao;
+
+	@Autowired
+	private ISIMCardDao simCardDao;
+
+	@Autowired
+	private IGSMModuleDao gsmDao;
+
+	@Autowired
+	private IInstallationAddressDao addressDao;
+
+	@Autowired
+	private OperateResultPollRunner operateResultRunner;
 
 	public UseRecordInfo getOne(Long id) {
 		return UseRecordInfo.create(get(id));
@@ -81,13 +106,14 @@ public class UseRecordService extends CrudService<IUseRecordDao, UseRecord, UseR
 
 	public void createOne(UseRecordInfo t) {
 		UseRecord r = new UseRecord(null, t.getOrderId(), t.getResultCode(), t.getFrom(), t.getResponse(), BaseEnum.valueOf(UseRecordType.class, t.getType().getCode()),
-		                t.getImei(), t.getSim(), t.getPrice(), t.getMinutes(), t.getChair(), t.getOpenid(), t.getNickName(), t.getAddr(), t.getUrl());
+		                t.getImei(), t.getSim(), t.getPrice(), t.getMinutes(), t.getChair(), t.getOpenid(), t.getNickName(), t.getAddr(), t.getUrl(), t.getChairStartTime());
 
 		create(r);
 	}
 
-	public void saveOperateResult(String command, String imei, String code, String orderId) {
+	public void saveOperateResult(String command, String imei, String sim, String code, String orderId, String chairStartTimeStr) {
 		log.debug("保存指令操作结果>>>");
+		log.debug("thread=" + Thread.currentThread().getId());
 		if (Utils.isNull(command)) {
 			throw new IllegalArgumentException("参数错误：type=" + command);
 		}
@@ -113,19 +139,36 @@ public class UseRecordService extends CrudService<IUseRecordDao, UseRecord, UseR
 			throw new IllegalArgumentException("参数错误：orderId=" + orderId);
 		}
 
+		String address = "";
+		String chairName = "";
 		MassageChair chair = chairDao.getByIMEI(imei);
 		if (chair == null) {
-			throw new EntityNotFoundException("没有找到按摩椅：IMEI=" + imei);
+			if (operateOk.equals(code) && command.equals(check) && !Utils.isNull(imei) && !Utils.isNull(sim)) {
+				chair = autoCreateChair(imei, sim);
+				chairName = chair.getName();
+				address = chair.getInstallationAddress() != null ? chair.getInstallationAddress().getFullAddress() : "";
+			} else {
+				sim = "";
+				log.warn("没有找到按摩椅：imei=" + imei);
+			}
+		} else {
+			chairName = chair.getName();
+			sim = chair.getGsmModule().getSimCard().getSim();
+			address = chair.getInstallationAddress() != null ? chair.getInstallationAddress().getFullAddress() : "";
 		}
 
-		String sim = chair.getGsmModule().getSimCard().getSim();
-
+		Calendar chairStartTime = null;
 		if (operateOk.equals(code)) {
 			String type = "";
 			String commandKey = command + sim;
 			if (command.equals(open)) {
 				type = UseRecordType.OPEN.getCode();
 				commandKey = command + orderId + sim;
+				if (!Utils.isNull(chairStartTimeStr)) {
+					chairStartTime = Calendar.getInstance();
+					chairStartTime.setTimeInMillis(Long.valueOf(chairStartTimeStr) * 1000);
+					orderDao.updateChairStartTime(chairStartTime, Long.valueOf(orderId));
+				}
 			} else if (command.equals(close)) {
 				type = UseRecordType.CLOSE.getCode();
 				String key = Constants.REDIS_ORDERID_KEY_PREFIX + orderId + sim;
@@ -145,6 +188,8 @@ public class UseRecordService extends CrudService<IUseRecordDao, UseRecord, UseR
 					return;
 				}
 
+				chairStartTime = orderInfo.getChairStartTime();
+
 				log.debug("更新按摩椅状态");
 
 				MassageChair chairInfo = chairDao.get(orderInfo.getChair().getId());
@@ -159,21 +204,71 @@ public class UseRecordService extends CrudService<IUseRecordDao, UseRecord, UseR
 			} else if (command.equals(url)) {
 				type = UseRecordType.URL.getCode();
 			}
+			log.debug("type=" + command + "/sim=" + sim + "/code=" + code + "/orderId=" + orderId);
 
 			UseRecord t = dao.getLast(sim, type, orderId);
-			if (t == null) {
+			if (t == null && !close.equals(command) && !check.equals(command)) {
 				log.error("没有找到对应的指令发出记录：type=" + command + "/sim=" + sim + "/orderId=" + orderId);
 				return;
 			}
 
-			log.debug("保存：type=" + command + "/sim=" + sim + "/code=" + code + "/orderId=" + orderId);
-			int experid = Integer.parseInt(env.getProperty(Constants.OPERATE_RESULT_CACHE_EXPIRED_MINUTES).trim());
-			redisTemplate.opsForValue().set(commandKey, code, experid, TimeUnit.MINUTES);
+			int expired = Integer.parseInt(env.getProperty(Constants.OPERATE_RESULT_CACHE_EXPIRED_MINUTES).trim());
+			log.debug("过期时间（min）：" + expired);
+			redisTemplate.opsForValue().set(commandKey, code, expired, TimeUnit.MINUTES);
+			redisTemplate.opsForValue().set(check + sim, code, expired, TimeUnit.MINUTES);
 
-			UseRecord r = new UseRecord(null, Utils.isNull(orderId) ? null : Long.valueOf(orderId), code, "接收设备指令操作结果", "设备指令执行成功", BaseEnum.valueOf(UseRecordType.class, type),
-			                imei, sim, t.getPrice(), t.getMinutes(), chair.getName(), t.getOpenid(), t.getNickName(), chair.getInstallationAddress().getFullAddress(), t.getUrl());
+			Long orderIdLong = Utils.isNull(orderId) ? null : Long.valueOf(orderId);
+			String from = "接收设备指令执行结果";
+			String response = "设备指令执行成功";
+			String price = "";
+			String minutes = "";
+			String openId = "";
+			String nickName = "";
+			String apiUrl = "";
+			if (t != null) {
+				price = t.getPrice();
+				minutes = t.getMinutes();
+				openId = t.getOpenid();
+				nickName = t.getNickName();
+				apiUrl = t.getUrl();
+			} else {
+				if (check.equals(command)) {
+					from = "接收设备心跳结果";
+					response = "设备状态正常";
+				}
+				if (close.equals(command)) {
+					from = "接收设备主动关机执行结果";
+					response = "设备关机成功";
+				}
+			}
+
+			UseRecord r = new UseRecord(null, orderIdLong, code, from, response, BaseEnum.valueOf(UseRecordType.class, type), imei, sim, price, minutes, chairName, openId,
+			                nickName, address, apiUrl, chairStartTime);
 			dao.insert(r);
 		}
+	}
+
+	private MassageChair autoCreateChair(String imei, String sim) {
+		SIMCard simCard = simCardDao.getBySIM(sim);
+		if (simCard == null) {
+			simCard = new SIMCard(null, "", 100, Utils.getMaxDate(), sim, SIMCardOperator.CHINAL_UNICOM, SIMCardStatus.USING, DeleteStatus.NORMAL);
+			simCardDao.insert(simCard);
+		}
+		GSMModule gsmModule = gsmDao.getByIMEI(imei);
+		if (gsmModule == null) {
+			gsmModule = new GSMModule(null, imei, imei, GSMModuleStatus.NORMAL, simCard, "", Calendar.getInstance(), Calendar.getInstance(), DeleteStatus.NORMAL);
+			gsmDao.insert(gsmModule);
+		} else {
+			gsmModule.setSimCard(simCard);
+			gsmDao.update(gsmModule);
+		}
+		Long addrId = Long.valueOf(env.getProperty(Constants.CHAIR_AUTO_CREATE_ADDRESS_ID).trim());
+		InstallationAddress installationAddress = addressDao.get(addrId);
+
+		Agency agency = installationAddress == null ? null : installationAddress.getAgency();
+		MassageChair chair = new MassageChair(null, sim, "", sim, ChairStatus.NORMAL, gsmModule, installationAddress, agency, DeleteStatus.NORMAL, "");
+		chairDao.insert(chair);
+		return chair;
 	}
 
 	public UseRecordInfo getByOrder(Long orderId, String type, String resultCode) {
@@ -262,15 +357,14 @@ public class UseRecordService extends CrudService<IUseRecordDao, UseRecord, UseR
 	}
 
 	public OperateResultInfo getOperateResult(String key, int retries) {
-		log.debug("获取指令操作结果>>>");
+		log.debug("查询指令操作结果>>>");
 		log.debug("key=" + key);
+		log.debug("thread=" + Thread.currentThread().getId());
 		if (Utils.isNull(key)) {
 			throw new IllegalArgumentException("参数错误：key=" + key);
 		}
 
 		String operateOk = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_RESULT_OK);
-		String operateFail = env.getProperty(Constants.SMS_YUNPIAN_CHAIR_COMMAND_RESULT_FAIL);
-		Long checkPeriod = Long.valueOf(env.getProperty(Constants.OPERATE_RESULT_CHECK_PERIOD_MILLISECONDS).trim());
 
 		String code = redisTemplate.opsForValue().get(key);
 		log.debug("code=" + code);
@@ -278,28 +372,14 @@ public class UseRecordService extends CrudService<IUseRecordDao, UseRecord, UseR
 			return null;
 		}
 		if (operateOk.equals(code)) {
-			return new OperateResultInfo(operateOk, "成功");
+			OperateResultInfo operateResultInfo = new OperateResultInfo(operateOk, "成功");
+			log.debug("查询指令操作结果=" + operateResultInfo);
+			return operateResultInfo;
 		} else {
-			if (retries > 0) {
-				for (int i = 0; i < retries; i++) {
-					if (i > 9) {
-						break;
-					}
-					try {
-						Thread.sleep(checkPeriod);
-					} catch (InterruptedException e) {
-						log.error(e.getMessage(), e);
-					}
-					code = redisTemplate.opsForValue().get(key);
-					if (code == null) {
-						return null;
-					}
-					if (operateOk.equals(code)) {
-						return new OperateResultInfo(operateOk, "成功");
-					}
-				}
-			}
-			return new OperateResultInfo(operateFail, "失败");
+			log.debug("operateResultRunner polling...");
+			OperateResultInfo operateResultInfo = operateResultRunner.run(key, retries);
+			log.debug("查询指令操作结果=" + operateResultInfo);
+			return operateResultInfo;
 		}
 	}
 
@@ -338,5 +418,4 @@ public class UseRecordService extends CrudService<IUseRecordDao, UseRecord, UseR
 			throw new IllegalArgumentException("错误的指令类型：type=" + recordInfo.getType().getCode());
 		}
 	}
-
 }

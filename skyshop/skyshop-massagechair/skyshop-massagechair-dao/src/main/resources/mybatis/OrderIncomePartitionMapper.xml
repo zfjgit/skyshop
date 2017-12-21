@@ -9,7 +9,6 @@
 		<result property="checkCode" jdbcType="VARCHAR" column="detailed_check"/>
 		<result property="percentage" jdbcType="INTEGER" column="detailed_percentage" />
 		<result property="totalMoney" jdbcType="DECIMAL" column="detailed_parent_money" />
-		<result property="createTime" column="cdate" />
 		<association property="order" column="orders_sno" select="com.sitv.skyshop.massagechair.dao.order.IOrderDao.get"/>
 		<association property="agency" column="user3_sno" select="com.sitv.skyshop.massagechair.dao.agency.IAgencyDao.get"/>
 	</resultMap>
@@ -37,6 +36,10 @@
 		SELECT * FROM tab_orders_Detailed WHERE user3_sno=#{id}
 	</select>
 	
+	<delete id="deleteByOrder" parameterType="long">
+	    DELETE FROM tab_orders_Detailed WHERE orders_sno=#{orderId}
+	</delete>
+	
 	<update id="update"  parameterType="com.sitv.skyshop.massagechair.domain.order.OrderIncomePartition" statementType="PREPARED" >
 		UPDATE tab_orders_Detailed 
 		SET detailed_money=#{money}, 
@@ -44,39 +47,162 @@
 		 	detailed_percentage=#{percentage},
 		 	detailed_parent_money=#{totalMoney},
 		 	orders_sno=#{order.id},
-		 	user3_sno=#{agency.id},
+		 	user3_sno=#{agency.id}
 		WHERE detailed_sno=#{id}
 	</update>
 	
-
-	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
-		SELECT m.*
+	<select id="getTodayTotalMoney" resultType="java.math.BigDecimal" >
+		SELECT ISNULL(sum(d.detailed_money),0)
+		FROM tab_orders_Detailed d 
+		LEFT JOIN tab_orders o ON o.orders_sno=d.orders_sno
+		WHERE 	o.orders_sno=d.orders_sno
+			AND o.orders_createtime &gt;= #{startTime} 
+			AND o.orders_createtime &lt;=  #{endTime} 
+			AND d.user3_sno=#{id}
+	</select>
+	
+	<!-- 	订单分成 order_detail_share-->
+	<select id="findOrderPartitions" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT d.*
+		FROM tab_orders_Detailed d 
+		LEFT JOIN tab_orders o ON o.orders_sno=d.orders_sno
+		WHERE 	o.orders_sno=d.orders_sno
+			AND o.orders_sno=#{param.order.id}
+		ORDER BY d.user3_sno
+	</select>
+	
+	<select id="getChairTotalMoney" resultType="java.math.BigDecimal" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT ISNULL(SUM(m.detailed_money),0)
 		FROM tab_orders_Detailed m 
 		LEFT JOIN tab_orders o on m.orders_sno=o.orders_sno
-		WHERE 1 = 1 
+		LEFT JOIN tab_massagechairs c on o.chairs_sno=c.chairs_sno
+		WHERE m.orders_sno=o.orders_sno
+			AND o.chairs_sno=c.chairs_sno
 		<if test="param != null and param.agency != null">
-			AND user3_sno = #{param.agency.id}
+			AND m.user3_sno = #{param.agency.id}
 		</if>
 		<if test="param != null and param.startDate != null">
-			AND o.orders_createtime &gt; #{param.startDate}
+			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
 			AND o.orders_createtime &lt;= #{param.endDate}
 		</if>
-		<if test="param != null and param.payStatus != null">
-			AND o.orders_payStatus= #{param.payStatus.code}
+		<if test="param != null and param.order != null and param.order.payStatus != null">
+			AND o.orders_payStatus= 'A'
 		</if>
-		<if test="param != null and param.payType != null">
-			AND o.orders_paytype= #{param.payType.code}
+		<if test="param != null and param.order != null and param.order.payType != null">
+			AND o.orders_paytype= #{param.order.payType.code}
 		</if>
-		<if test="param != null and param.chair != null ">
-			AND o.chairs_sno=#{param.chair.id}
+		<if test="param != null and param.order != null and param.order.chair != null ">
+			AND o.chairs_sno=#{param.order.chair.id}
 		</if>
+	</select>
+	
+	<select id="findChairIncomes" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT max(m.detailed_sno) as detailed_sno, max(m.orders_sno) as orders_sno, sum(m.detailed_money) as detailed_money, sum(m.detailed_parent_money) as detailed_parent_money
+		FROM tab_orders_Detailed m 
+		LEFT JOIN tab_orders o on m.orders_sno=o.orders_sno
+		LEFT JOIN tab_massagechairs c on o.chairs_sno=c.chairs_sno
+		WHERE m.orders_sno=o.orders_sno
+			AND o.chairs_sno=c.chairs_sno
 		<if test="param != null and param.agency != null">
-			AND m.user3_sno=#{param.agency.id}
+			AND m.user3_sno = #{param.agency.id}
 		</if>
-		<if test="sortField != null and sortDir != null">
-			ORDER BY ${sortField} ${sortDir}
+		<if test="param != null and param.startDate != null">
+			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
+		<if test="param != null and param.endDate != null">
+			AND o.orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.order != null and param.order.payStatus != null">
+			AND o.orders_payStatus= 'A'
+		</if>
+		<if test="param != null and param.order != null and param.order.payType != null">
+			AND o.orders_paytype= #{param.order.payType.code}
+		</if>
+		<if test="param != null and param.order != null and param.order.chair != null ">
+			AND o.chairs_sno=#{param.order.chair.id}
+		</if>
+		GROUP BY c.chairs_sno
+		ORDER BY orders_sno DESC
+	</select>
+	
+	<select id="findChairIncomeDetail" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT m.*
+		FROM tab_orders_Detailed m 
+		LEFT JOIN tab_orders o on m.orders_sno=o.orders_sno
+		LEFT JOIN tab_massagechairs c on o.chairs_sno=c.chairs_sno
+		WHERE m.orders_sno=o.orders_sno
+			AND o.chairs_sno=c.chairs_sno
+			AND o.chairs_sno=#{param.order.chair.id}
+		<if test="param != null and param.agency != null">
+			AND m.user3_sno = #{param.agency.id}
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND o.orders_createtime &gt;= #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND o.orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.order != null and param.order.payStatus != null">
+			AND o.orders_payStatus= 'A'
+		</if>
+		<if test="param != null and param.order != null and param.order.payType != null">
+			AND o.orders_paytype= #{param.order.payType.code}
+		</if>
+		ORDER BY m.orders_sno DESC
+	</select>
+
+	<!-- 	代理商收益 agency_income_list -->
+	<select id="getTotalMoney" resultType="java.math.BigDecimal" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT ISNULL(SUM(m.detailed_money),0)
+		FROM tab_orders_Detailed m 
+		LEFT JOIN tab_orders o on m.orders_sno=o.orders_sno
+		WHERE m.orders_sno=o.orders_sno
+		<if test="param != null and param.agency != null">
+			AND m.user3_sno = #{param.agency.id}
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND o.orders_createtime &gt;= #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND o.orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.order != null and param.order.payStatus != null">
+			AND o.orders_payStatus= 'A'
+		</if>
+		<if test="param != null and param.order != null and param.order.payType != null">
+			AND o.orders_paytype= #{param.order.payType.code}
+		</if>
+		<if test="param != null and param.order != null and param.order.chair != null ">
+			AND o.chairs_sno=#{param.order.chair.id}
+		</if>
+	</select>
+	
+	<!-- 	代理商收益 agency_income_list -->
+	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT m.*
+		FROM tab_orders_Detailed m 
+		LEFT JOIN tab_orders o on m.orders_sno=o.orders_sno
+		WHERE m.orders_sno=o.orders_sno
+		<if test="param != null and param.agency != null">
+			AND m.user3_sno = #{param.agency.id}
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND o.orders_createtime &gt;= #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND o.orders_createtime &lt;= #{param.endDate}
+		</if>
+		<if test="param != null and param.order != null and param.order.payStatus != null">
+			AND o.orders_payStatus= 'A'
+		</if>
+		<if test="param != null and param.order != null and param.order.payType != null">
+			AND o.orders_paytype= #{param.order.payType.code}
+		</if>
+		<if test="param != null and param.order != null and param.order.chair != null ">
+			AND o.chairs_sno=#{param.order.chair.id}
+		</if>
+		ORDER BY m.orders_sno DESC
 	</select>
 </mapper>

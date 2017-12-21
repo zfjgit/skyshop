@@ -33,7 +33,7 @@
 			        addr_parentcode='0'
 			    </when>
 			    <otherwise>
-			        #{parent.code} 
+			        addr_parentcode=#{parent.code} 
 			    </otherwise>
 			</choose>
 		WHERE addr_sno=#{id}

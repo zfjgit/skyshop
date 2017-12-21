@@ -45,10 +45,13 @@ public class UseRecordInfo extends FullInfoDto {
 
 	private String url;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	private Calendar chairStartTime;
+
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private Calendar startDate;
 
-	@JsonFormat(pattern = "yyyy-MM-dd")
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
 	private Calendar endDate;
 
 	private EnumInfo<UseRecordType, String> type;
@@ -57,7 +60,7 @@ public class UseRecordInfo extends FullInfoDto {
 	}
 
 	public UseRecordInfo(Long id, Long orderId, String resultCode, EnumInfo<UseRecordType, String> type, String from, String response, String imei, String sim, String price,
-	                String minutes, String chair, String openid, String nickName, String addr, String url, Calendar createTime) {
+	                String minutes, String chair, String openid, String nickName, String addr, String url, Calendar createTime, Calendar chairStartTime) {
 		super(id, "");
 		this.orderId = orderId;
 		this.resultCode = resultCode;
@@ -73,6 +76,7 @@ public class UseRecordInfo extends FullInfoDto {
 		this.addr = addr;
 		this.type = type;
 		this.url = url;
+		this.chairStartTime = chairStartTime;
 		setCreateTime(createTime);
 	}
 
@@ -81,7 +85,7 @@ public class UseRecordInfo extends FullInfoDto {
 			return null;
 		}
 		return new UseRecordInfo(r.getId(), r.getOrderId(), r.getResultCode(), new EnumInfo<>(r.getType()), r.getFrom(), r.getResponse(), r.getImei(), r.getSim(), r.getPrice(),
-		                r.getMinutes(), r.getChair(), r.getOpenid(), r.getNickName(), r.getAddr(), r.getUrl(), r.getCreateTime());
+		                r.getMinutes(), r.getChair(), r.getOpenid(), r.getNickName(), r.getAddr(), r.getUrl(), r.getCreateTime(), r.getChairStartTime());
 	}
 
 	public static List<UseRecordInfo> creates(List<UseRecord> rs) {

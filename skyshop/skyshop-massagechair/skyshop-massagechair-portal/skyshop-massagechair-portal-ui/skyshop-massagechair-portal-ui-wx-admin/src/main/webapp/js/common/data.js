@@ -1,39 +1,57 @@
 function ChairManageInfo() {
+    this.page = new PageInfo();
     this.chairs = [ new MassageChairInfo() ];
     this.chairName = '';
 }
 
 function GSMManageInfo() {
+    this.page = new PageInfo();
     this.gsms = [ new GSMModuleInfo() ];
     this.imei = '';
 }
 
 function SIMManageInfo() {
+    this.page = new PageInfo();
     this.sims = [ new SIMCardInfo() ];
     this.sim = '';
+    this.needRecharge = false;
+}
+
+function PageInfo() {
+    this.hasNextPage = false;
+    this.current = 0;
+    this.pageSize = 10;
+    this.total = 0;
+    this.pages = 1;
+    this.loading = true;
 }
 
 function AddrManageInfo() {
+    this.page = new PageInfo();
     this.addrs = [ new InstallAddressInfo() ];
     this.addrName = '';
 }
 
 function PriceManageInfo() {
+    this.page = new PageInfo();
     this.prices = [ new PriceInfo() ];
     this.priceName = '';
 }
 
 function AgencyManageInfo() {
+    this.page = new PageInfo();
     this.agencys = [ new AgencyInfo() ];
     this.agencyName = '';
 }
 
 function OrderManageInfo() {
-    this.orders = [];
+    this.page = new PageInfo();
+    
+    this.orders = [ new OrderInfo() ];
     this.total = 0;
     
-    this.startDate = today();
-    this.endDate = tomorrow();
+    this.startDate = today(-30);
+    this.endDate = today();
 }
 
 function MassageChairInfo() {
@@ -91,6 +109,25 @@ function SIMCardInfo() {
     this.deleteStatus = new EnumInfo();
     this.description = '';
     
+    this.isNeedRecharge = function(dueDate) {
+        if (dueDate && dueDate.indexOf('-') != -1) {
+            var dates = dueDate.split('-');
+            if (dates.length == 3) {
+                var dueDate = new Date();
+                dueDate.setFullYear(parseInt(dates[0]));
+                dueDate.setMonth(parseInt(dates[1]) - 1);
+                dueDate.setDate(parseInt(dates[2]));
+                var dateDiff = dueDate.getTime() - new Date().getTime();
+                if (0 < dateDiff && dateDiff < 3 * 24 * 60 * 60 * 1000) {
+                    return '及时充值';
+                } else if (dateDiff <= 0) {
+                    return '需充值';
+                } else {
+                    return '';
+                }
+            }
+        }
+    }
     this.operatorPairs = {
         '电信' : 'A',
         '移动' : 'B',
@@ -137,7 +174,95 @@ function AddressInfo() {
     };
 }
 
+function ChairOrderPartitionManageInfo() {
+    this.page = new PageInfo();
+    
+    this.orderPartitions = [ new OrderPartitionInfo() ];
+    this.chair = new MassageChairInfo();
+    this.total = 0;
+    this.startDate = today(-30);
+    this.endDate = today();
+}
+
+function ChairIncomeManageInfo() {
+    this.page = new PageInfo();
+    
+    this.chairIncomes = [ new ChairIncomeInfo() ];
+    this.total = 0;
+    this.startDate = today(-30);
+    this.endDate = today();
+}
+
+function ChairIncomeInfo() {
+    this.chair = new MassageChairInfo();
+    this.money = 0;
+    this.status = '';
+    this.detailUrl = 'income_by_chair_detail.html?';
+}
+
+function OrderPartitionManageInfo() {
+    this.page = new PageInfo();
+    
+    this.order = new OrderInfo();
+    this.orderPartitions = [ new OrderPartitionInfo() ];
+    this.total = 0;
+    this.startDate = today(-30);
+    this.endDate = today();
+}
+
+function OrderPartitionInfo() {
+    this.agency = {};
+    this.order = new OrderInfo();
+    this.percentage = 0;
+    this.money = 0;
+    this.totalMoney = 0;
+}
+
+function AddrOrderManageInfo() {
+    this.page = new PageInfo();
+    
+    this.addr = new InstallAddressInfo();
+    this.addrOrders = [ new OrderInfo() ];
+    this.total = 0;
+    this.startDate = today(-30);
+    this.endDate = today();
+    
+    this.detailUrl = 'income_by_addr_order_share.html?';
+}
+
+function AddrOrderPartitionManageInfo() {
+    this.page = new PageInfo();
+    
+    this.addr = new InstallAddressInfo();
+    this.orderPartitions = [ new OrderPartitionInfo() ];
+    this.total = 0;
+    this.startDate = today(-30);
+    this.endDate = today();
+    
+    this.detailUrl = 'income_by_addr_order_share.html?';
+}
+
+function AddrIncomeManageInfo() {
+    this.page = new PageInfo();
+    
+    this.addrIncomes = [ new AddrIncomeInfo() ];
+    this.total = 0;
+    this.startDate = today(-30);
+    this.endDate = today();
+}
+
+function AddrIncomeInfo() {
+    this.addr = new InstallAddressInfo();
+    this.chairCount = 0;
+    this.orderCount = 0;
+    this.money = 0;
+    this.chairAvgMoney = 0;
+    
+    this.detailUrl = 'income_by_addr_detail.html?';
+}
+
 function OrderInfo() {
+    this.code = '';
     this.createTime = '';
     this.minutes = 0;
     this.money = 0;
@@ -160,7 +285,7 @@ function OrderInfo() {
         name : ''
     };
     
-    this.detailUrl = 'order_detail.html?';
+    this.detailUrl = 'order_detail_main.html?';
 }
 
 function MalfunctionInfo() {
@@ -217,13 +342,14 @@ function AgencyInfo() {
     this.id = 0;
     this.name = '';
     this.level = new EnumInfo();
-    this.parent = {
+    this.p_a_r_e_n_t = {
         id : 0,
         name : '',
         level : new EnumInfo()
     };
     this.parentPercentage = 0;
     this.percentage = 0;
+    this.orderIncomePercentage = 0;
     this.deleteStatus = new EnumInfo();
     this.balance = parseFloat(0).toFixed(2);
     

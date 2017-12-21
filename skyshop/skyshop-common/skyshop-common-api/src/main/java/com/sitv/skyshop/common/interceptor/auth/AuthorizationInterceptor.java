@@ -2,6 +2,8 @@ package com.sitv.skyshop.common.interceptor.auth;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,31 +30,30 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 	private Environment env;
 
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-		log.debug("TOKEN-HEADER CHECK>>>>");
-		log.debug("refer=" + request.getRemoteAddr());
 
 		response.setCharacterEncoding("UTF-8");
 		response.setContentType("text/json;charset=UTF-8");
 
 		String corsOrigin = env.getProperty(Constants.ACCESS_CONTROL_ALLOW_ORIGIN);
 		if (CorsUtils.isCorsRequest(request)) {
-			log.debug("CORS REQUEST>>>");
+			// log.debug("CORS REQUEST>>>");
 			response.addHeader("Access-Control-Allow-Origin", corsOrigin);
 			response.addHeader("Access-Control-Allow-Credentials", "true");
 			response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, DELETE, PUT, HEAD");
-			response.addHeader("Access-Control-Allow-Headers",
-			                "Content-Type, X-Requested-With, Token-Header, Access-Control-Allow-Origin, Access-Control-Allow-Credentials, Access-Control-Allow-Methods");
+			response.addHeader("Access-Control-Allow-Headers", getAllowHeaders());
 			response.addHeader("Access-Control-Max-Age", "3600");
 		}
-
-		String url = request.getRequestURL().toString();
-
-		log.debug("url=" + url);
 
 		boolean authInterceptorEnabled = Boolean.valueOf(env.getProperty(Constants.AUTH_INTERCEPTOR_ENABLED));
 		if (!authInterceptorEnabled) {
 			return true;
 		}
+		log.debug("TOKEN-HEADER CHECK>>>>");
+		log.debug("refer=" + request.getRemoteAddr());
+
+		String url = request.getRequestURL().toString();
+
+		log.debug("url=" + url);
 
 		if (url.endsWith("error") || url.endsWith(".html") || url.endsWith(".css")) {
 			return true;
@@ -124,8 +125,23 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
 		return true;
 	}
 
+	private String getAllowHeaders() {
+		String headerStr = "Access-Control-Max-Age,Accept,Accept-Encoding,Accept-Language,Access-Control-Allow-Origin,Access-Control-Allow-Credentials,Access-Control-Allow-Method,Access-Control-Allow-Methods,Access-Control-Request-Headers,Authorization,Connection,Content-Type,Host,Origin,Referer,Token-Id,User-Agent";
+
+		Set<String> headers = new HashSet<>();
+		headers.add(Constants.X_REQUESTED_WITH);
+		headers.add(Constants.TOKEN_HEADER);
+		headers.add(Constants.HTTP_METHOD_OVERRIDE_HEADER);
+
+		for (String h : headers) {
+			headerStr += "," + h;
+		}
+
+		return headerStr;
+	}
+
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-		log.debug("TOKEN验证完成>>>");
+		// log.debug("TOKEN验证完成>>>");
 		UserSessionContext.setSession(null);
 		super.postHandle(request, response, handler, modelAndView);
 	}

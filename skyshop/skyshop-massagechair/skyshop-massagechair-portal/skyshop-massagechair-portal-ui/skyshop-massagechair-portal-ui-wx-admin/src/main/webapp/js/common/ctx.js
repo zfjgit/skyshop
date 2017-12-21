@@ -3,6 +3,14 @@
  */
 
 var config = {
+    // api_server_host : 'chairsag.api.s-itv.com',
+    // api_server_port : 80,
+    // api_server_contextPath : '/api',
+    
+    // ui_server_host : 'chairsag.s-itv.com',
+    // ui_server_port : 80,
+    // ui_server_contextPath : '/',
+    
     api_server_host : 'localhost',
     api_server_port : 8080,
     api_server_contextPath : '/chairs-api-wxadmin',
@@ -36,6 +44,9 @@ var config = {
         level : {
             code : 'A',
             name : '平台'
+        },
+        parent : {
+            name : ''
         }
     },
     
@@ -51,17 +62,18 @@ var config = {
         }
         if (config.loginUserInfo.userInfo['agency']) {
             config.agency = config.loginUserInfo.userInfo['agency'];
+        } else {
+            config.loginUserInfo.userInfo['agency'] = config.agency;
         }
     },
     
     init : function() {
-    	config.api_server_url = 'http://' + config.api_server_host + ':' + config.api_server_port + config.api_server_contextPath;
-    	config.ui_server_url = 'http://' + config.ui_server_host + ':' + config.ui_server_port + config.ui_server_contextPath;
+        config.api_server_url = 'http://' + config.api_server_host + ':' + config.api_server_port + config.api_server_contextPath;
+        config.ui_server_url = 'http://' + config.ui_server_host + ':' + config.ui_server_port + config.ui_server_contextPath;
     }
 };
 
 config.init();
-
 
 function post(url, data, successfunc, runtimeerrorfunc) {
     doAjax(url, data, successfunc, 'POST', runtimeerrorfunc);
@@ -130,93 +142,94 @@ function doAjax(url, data, successfunc, method, runtimeerrorfunc, async, errorfu
     if (config.is_debug) {
         console.log('ajax------->url=' + url);
     }
-    $
-        .ajax({
-            url : config.api_server_url + url,
-            type : method ? method : 'post',
-            async : (async + '') != 'false',
-            data : data,
-            dataType : 'json',
-            headers : {
-                "Token-Header" : config.loginUserInfo.token,
-                "X-Requested-With" : "XMLHttpRequest"
-            },
-            xhrFields : {
-                withCredentials : true
-            },
-            crossDomain : true,
-            success : function(result, textStatus, jqXHR) {
-                $.hideLoading();
-                
-                if (config.is_debug) {
-                    if (typeof result == 'object') {
-                        console.log("ajax------->result=" + JSON.stringify(result));
-                    } else {
-                        console.log("ajax------->result=" + result);
-                    }
-                }
-                try {
-                    if (result) {
-                        var jsondata = result;
-                        if (typeof result == 'string') {
-                            jsondata = $.parseJSON(result);
-                        }
-                        if (jsondata['code'] && (jsondata['code'] == config.unauthorized_error_code)) {
-                            showLoginError();
-                            return;
-                        } else if (jsondata['code'] && jsondata['code'] == config.runtime_error_code) {
-                            showOperateError();
-                            return;
-                        } else if (jsondata['code']
-                            && (jsondata['code'] == config.success_code || jsondata['code'] == config.created_success_code || jsondata['code'] == config.updated_success_code || jsondata['code'] == config.deleted_success_code)) {
-                            if (successfunc && typeof successfunc == 'function') {
-                                successfunc(jsondata, textStatus, jqXHR);
-                            } else {
-                                console.log('没有事件处理函数');
-                            }
-                        } else {
-                            if (runtimeerrorfunc && typeof runtimeerrorfunc == 'function') {
-                                runtimeerrorfunc(jsondata);
-                            } else {
-                                showOperateError();
-                            }
-                        }
-                    } else {
-                        showOperateError();
-                    }
-                } catch (e) {
-                    showOperateError();
-                    throw e;
-                }
-            },
-            error : function(xhr, textStatus, errorThrown) {
-                $.hideLoading();
-                
-                if (xhr && xhr.status == config.not_found_error_code) {
-                    showError('您所请求的对象不存在，请稍后再试');
-                } else if (xhr && xhr.status == config.unauthorized_error_code) {
-                    showLoginError();
-                    return;
+    $.ajax({
+        url : config.api_server_url + url,
+        type : (method == 'GET') ? method : 'POST',
+        async : (async + '') != 'false',
+        data : data,
+        dataType : 'json',
+        headers : {
+            "Token-Header" : config.loginUserInfo.token,
+            "X-Requested-With" : "XMLHttpRequest",
+            "X-HTTP-Method-Override" : method
+        },
+        xhrFields : {
+            withCredentials : true
+        },
+        crossDomain : true,
+        success : function(result, textStatus, jqXHR) {
+            $.hideLoading();
+            
+            if (config.is_debug) {
+                if (typeof result == 'object') {
+                    console.log("ajax------->result=" + JSON.stringify(result));
                 } else {
-                    showError('操作遇到问题，请稍后再试：' + (xhr ? xhr.status : ''));
-                }
-                
-                if (errorfunc && typeof errorfunc == 'function') {
-                    errorfunc(xhr, textStatus, errorThrown);
-                }
-            },
-            beforeSend : function(xhr) {
-                $.showLoading();
-                if (beforefunc && typeof beforefunc == 'function') {
-                    beforefunc(xhr);
-                }
-            },
-            complete : function(xhr, textStatus) {
-                if (completefunc && typeof completefunc == 'function') {
-                    completefunc(xhr, textStatus);
+                    console.log("ajax------->result=" + result);
                 }
             }
-        });
+            try {
+                if (result) {
+                    var jsondata = result;
+                    if (typeof result == 'string') {
+                        jsondata = $.parseJSON(result);
+                    }
+                    if (jsondata['code'] && (jsondata['code'] == config.unauthorized_error_code)) {
+                        showLoginError();
+                        return;
+                    } else if (jsondata['code'] && jsondata['code'] == config.runtime_error_code) {
+                        showOperateError();
+                        return;
+                    } else if (jsondata['code']
+                        && (jsondata['code'] == config.success_code || jsondata['code'] == config.created_success_code
+                            || jsondata['code'] == config.updated_success_code || jsondata['code'] == config.deleted_success_code)) {
+                        if (successfunc && typeof successfunc == 'function') {
+                            successfunc(jsondata, textStatus, jqXHR);
+                        } else {
+                            console.log('没有事件处理函数');
+                        }
+                    } else {
+                        if (runtimeerrorfunc && typeof runtimeerrorfunc == 'function') {
+                            runtimeerrorfunc(jsondata);
+                        } else {
+                            showOperateError();
+                        }
+                    }
+                } else {
+                    showOperateError();
+                }
+            } catch (e) {
+                showOperateError();
+                throw e;
+            }
+        },
+        error : function(xhr, textStatus, errorThrown) {
+            $.hideLoading();
+            
+            if (xhr && xhr.status == config.not_found_error_code) {
+                showError('您所请求的对象不存在，请稍后再试');
+            } else if (xhr && xhr.status == config.unauthorized_error_code) {
+                showLoginError();
+                return;
+            } else {
+                showError('操作遇到问题，请稍后再试：' + (xhr ? xhr.status : ''));
+            }
+            
+            if (errorfunc && typeof errorfunc == 'function') {
+                errorfunc(xhr, textStatus, errorThrown);
+            }
+        },
+        beforeSend : function(xhr) {
+            $.showLoading();
+            if (beforefunc && typeof beforefunc == 'function') {
+                beforefunc(xhr);
+            }
+        },
+        complete : function(xhr, textStatus) {
+            if (completefunc && typeof completefunc == 'function') {
+                completefunc(xhr, textStatus);
+            }
+        }
+    });
 }
 
 function showLoginError() {
@@ -249,6 +262,14 @@ function showCancelMsg(msg, func) {
     });
 }
 
+function showAlert(msg, func) {
+    $.alert(msg, function() {
+        if (func && typeof func == 'function') {
+            func();
+        }
+    });
+}
+
 function showConfirmMsg(msg, func, cancelFunc) {
     $.confirm(msg, function() {
         if (func && typeof func == 'function') {
@@ -264,8 +285,8 @@ function showConfirmMsg(msg, func, cancelFunc) {
 function today(diff) {
     var d = new Date();
     
-    if(diff) {
-    	d.setDate(d.getDate() + diff);
+    if (diff) {
+        d.setDate(d.getDate() + diff);
     }
     
     var year = d.getFullYear();
@@ -286,5 +307,32 @@ function yesterday() {
 }
 
 function tomorrow() {
-	return today(1);
+    return today(1);
+}
+
+function fixUkuRepeatComment(refresh) {
+    if (refresh) {
+        var beginComment = '';
+        $('.t_table_body').contents().each(function(i, e) {
+            if (e && e.nodeType == Node.COMMENT_NODE) {
+                if (e && e.nodeValue && e.nodeValue.indexOf('begin uku-repeat:') == 0) {
+                    $(e).remove();
+                } else if (e && e.nodeValue && e.nodeValue.indexOf('end uku-repeat:') == 0) {
+                    var beginComment = e.nodeValue.replace('end', 'begin');
+                    $('.t_table_body').prepend('<!--' + beginComment + '-->');
+                }
+            }
+        });
+    } else {
+        $('.t_table_body').contents().filter(function(e) {
+            return this.nodeType = Node.COMMENT_NODE;
+        }).each(function(i, e) {
+            if (e && e.nodeValue && e.nodeValue.indexOf('begin uku-repeat:') == 0) {
+                $(e).remove();
+            } else if (e && e.nodeValue && e.nodeValue.indexOf('end uku-repeat:') == 0) {
+                var beginComment = e.nodeValue.replace('end', 'begin');
+                $(e).before('<!--' + beginComment + '-->');
+            }
+        });
+    }
 }

@@ -19,4 +19,6 @@ public interface IGSMModuleDao extends ICrudDao<GSMModule>, IDeleteStatusDao<GSM
 	GSMModule getBySIM(@Param("id") Long id);
 
 	void updateStatus(GSMModule gsmModule);
+
+	GSMModule getByIMEI(@Param("imei") String imei);
 }

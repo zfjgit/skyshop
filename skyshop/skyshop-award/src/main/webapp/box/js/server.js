@@ -36,7 +36,7 @@ var sms2 = '【三网通共享平台】亲爱的#player#，恭喜你获得了奖
 // var bg = 'images/bg4.jpg';
 
 var text_awards = '中奖记录';
-var text_point = '全球通点数';
+var text_point = '大米点数';
 var text_cost_1 = '抽一次仅需';
 var text_cost_2 = '点';
 var text_awards_list = '中奖名单';

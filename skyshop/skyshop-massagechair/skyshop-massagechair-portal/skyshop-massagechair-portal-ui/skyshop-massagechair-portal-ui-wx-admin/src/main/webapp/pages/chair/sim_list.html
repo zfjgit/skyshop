@@ -26,6 +26,10 @@
 						<td class="t_fieldname">输入SIM卡号</td>
 						<td class="t_fieldvalue"><input class="t_text" uku-value="simManage.sim" placeholder="SIM卡号" /></td>
 					</tr>
+					<tr>
+						<td class="t_fieldname">急需充值</td>
+						<td class="t_fieldvalue"><input class="weui-switch" uku-value="simManage.needRecharge" type="checkbox"></td>
+					</tr>
 				</table>
 				<div class="t_area_btn">
 					<div class="t_table_title">SIM卡列表</div><div id="btn_search" class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
@@ -36,9 +40,9 @@
 					<table class="t_table" style="width: 600px;">
 						<thead class="t_table_head">
 							<tr>
-								<td width="15%">SIM卡号</td>
+								<td width="25%">SIM卡号</td>
 								<td width="15%">总流量</td>
-								<td width="25%">到期日</td>
+								<td width="30%">到期日</td>
 								<td width="15%">运营商</td>
 								<td width="15%">状态</td>
 								<td width="10%">操作</td>
@@ -48,13 +52,17 @@
 							<tr uku-repeat="item in simManage.sims">
 								<td>{{item.sim}}</td>
 								<td>{{item.dataFlow}}</td>
-								<td>{{item.dueDate}}</td>
+								<td>{{item.dueDate}} <sup style="color:red;font-size: 12px;">{{item.isNeedRecharge(item.dueDate)}}</sup></td>
 								<td>{{item.operator.name}}</td>
 								<td>{{item.status.name}}</td>
 								<td><a uku-href="item.detailUrl">{{item.id ? '&gt;' : ''}}</a></td>
 							</tr>
 						</tbody>
 					</table>
+					<div class="weui-loadmore">
+					  	<i class="weui-loading"></i>
+					  	<span class="weui-loadmore__tips">正在加载</span>
+					</div>
 				</div>
 			</div>
 		</div>

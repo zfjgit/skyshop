@@ -10,12 +10,18 @@ $(function() {
         searchList();
         addListeners();
     });
+    uku.addListener(Ukulele.REFRESH, function(e) {
+        fixUkuRepeatComment();
+        gsmManage.page.loading = false;
+    });
     uku.init();
 });
 
 function searchList() {
     var data = {
-        imei : gsmManage.imei
+        imei : gsmManage.imei,
+        page : gsmManage.page.current + 1,
+        pageSize : gsmManage.page.pageSize
     }
 
     var params = $.customParam(data);
@@ -37,12 +43,42 @@ function searchList() {
             
             gsmManage.gsms.push(gsm);
         }
+        
+        gsmManage.page = {
+            current : d.data.current,
+            pages : d.data.pages,
+            total : d.data.total,
+            pageSize : d.data.pageSize,
+            hasNextPage : d.data.hasNextPage
+        };
+        if (gsmManage.page.hasNextPage) {
+            if (gsmManage.page.current == 1) {
+                $(document.body).infinite();
+                $('.weui-loading').show();
+                $('.weui-loadmore__tips').text('正在加载');
+            }
+        } else {
+            $(document.body).destroyInfinite();
+            $('.weui-loading').hide();
+            $('.weui-loadmore__tips').text('共 ' + gsmManage.page.total + ' 条，已加载完毕');
+        }
+        
         config.uku.refresh('gsmManage');
     });
 }
 
 function addListeners() {
     $('#btn_search').on('click', function() {
+        gsmManage.page.current = 0;
+        fixUkuRepeatComment(true);
+        searchList();
+    });
+    
+    $(document.body).infinite().on("infinite", function() {
+        if (gsmManage.page.loading) {
+            return;
+        }
+        gsmManage.page.loading = true;
         searchList();
     });
 }

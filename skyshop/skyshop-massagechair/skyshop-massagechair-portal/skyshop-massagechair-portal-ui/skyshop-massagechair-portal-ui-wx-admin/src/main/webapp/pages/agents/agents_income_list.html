@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>订单查询 - 三网通-按摩椅</title>
+		<title>代理商收益查询 - 三网通-按摩椅</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
 		<meta name="apple-mobile-web-app-capable" content="yes"/>
@@ -9,29 +9,12 @@
 		<meta http-equiv="description" content="三网通-按摩椅"/>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
-		
-<!-- 		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/lib/weui.css"/> -->
-<!-- 		<link rel="stylesheet" type="text/css" href="../../plugins/jqweui/css/jquery-weui.css"/> -->
-		
-<!-- 		<link rel="stylesheet" type="text/css" href="../../css/style.css"/> -->
-<!-- 		<link rel="stylesheet" type="text/css" href="../../css/list.css"/> -->
-
-		
-<!-- 		<script type="text/javascript" src="../../plugins/jqweui/lib/jquery-2.1.4.js"></script> -->
-<!-- 		<script type="text/javascript" src="../../plugins/jqweui/js/jquery-weui.js"></script> -->
-<!-- 		<script type="text/javascript" src="../../plugins/jqweui/js/city-picker.js" charset="utf-8"></script> -->
-		
-<!-- 		<script type="text/javascript" src="../../js/admin.js"></script> -->
-		<script type="text/javascript">
-			$(function(){
-			    $('.t_date').calendar();
-			});
-		</script>
+		<script type="text/javascript" src="../../js/agency/agency_income_list.js"></script>
 	</head>
-	<body>
+	<body uku-application>
 		<div class="h_nav" style="display: none;">
 			<div class="h_back">&lt;</div>
-			<div class="h_title">订单查询</div>
+			<div class="h_title">代理商收益查询</div>
 		</div>
 		<div class="content">
 			<div class="search">
@@ -39,58 +22,46 @@
 				<table class="t_table">
 					<tr>
 						<td class="t_fieldname">选择开始时间</td>
-						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-21" readonly="readonly" /></td>
+						<td class="t_fieldvalue"><input id="startDate" class="t_text t_date" uku-value="orderPartitionManage.startDate" readonly="readonly" /></td>
 					</tr>
 					<tr>
 						<td class="t_fieldname">选择结束时间</td>
-						<td class="t_fieldvalue"><input class="t_text t_date" value="2017-11-22" readonly="readonly"/></td>
+						<td class="t_fieldvalue"><input id="endDate" class="t_text t_date" uku-value="orderPartitionManage.endDate" readonly="readonly"/></td>
 					</tr>
 				</table>
 				<div class="t_area_btn">
-					<div class="t_table_title">订单列表</div><div class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+					<div class="t_table_title">收益列表</div><div id="btn_search" class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
 				</div>
 			</div>
 			<div class="t_search_results">
-				<div class="t_search_total">查询总收益：<span class="money">100.00</span> 元</div>
+				<div class="t_search_total">查询总收益：<span class="money">{{orderPartitionManage.total}}</span> 元</div>
 				<div class="tb_search_table">
-					<table class="t_table" style="width: 700px;">
+					<table class="t_table" style="width: 950px;">
 						<thead class="t_table_head">
 							<tr>
-								<td>订单号</td>
-								<td>设备编号</td>
-								<td>订单时间</td>
-								<td>时长（分钟）</td>
-								<td>金额（元）</td>
-								<td width="10%">分成</td>
+								<td width="40%">订单号</td>
+								<td width="30%">设备编号</td>
+								<td width="40%">订单时间</td>
+								<td width="25%">时长（分钟）</td>
+								<td width="30%">订单金额（元）</td>
+								<td width="20%">收益（元）</td>
 							</tr>
 						</thead>
 						<tbody class="t_table_body">
-							<tr>
-								<td class="t_wrap_text t_order_no">20171121124</td>
-								<td>C121223</td>
-								<td>2017-11-21 12:45:14</td>
-								<td>5</td>
-								<td>300.00</td>
-								<td><a href="agents_income_share.html?id=1">&gt;</a></td>
-							</tr>
-							<tr>
-								<td class="t_wrap_text t_order_no">20171121124</td>
-								<td>C121223</td>
-								<td>2017-11-21 12:45:14</td>
-								<td>5</td>
-								<td>300.00</td>
-								<td><a href="agents_income_share.html?id=1">&gt;</a></td>
-							</tr>
-							<tr>
-								<td class="t_wrap_text t_order_no">20171121124</td>
-								<td>C121223</td>
-								<td>2017-11-21 12:45:14</td>
-								<td>5</td>
-								<td>300.00</td>
-								<td><a href="agents_income_share.html?id=1">&gt;</a></td>
+							<tr uku-repeat="item in orderPartitionManage.orderPartitions">
+								<td class="t_wrap_text t_order_no">{{item.order.code}}</td>
+								<td>{{item.order.chair.name}}</td>
+								<td>{{item.order.createTime}}</td>
+								<td>{{item.order.minutes}}</td>
+								<td>{{item.order.money}}</td>
+								<td>{{item.money}}</td>
 							</tr>
 						</tbody>
 					</table>
+					<div class="weui-loadmore">
+					  	<i class="weui-loading"></i>
+					  	<span class="weui-loadmore__tips">正在加载</span>
+					</div>
 				</div>
 			</div>
 		</div>
