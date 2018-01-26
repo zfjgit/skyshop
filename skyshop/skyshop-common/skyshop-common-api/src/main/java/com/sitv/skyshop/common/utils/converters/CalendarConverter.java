@@ -22,7 +22,11 @@ public class CalendarConverter implements Converter<String, Calendar> {
 				source = source.trim();
 				if (source.contains("-")) {
 					if (source.contains(":")) {
-						return Utils.toCalendar(source);
+						if (source.length() == Constants.DATETIME_FORMAT_1.length()) {
+							return Utils.toCalendar(source, Constants.DATETIME_FORMAT_1);
+						} else if (source.length() == Constants.DATETIME_FORMAT_3.length()) {
+							return Utils.toCalendar(source, Constants.DATETIME_FORMAT_3);
+						}
 					} else {
 						return Utils.toCalendar(source, Constants.DATE_FORMAT_1);
 					}
@@ -34,7 +38,7 @@ public class CalendarConverter implements Converter<String, Calendar> {
 					}
 				}
 			} catch (Exception e) {
-				throw new RuntimeException(String.format("解析日期 %s 出错", source));
+				throw new RuntimeException(String.format("解析日期 %s 出错", source), e);
 			}
 		}
 

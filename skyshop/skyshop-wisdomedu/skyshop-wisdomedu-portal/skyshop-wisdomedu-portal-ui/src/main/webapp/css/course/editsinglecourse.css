@@ -1,0 +1,139 @@
+.seriescourse-poster {
+	background-color: white;
+	height: 170px;
+	vertical-align: middle;
+	
+	display: flex;
+	align-content: center;
+	justify-content: center;
+}
+.seriescourse-poster-div {
+	width: 60%;
+	height: 70%;
+	border: dashed 1px #ddd;
+	align-self: center;
+	border-radius: 10px;
+	
+	vertical-align: middle;
+	margin: auto;
+	
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-content: center;
+	
+	position: relative;
+	
+	background-size: 100%;
+}
+.seriescourse-poster-icon {
+	color: #00ff8c;
+	font-size: 20px;
+}
+.seriescourse-poster-title {
+	color: #00ff8c;
+	font-size: 14px;
+}
+.seriescourse-poster-size {
+	color: #aaa;
+}
+.seriescourse-poster-upload {
+	width: 100%;
+	height: 100%;
+	position: absolute;
+	left:0;
+	top:0;
+	z-index: 100;
+	opacity: 0;
+}
+.seriescourse-poster-bottom-size {
+	position: absolute;
+	bottom: 0;
+	background-color: #000;
+	opacity: 0.5;
+	color: white;
+	
+	width: 100%;
+	border-radius: 0px 0px 10px 10px;
+}
+.seriescourse-detail {
+	margin-top: 10px;
+	background-color: white;
+}
+.seriescourse-detail-item {
+	display: flex;
+	align-content: center;
+	justify-content: space-between;
+	vertical-align: middle;
+	border-bottom: solid 1px #eee;
+	padding: 10px;
+}
+.seriescourse-detail-item div {
+	align-self: center;
+}
+.seriescourse-detail-item input {
+	border: none;
+	outline: none;
+	flex-basis: 80%;
+	padding: 5px;
+	text-align: right;
+}
+.seriescourse-detail-item-value {
+	color: #808080;
+}
+.category-item {
+	display: flex;
+	align-content: center;
+	justify-content: space-between;
+	padding: 5px 10px;
+	border-bottom: solid 1px #eee;
+	background-color: white;
+}
+.category-item-name {
+	align-self: center;
+	color: black;
+}
+.category-item-icon {
+	align-self: center;
+	color: green;
+	font-size: 20px;
+}
+.categorys-buttons {
+	display: flex;
+	padding: 0px;
+	margin-top: 5px;
+}
+.categorys-buttons-btn {
+	flex-grow: 1;
+	padding: 10px;
+	border: solid 1px #eee;
+	background-color: white;
+}
+.btn-confirm {
+	color: green;
+}
+
+.seriescourse-buttons {
+	margin: 10px;
+}
+
+.materials-file-img {
+	width: 20px;
+	height: 20px;
+	display: inline-block;
+	vertical-align: middle;
+}
+.materials-file {
+	width: 100%;
+	position: absolute;
+	left:0;
+	top:0;
+	z-index: 100;
+	opacity: 0;
+}
+.materials-file-upload {
+	position: relative;
+	left: 0;
+	top: 0;
+	text-align: right;
+}

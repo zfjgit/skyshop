@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<!--#set var="CONTEXT_PATH" value="/tbataobao-check-ui" -->
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="chrome=1,IE=edge">
+	<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+	<meta http-equiv="Cache-Control" content="no-siteapp" />
+	<link rel="Bookmark" href="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/static/h-ui.admin/images/icon.png">
+	<link rel="Shortcut Icon" href="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/static/h-ui.admin/images/icon.png">
+	<title>台宝网信息审核系统</title>
+	<meta name="keywords" content="台宝网信息审核系统 台宝网信息审核系统">
+	<meta name="description" content="台宝网信息审核系统">
+	
+	<link href='<!--#echo var="CONTEXT_PATH"-->/plugins/h-ui/static/h-ui/css/H-ui.min.css' rel="stylesheet" type="text/css" />
+	<link href="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/static/h-ui.admin/css/H-ui.admin.css" rel="stylesheet" type="text/css" />
+	<link href="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/static/h-ui.admin/css/style.css" rel="stylesheet" type="text/css" />
+	<link href="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/Hui-iconfont/1.0.8/iconfont.css" rel="stylesheet" type="text/css" />
+	<link href="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/static/h-ui.admin/skin/default/skin.css" rel="stylesheet" type="text/css" id="skin" />
+	<link href="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/layer/2.4/skin/layer.css" rel="stylesheet" type="text/css" >
+	<link href="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/laypage/1.2/skin/laypage.css" rel="stylesheet" type="text/css" >
+	
+	<link href="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/webuploader/0.1.5/webuploader.css" rel="stylesheet" type="text/css" />
+	
+	<link href="<!--#echo var='CONTEXT_PATH'-->/plugins/jqweui/lib/weui.css" rel="stylesheet" type="text/css" />
+	<link href="<!--#echo var='CONTEXT_PATH'-->/plugins/jqweui/css/jquery-weui.css" rel="stylesheet" type="text/css">
+	<link href="<!--#echo var='CONTEXT_PATH'-->/css/common.css" rel="stylesheet" type="text/css">
+	
+</head>	

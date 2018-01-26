@@ -102,13 +102,13 @@ function initSIMPicker() {
 function addListeners() {
     $('#btn_save').on('click', function() {
         if (gsmInfo.imei == '') {
-            showMsg('请输入IMEI号');
+            showCancelMsg('请输入IMEI号');
             return;
         }
         
         var sim = $('#sim-picker').val();
         if (sim == '') {
-            showMsg('请选择SIM卡');
+            showCancelMsg('请选择SIM卡');
             return;
         }
         gsmInfo.simCard['name'] = sim;

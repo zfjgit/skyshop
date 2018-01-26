@@ -1,0 +1,128 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>编辑课程 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/course/editsinglecourse.css" th:href="@{/css/course/editsinglecourse.css}"></link>
+	</head>
+	<body>
+		<div id="course">
+			<div class="seriescourse-poster">
+				<div class="seriescourse-poster-div" :style="headimgBg">
+					<div class="seriescourse-poster-icon" :style="headimg == '' ? '' : 'display:none'"><i class="icon Hui-iconfont">&#xe612;</i></div>
+					<div class="seriescourse-poster-title" :style="headimg == '' ? '' : 'display:none'">上传课程背景图</div>
+					<div class="seriescourse-poster-size" :style="headimg == '' ? '' : 'display:none'">(800x500)</div>
+					
+					<div class="seriescourse-poster-bottom-size" :style="headimg == '' ? 'display:none' : ''">图片尺寸800x500</div>
+					
+					<input id="file" type="file" v-on:change="uploadHeadimg()" class="seriescourse-poster-upload"/>
+				</div>
+			</div>
+			
+			<div class="seriescourse-detail">
+				<div class="seriescourse-detail-item">
+					<div>课程名称</div>
+					<div class="seriescourse-detail-item-value"><input name="title" placeholder="课程名称最多40个字" v-model="title"/></div>
+				</div>
+				<div class="seriescourse-detail-item">
+					<div>课程介绍</div>
+					<div class="seriescourse-detail-item-value" @click="editCourseIntroduction()"><input maxlength="10" v-model="introduction" readonly="readonly"/><i class="icon Hui-iconfont">&#xe6d7;</i></div>
+				</div>
+				<div class="seriescourse-detail-item">
+					<div class="">开始时间</div>
+					<div class="seriescourse-detail-item-value">
+						<input type="text" id='datetime-picker' readonly="readonly" @change="setStartTime()" v-model="startTime"/>
+					</div>
+				</div>
+				<div class="seriescourse-detail-item">
+					<div>所属系列课</div>
+					<div class="seriescourse-detail-item-value" @click="showSelectSeriesCourse()"><span>{{ seriesCourse ? seriesCourse.title : '' }}</span><span><i class="icon Hui-iconfont">&#xe6d7;</i></span></div>
+				</div>
+				
+				<div class="seriescourse-detail-item" >
+					<div>课程形式</div>
+					<div class="seriescourse-detail-item-value"><input name="courseForm" v-model="courseForm.name" placeholder="" readonly="readonly"/></div>
+				</div>
+				
+				<div class="seriescourse-detail-item" v-if="courseForm.code != 2">
+					<div>课程教材</div>
+					<div class="seriescourse-detail-item-value" @click="showMaterialsPop()">
+						<i class="icon Hui-iconfont">&#xe6d7;</i>
+					</div>
+				</div>
+				
+				<div class="seriescourse-detail-item" >
+					<div>直播类型</div>
+					<div class="seriescourse-detail-item-value"><input name="liveType" v-model="liveType.name" placeholder="" readonly="readonly"/></div>
+				</div>
+				
+				<div class="seriescourse-detail-item" v-if="liveType.code == 1">
+					<div>介绍页说明</div>
+					<div class="seriescourse-detail-item-value"><input @click="setLiveIntroPageOn($event.target.checked)" v-model="isShowDetailPage" class="weui-switch" type="checkbox"/></div>
+				</div>
+				
+				<div class="seriescourse-detail-item" v-if="liveType.code == 3">
+					<div>价格（元）</div>
+					<div class="seriescourse-detail-item-value"><input type="number" name="tickets" v-model="tickets" placeholder="请输入门票价格"/></div>
+				</div>
+				
+				<div class="seriescourse-detail-item" v-if="liveType.code == 2">
+					<div>加密密码</div>
+					<div class="seriescourse-detail-item-value"><input name="passwd" v-model="passwd" placeholder="请输入加密密码"/></div>
+				</div>
+				
+				<div class="seriescourse-detail-item" >
+					<div>禁言模式</div>
+					<div class="seriescourse-detail-item-value"><input @click="setSilenceMode($event.target.checked)" v-model="isSilenceMode" class="weui-switch" type="checkbox"/></div>
+				</div>
+			</div>
+			
+			<div class="seriescourse-buttons">
+				<div class="weui-btn weui-btn_primary seriescourse-buttons-confirm" @click="confirm()">确定</div>
+			</div>
+			
+			<div id="seriesCourse" class="weui-popup__container popup-bottom">
+			  	<div class="weui-popup__overlay"></div>
+			  	<div class="weui-popup__modal">
+			  		<div class="category-item">选择所属系列课</div>
+			    	<div class="category-item" v-for="item in seriesCourses" @click="selectSeriesCourse(item)">
+			    		<div class="category-item-name">{{ item.title }}</div>
+			    		<div class="category-item-icon"><i class="icon Hui-iconfont">{{ (seriesCourse && (seriesCourse.id == item.id)) ? '&#xe6a7;' : '' }}</i></div>
+			    	</div>
+			    	<div class="categorys-buttons">
+			    		<div class="categorys-buttons-btn" @click="cancel()">取消</div>
+			    		<div class="categorys-buttons-btn btn-confirm" @click="confirmSeriesCourse()">确定</div>
+			    	</div>
+			  	</div>
+			</div>
+			
+			<div id="materials" class="weui-popup__container popup-bottom">
+			  	<div class="weui-popup__overlay"></div>
+			  	<div class="weui-popup__modal">
+			  		<div class="category-item">
+			  			<div class="category-item-name">上传课程教材</div>
+			  			<div class="category-item-icon">
+			  				<div class="materials-file-upload" >
+				  				<i class="icon Hui-iconfont">&#xe610;</i>
+				  				<input id="material" type="file" @change="uploadMaterials()" class="materials-file" v-model="materialFile"/>
+			    			</div>
+			  			</div>
+			  		</div>
+			    	<div class="category-item" v-for="(item, idx) in materials">
+			    		<div class="category-item-name">
+			    			<i class="icon Hui-iconfont" v-if="item.resourceType.code == 1">&#xe6d0;</i>
+			    			<i class="icon Hui-iconfont" v-if="item.resourceType.code == 2">&#xe685;</i>
+			    			<i class="icon Hui-iconfont" v-if="item.resourceType.code == 3">&#xe6e6;</i>
+			    			<i class="icon Hui-iconfont" v-if="item.resourceType.code == 4">&#xe72d;</i>
+			    			<i class="icon Hui-iconfont" v-if="item.resourceType.code == 5">&#xe6ec;</i>
+			    			{{ item.name }}
+			    		</div>
+			    		<div class="category-item-icon" @click="deleteMaterials(item.id, idx)"><i class="icon Hui-iconfont">&#xe609;</i></div>
+			    	</div>
+			  	</div>
+			</div>
+		</div>
+	</body>
+	
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/course/editsinglecourse.js" th:src="@{/js/course/editsinglecourse.js}"></script>
+</html>

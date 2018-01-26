@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.course.ICourseResourceDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.course.CourseResource">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		<result property="name" jdbcType="VARCHAR" column="filename" />
+		<result property="link" jdbcType="VARCHAR" column="link" />
+		<result property="seconds" jdbcType="INTEGER" column="seconds" />
+		<result property="size" jdbcType="INTEGER" column="size" />
+		<result property="resourceType" jdbcType="INTEGER" column="type" />
+		<result property="content" jdbcType="VARCHAR" column="content" />
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		<association property="course" column="courseid" select="com.sitv.skyshop.wisdomedu.dao.course.ISingleCourseDao.get"></association>
+	</resultMap>
+    
+    
+    <insert id="insert" statementType="PREPARED" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO courseresources
+        	(filename, link, seconds, size, type, content, createtime, courseid) 
+        VALUES 
+        	(#{name}, #{link}, #{seconds}, #{size}, #{resourceType.code}, #{content, jdbcType=VARCHAR}, #{createTime}, #{course.id})
+    </insert>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM courseresources WHERE id=#{id}
+	</select>
+	
+    <select id="search" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM courseresources WHERE 1=1
+		<if test="param != null and param.course != null">
+		    AND courseid=#{param.course.id}
+		</if>
+	</select>
+	
+    <delete id="delete" statementType="PREPARED">
+        DELETE FROM courseresources WHERE id=#{id}
+    </delete>
+</mapper>

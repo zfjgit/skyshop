@@ -4,7 +4,7 @@ $(function() {
     $('.t_agency_field').hide();
     
     var uku = new Ukulele();
-    var userInfo = config.loginUserInfo.userInfo;
+    var userInfo = new UserInfo();
     uku.registerController("userInfo", userInfo);
     uku.addListener(Ukulele.INITIALIZED, function(e) {
         config.uku = uku;
@@ -32,6 +32,11 @@ function loadOne() {
                 level : {
                     code : d.data.agency.level.code,
                     name : d.data.agency.level.name
+                },
+                p_a_r_e_n_t : {
+                    id : 0,
+                    name : '平台',
+                    level : new EnumInfo()
                 }
             };
             if (d.data.agency['parent']) {
@@ -39,6 +44,8 @@ function loadOne() {
                     name : d.data.agency['parent'].name
                 };
             }
+        } else {
+            $('#btn_withraw').hide();
         }
         config.loginUserInfo.userInfo = userInfo;
         config.uku.refresh("userInfo");

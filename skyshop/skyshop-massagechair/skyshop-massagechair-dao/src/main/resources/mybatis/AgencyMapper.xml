@@ -50,6 +50,7 @@
 			user3_level=#{level.code}, 
 			user3_parentbonuspart=#{orderIncomePercentage}, 
 			user3_check=#{checkCode}, 
+			user3_balance=#{balance}, 
 			description=#{description, jdbcType=VARCHAR}, 
 			<choose>
 			    <when test="parent == null" >
@@ -88,9 +89,7 @@
 		<if test="param != null and param.parent != null and param.parent.id != 0">
 			AND user3_parent_sno = #{param.parent.id}
 		</if>
-		<if test="sortField != null and sortDir != null">
-			ORDER BY ${sortField} ${sortDir}
-		</if>
+		ORDER BY user3_sno DESC
 	</select>
 	
 </mapper>

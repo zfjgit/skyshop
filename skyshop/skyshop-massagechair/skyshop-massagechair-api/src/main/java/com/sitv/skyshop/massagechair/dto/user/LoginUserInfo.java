@@ -22,9 +22,9 @@ public class LoginUserInfo extends UserInfo implements UserSessionInfo {
 	private static final long serialVersionUID = 145155310888788641L;
 
 	private String ip;
-
-	private UserInfo userInfo;
 	private String token;
+	private String sessionId;
+	private UserInfo userInfo;
 	private long lastAccessTime;
 
 	public LoginUserInfo() {

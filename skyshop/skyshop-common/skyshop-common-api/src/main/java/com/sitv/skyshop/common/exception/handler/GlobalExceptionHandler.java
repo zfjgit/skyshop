@@ -14,6 +14,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 
 import com.sitv.skyshop.common.exception.EntityNotFoundException;
 import com.sitv.skyshop.common.exception.EntityStatusException;
+import com.sitv.skyshop.common.exception.InsufficientBalanceException;
 import com.sitv.skyshop.common.exception.OperateResultReceivException;
 import com.sitv.skyshop.common.exception.OrderExpiredException;
 import com.sitv.skyshop.common.exception.OrderNotPaidException;
@@ -41,6 +42,13 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	private <T> ResponseInfo<T> entityVarificationFailedExceptionHandler(CheckCodeVerificationFailedException e) {
 		log.error("---------> 实体对象CHECKCODE校验错误!!!", e);
 		return ResponseInfo.CHECKCODE_VARIFY_ERROR(e.getMessage());
+	}
+
+	@ResponseBody
+	@ExceptionHandler(InsufficientBalanceException.class)
+	private <T> ResponseInfo<T> insufficientBalanceExceptionHandler(InsufficientBalanceException e) {
+		log.error("---------> 余额不足!!!", e);
+		return ResponseInfo.INSUFFICIENT_BALANCE_ERROR(e.getMessage());
 	}
 
 	@ResponseBody

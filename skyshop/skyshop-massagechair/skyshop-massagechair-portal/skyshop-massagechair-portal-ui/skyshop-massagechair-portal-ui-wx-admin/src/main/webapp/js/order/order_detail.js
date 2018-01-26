@@ -44,10 +44,13 @@ function loadOne() {
 
 function addListeners() {
     $('#btn_partition').on('click', function() {
-        post('/order/partition/' + orderInfo.id, '', function() {
-            showOkMsg('订单分成成功', function() {
-                
+        showConfirmMsg('订单重新分成会删除之前的分成数据，生成新的分成数据，确定要继续吗？', function() {
+            post('/order/partition/' + orderInfo.id, '', function() {
+                showOkMsg('订单分成成功', function() {
+                    
+                });
             });
+        }, function() {
         });
     });
     $('#btn_delete').on('click', function() {

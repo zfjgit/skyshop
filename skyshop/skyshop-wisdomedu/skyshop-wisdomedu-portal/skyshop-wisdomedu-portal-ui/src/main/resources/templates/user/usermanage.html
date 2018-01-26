@@ -1,0 +1,23 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>直播间粉丝 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/user/usermanage.css" th:href="@{/css/user/usermanage.css}"></link>
+	</head>
+	<body>
+		<div id="users">
+			<div class="user-item" v-for="item in users">
+				<div class="user-logo">
+					<img alt="" :src="item.user.headimg" class="user-logo-img"/>
+				</div>
+				<div class="user-info">
+					<div class="user-name"><i class="icon Hui-iconfont">&#xe60d;</i> {{ item.user.name }}</div>
+					<div class="user-time"><i class="icon Hui-iconfont">&#xe690;</i> {{ item.createTime }}</div>
+					<div class="user-operation" @click="remove(item.id)"><i class="icon Hui-iconfont">&#xe60b;</i> 移除</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/user/usermanage.js" th:src="@{/js/user/usermanage.js}"></script>
+</html>

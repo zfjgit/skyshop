@@ -1,0 +1,94 @@
+<!--#include virtual="../../common/_meta.shtml" -->
+
+<body uku-application>
+<article class="page-container">
+	<div style="width: 85%;margin: auto;">
+		<div id="div-checkAlert" class="Huialert">
+			<i class="Hui-iconfont">&#xe6a6;</i><span class="checkStatus-text"></span>
+			<div class="div-checkRemarkInfo" >
+				<div><span>审核未通过原因：</span><span class="checkRemarkInfo-text">{{shop.showRemarkInfo()}}</span></div>
+				<div><span>上一次审核时间：</span><span class="checkRemarkTime-text"></span></div>
+			</div>
+		</div>
+	</div>
+	<form class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">店铺ID：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="shop.id" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">店铺名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="shop.name" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">所属行业：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="shop.industry" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">联系电话：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="shop.phone" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">店铺状态：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				 <input type="text" class="input-text" uku-value="shop.status.name" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">审核状态：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				 <input type="text" class="input-text" uku-value="shop.checkStatus.name" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">地址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="shop.address" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">创建时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="shop.createTime" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">LOGO：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<img alt="" uku-src="shop.logo" />
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">Banner：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<img alt="" uku-src="item" uku-repeat="item in shop.banners"/>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">图文描述：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div id="introducation">{{shop.showIntroducation()}}</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<button uku-onclick="shop.checkSuccess()" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe6a7;</i> 审核通过</button>
+				<button uku-onclick="shop.checkFail()" class="btn btn-danger radius" type="button"><i class="Hui-iconfont">&#xe6a6;</i> 审核不通过</button>
+				<button uku-onclick="shop.checkCancel()" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--#include virtual="../../common/_footer.shtml" -->
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/js/admin/shop.js"></script>
+</body>
+</html>

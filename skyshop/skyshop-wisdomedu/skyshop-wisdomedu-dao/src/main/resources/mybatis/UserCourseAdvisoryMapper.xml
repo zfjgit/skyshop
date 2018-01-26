@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.user.IUserCourseAdvisoryDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.user.UserCourseAdvisory">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		<result property="content" jdbcType="VARCHAR" column="content" />
+		<result property="reply" jdbcType="VARCHAR" column="reply" />
+		<result property="praiseCount" jdbcType="INTEGER" column="praiseCount" />
+		<result property="replyTime" jdbcType="TIMESTAMP" column="replyTime" />
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		<result property="courseType" jdbcType="VARCHAR" column="coursetype" />
+		<association property="user" column="userid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserDao.get"></association>
+		<discriminator javaType="string" column="coursetype">
+		    <case value="1" resultType="com.sitv.skyshop.wisdomedu.domain.user.UserCourseAdvisory">
+		        <association property="course" column="courseid" select="com.sitv.skyshop.wisdomedu.dao.course.ISingleCourseDao.get"></association>
+		    </case>
+		    <case value="2" resultType="com.sitv.skyshop.wisdomedu.domain.user.UserCourseAdvisory">
+		        <association property="course" column="courseid" select="com.sitv.skyshop.wisdomedu.dao.course.ISeriesCourseDao.get"></association>
+		    </case>
+		</discriminator>
+		
+	</resultMap>
+	
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM usercourseadvisorys WHERE id=#{id}
+	</select>
+	
+    <select id="search" resultMap="BaseResultMap" statementType="PREPARED" parameterType="com.sitv.skyshop.dto.SearchParamInfo" >
+        SELECT * FROM usercourseadvisorys WHERE 1=1
+        <if test="param != null and param.course != null">
+            AND courseid=#{param.course.id}
+        </if>
+        <if test="param != null and param.courseType != null">
+            AND courseType=#{param.courseType.code}
+        </if>
+        ORDER BY createtime DESC
+    </select>
+    
+    <update id="reply" statementType="PREPARED">
+        UPDATE usercourseadvisorys SET reply=#{reply},replytime=#{replyTime} WHERE id=#{id}
+    </update>
+</mapper>

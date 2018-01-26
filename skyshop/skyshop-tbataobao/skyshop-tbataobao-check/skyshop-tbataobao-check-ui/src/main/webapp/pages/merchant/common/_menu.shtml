@@ -1,0 +1,16 @@
+<aside class="Hui-aside">
+	<div class="menu_dropdown bk_2">
+		<dl id="menu-check">
+			<dt class="selected"><i class="Hui-iconfont">&#xe616;</i> 信息管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dd style="display: block;">
+				<ul>
+					<li><a href="<!--#echo var='CONTEXT_PATH'-->/pages/merchant/product/product-list.shtml" title="商品信息">商品信息</a></li>
+					<li><a href="<!--#echo var='CONTEXT_PATH'-->/pages/merchant/shop/shop-list.shtml" title="店铺信息">店铺信息</a></li>
+<!-- 					<li><a href="article-list.shtml" title="订单信息">订单信息</a></li> -->
+<!-- 					<li><a href="article-list.shtml" title="会员信息">会员信息</a></li> -->
+				</ul>
+			</dd>
+		</dl>
+	</div>
+</aside>
+<div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>

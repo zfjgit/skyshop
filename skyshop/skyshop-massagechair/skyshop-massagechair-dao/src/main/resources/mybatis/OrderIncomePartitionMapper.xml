@@ -57,7 +57,7 @@
 		LEFT JOIN tab_orders o ON o.orders_sno=d.orders_sno
 		WHERE 	o.orders_sno=d.orders_sno
 			AND o.orders_createtime &gt;= #{startTime} 
-			AND o.orders_createtime &lt;=  #{endTime} 
+			AND o.orders_createtime &lt; (#{endTime} + 1)
 			AND d.user3_sno=#{id}
 	</select>
 	
@@ -85,7 +85,7 @@
 			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND o.orders_createtime &lt;= #{param.endDate}
+			AND o.orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.order != null and param.order.payStatus != null">
 			AND o.orders_payStatus= 'A'
@@ -112,7 +112,7 @@
 			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND o.orders_createtime &lt;= #{param.endDate}
+			AND o.orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.order != null and param.order.payStatus != null">
 			AND o.orders_payStatus= 'A'
@@ -142,7 +142,7 @@
 			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND o.orders_createtime &lt;= #{param.endDate}
+			AND o.orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.order != null and param.order.payStatus != null">
 			AND o.orders_payStatus= 'A'
@@ -166,7 +166,7 @@
 			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND o.orders_createtime &lt;= #{param.endDate}
+			AND o.orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.order != null and param.order.payStatus != null">
 			AND o.orders_payStatus= 'A'
@@ -192,7 +192,7 @@
 			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND o.orders_createtime &lt;= #{param.endDate}
+			AND o.orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.order != null and param.order.payStatus != null">
 			AND o.orders_payStatus= 'A'

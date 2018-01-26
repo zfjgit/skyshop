@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioBalanceDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.livestudio.LiveStudioBalance">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		
+		<result property="courseIncome" jdbcType="DECIMAL" column="courseIncome" />
+		<result property="seriesCourseIncome" jdbcType="DECIMAL" column="seriesCourseIncome" />
+		<result property="vipIncome" jdbcType="DECIMAL" column="vipIncome" />
+		<result property="punchIncome" jdbcType="DECIMAL" column="punchIncome" />
+		<result property="unsettledAmount" jdbcType="DECIMAL" column="unsettledAmount" />
+		<result property="availableAmount" jdbcType="DECIMAL" column="availableAmount" />
+		<result property="frozenAmount" jdbcType="DECIMAL" column="frozenAmount" />
+		<result property="withdrawnAmount" jdbcType="DECIMAL" column="withdrawnAmount" />
+		<result property="totalAmount" jdbcType="DECIMAL" column="totalAmount" />
+		
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		
+		<association property="liveStudio" column="liveStudioid" select="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioDao.get"></association>
+	</resultMap>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM livestudiobalances WHERE id=#{id}
+	</select>
+	
+    <update id="update" statementType="PREPARED">
+        UPDATE livestudiobalances 
+        SET courseIncome=#{courseIncome},
+        	seriesCourseIncome=#{seriesCourseIncome},
+        	vipIncome=#{vipIncome},
+        	punchIncome=#{punchIncome},
+        	unsettledAmount=#{unsettledAmount},
+        	availableAmount=#{availableAmount},
+        	frozenAmount=#{frozenAmount},
+        	withdrawnAmount=#{withdrawnAmount},
+        	totalAmount=#{totalAmount}
+        WHERE id=#{id}
+    </update>
+	
+    <select id="getBy" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM livestudiobalances WHERE livestudioid=#{liveStudioId}
+	</select>
+	
+</mapper>

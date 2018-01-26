@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioWithrawRecordDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.livestudio.LiveStudioWithrawRecord">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		
+		<result property="bankUser" jdbcType="VARCHAR" column="bankUser" />
+		<result property="bankName" jdbcType="VARCHAR" column="bankName" />
+		<result property="bankNum" jdbcType="VARCHAR" column="bankNum" />
+		
+		<result property="amount" jdbcType="DECIMAL" column="amount" />
+		<result property="beforeAmount" jdbcType="DECIMAL" column="beforeAmount" />
+		<result property="afterAmount" jdbcType="DECIMAL" column="afterAmount" />
+		
+		<result property="description" jdbcType="VARCHAR" column="remark" />
+		
+		<result property="status" jdbcType="VARCHAR" column="status" />
+		
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		
+		<association property="liveStudio" column="liveStudioid" select="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioDao.get"></association>
+	</resultMap>
+	
+    <insert id="insert" statementType="PREPARED" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO livestudiowithrawrecords
+        	(bankuser, bankname, banknum, amount, beforeamount, afteramount, remark, status, createTime, livestudioid)
+        VALUES
+        	(#{bankuser}, #{bankName}, #{bankNum}, #{amount}, #{beforeAmount}, #{afterAmount}, #{description, jdbcType=VARCHAR}, #{status.code}, #{createTime}, #{liveStudio.id})
+    </insert>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM livestudiowithrawrecords WHERE id=#{id}
+	</select>
+	
+    <select id="search" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM livestudiowithrawrecords WHERE liveStudioid=#{param.liveStudio.id}
+		ORDER BY createTime DESC
+	</select>
+	
+    <update id="updateStatus" statementType="PREPARED">
+        UPDATE livestudiowithrawrecords SET status=#{status.code}, remark=#{description} WHERE id=#{id}
+    </update>
+	
+</mapper>

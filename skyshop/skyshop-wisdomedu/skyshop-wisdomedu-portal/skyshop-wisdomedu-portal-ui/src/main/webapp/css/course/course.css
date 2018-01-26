@@ -1,0 +1,187 @@
+.course-field {
+	padding: 0px;
+}
+.course-field div {
+}
+.course-field-name {
+	padding: 10px 10px 5px 10px;
+	text-align: left;
+}
+.course-field-value {
+	background-color: white;
+	
+	text-align: left;
+	display: flex;
+	align-content: flex-start;
+	justify-content: flex-start;
+}
+
+.course-field-value textarea,input {
+	flex-grow: 1;
+	padding: 10px;
+	background-color: white;
+	border: none;
+	max-width: 100%;
+	outline: none;
+}
+
+.course-field-form-item {
+	text-align: left;
+	display: flex;
+	align-content: flex-start;
+	justify-content: flex-start;
+	
+	padding: 10px 0;
+	background-color: white;
+	border-top: solid 1px #eee;
+}
+
+.course-field-form-item-select {
+	vertical-align: middle;
+	flex-basis: 60px;
+	align-self: center!important;
+	align-content: center!important;
+	align-items: center!important;
+	justify-content: center!important;
+	font-size: 30px;
+}
+
+.course-field-form-item-text div {
+	text-align: left; 
+}
+
+.course-field-form-item-text {
+	flex-grow: 1;
+	flex-basis: 75%;
+}
+
+.course-field-form-item-text-hint {
+	flex-grow: 1;
+	font-size: 9px;
+	color: #ccc;
+}
+.course-field-form-item-example {
+	vertical-align: middle;
+	flex-basis: 70px;
+	align-self: center!important;
+	align-content: center!important;
+	align-items: center!important;
+	justify-content: center!important;
+}
+.course-field-form-item-example > i {
+	font-size: 14px;
+}
+
+.live-type-select-title {
+	font-size: 16px;
+	margin-top: 10px;
+}
+.live-type-select-hint {
+	color: red;
+	font-size: 12px;
+}
+.live-type-select {
+	margin-top: 10px;
+	
+	display:flex;
+	align-content: center;
+	justify-content: space-around;
+}
+.live-type-select-item {
+	background-color: white;
+	border-radius: 5px;
+	flex-basis: 90px;
+	padding: 5px;
+}
+.live-type-icon {
+	font-size: 40px;
+}
+.live-type-title {
+	border-top: solid 1px #ddd;
+	background-color: #f8f8f8
+}
+
+.live-type-arrow {
+	background-color: white;
+	
+	position: relative;
+}
+
+.live-type-arrow:after, .live-type-arrow:before {
+  border: solid transparent;
+  content: ' ';
+  height: 0;
+  left: 42px;
+  top: 0;
+  position: absolute;
+  width: 0;
+}
+
+.live-type-arrow:after {
+  border-width: 8px;
+  border-bottom-color: #fff;
+  
+  top: 5px;
+}
+
+.live-type-arrow:before {
+  
+}
+
+.live-type-item-settings {
+	background-color: white;
+	margin: 0 5px; 
+	margin-top: 16px;
+}
+.live-type-item-settings-hint {
+	padding: 10px;
+	text-align: left;
+	border-bottom: solid 1px #eee;
+}
+.live-type-item-settings-controls-title div {
+	text-align: left;
+	padding: 5px;
+}
+.live-type-item-settings-controls-hint {
+	padding: 0px 0px 10px 10px;
+	text-align: left;
+	color: #aaa;
+}
+
+.live-type-item-settings-controls-pwd {
+	padding: 10px;
+	text-align: left;
+	
+	display: flex;
+	flex-direction: column;
+	align-content: flex-start;
+	justify-content: flex-start;
+}
+
+.live-type-item-settings-controls-input-title {
+	vertical-align: middle;
+	text-align: left;
+	padding-left: 5px;
+	padding-bottom: 5px;
+}
+
+.live-type-item-settings-controls-input-div {
+	flex-grow: 1;
+}
+.live-type-item-settings-controls-input {
+	border: solid 1px #ddd;
+	border-radius: 20px;
+	width: 92%;
+	outline: none;
+}
+
+.live-type-buttons {
+	margin: 10px;
+}
+
+.live-type-buttons-btn {
+}
+
+.weui-photo-browser-modal {
+	z-index: 1000;
+}

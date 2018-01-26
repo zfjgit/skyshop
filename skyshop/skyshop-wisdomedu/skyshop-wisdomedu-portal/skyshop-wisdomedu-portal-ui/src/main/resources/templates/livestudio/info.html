@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+		<title>直播间信息 - <th:block th:text="${commonTitle}"></th:block></title>
+		<link rel="stylesheet" type="text/css" href="../css/livestudio/info.css" th:href="@{/css/livestudio/info.css}"></link>
+	</head>
+	<body>
+		<div id="info">
+			<div class="list-item">
+				<div class="list-item-l">直播间图标</div>
+				<div class="list-item-r" >
+					<div class="live-info-logo-upload">
+						<img alt="" v-bind:src="headimg" class="list-item-img"/><i class="icon Hui-iconfont">&#xe6d7;</i>
+						<input id="file" type="file" v-on:change="uploadLogo()" class="live-info-logo-file"/>
+					</div>
+				</div>
+			</div>
+			<div class="list-item" v-on:click="editName()">
+				<div class="list-item-l">直播间名称</div>
+				<div class="list-item-r"><span class="list-item-text">{{name}}</span><i class="icon Hui-iconfont">&#xe6d7;</i></div>
+			</div>
+			<div class="list-item" v-on:click="editIntro()">
+				<div class="list-item-l">直播间简介</div>
+				<div class="list-item-r"><i class="icon Hui-iconfont">&#xe6d7;</i></div>
+			</div>
+			<div class="list-item" v-on:click="editBg()">
+				<div class="list-item-l">直播间背景</div>
+				<div class="list-item-r"><i class="icon Hui-iconfont">&#xe6d7;</i></div>
+			</div>
+			<div class="list-item">
+				<div class="list-item-l">直播间链接</div>
+				<div class="list-item-r word-wrap">{{link}}</div>
+			</div>
+		</div>
+	</body>
+	
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/livestudio/info.js" th:src="@{/js/livestudio/info.js}"></script>
+</html>

@@ -226,13 +226,13 @@ function addListeners() {
     
     $('#btn_save').on('click', function() {
         if (chairInfo.name == '') {
-            showMsg('请输入编号');
+            showCancelMsg('请输入编号');
             return;
         }
         
         var gsm = $('#gsm-picker').val();
         if (gsm == '') {
-            showMsg('请选择GSM模块');
+            showCancelMsg('请选择GSM模块');
             return;
         }
         

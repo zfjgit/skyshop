@@ -1,0 +1,29 @@
+.categorys-item {
+	display: flex;
+	align-content: stretch;
+	
+	background-color: white;
+	border-bottom: solid 1px #eee;
+	padding: 10px;
+}
+.categorys-item-order {
+	align-self: center;
+	flex-basis: 30px;
+	height: 30px;
+	line-height: 30px;
+	border-radius: 50%;
+	background-color: #eee;
+}
+.categorys-item-name {
+	flex-grow: 1;
+	align-self: center;
+	text-align: left;
+}
+.categorys-item-icon {
+	flex-basis: 20%;
+	align-self: center;
+	font-size: 20px;
+}
+.categorys-buttons-btn {
+	margin: 10px;
+}

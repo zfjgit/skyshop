@@ -18,4 +18,6 @@ public interface UserSessionInfo extends Serializable {
 
 	Dto getUserInfo();
 
+	String getSessionId();
+
 }

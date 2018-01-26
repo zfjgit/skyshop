@@ -1,0 +1,30 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+<title>咨询详情 - <th:block th:text="${commonTitle}"></th:block></title>
+<link rel="stylesheet" type="text/css" href="../css/course/advisory.css" th:href="@{/css/course/advisory.css}"></link>
+</head>
+<body>
+	<div id="courseadvisory">
+		<div class="advisory-item" v-for="item in advisorys">
+			<div class="adv-user-logo"><img :src="item.user.logo" class="adv-user-logo-img"/></div>
+			<div class="adv-user-content">
+				<div class="adv-username">{{ item.user.name }}</div>
+				<div class="adv-content">{{ item.content }}</div>
+				<div class="adv-operations">
+					<div class="adv-time">{{ item.createTime }}</div>
+					<div class="adv-reply-btn" v-if="!item.reply" @click="reply(item.id)"><i class="icon Hui-iconfont" >&#xe686;</i>回复</div>
+				</div>
+				<div class="adv-reply" v-if="item.reply">
+					<div class="adv-reply-title">直播间回复</div>
+					<div class="adv-reply-content">{{ item.reply }}</div>
+					<div class="adv-reply-time">{{ item.replyTime }}</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<th:block th:replace="common/footer" />
+<script type="text/javascript" src="../js/course/courseadvisory.js" th:src="@{/js/course/courseadvisory.js}"></script>
+</html>

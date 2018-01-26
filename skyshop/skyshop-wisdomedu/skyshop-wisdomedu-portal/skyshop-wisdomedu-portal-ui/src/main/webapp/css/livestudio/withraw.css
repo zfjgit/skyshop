@@ -1,0 +1,38 @@
+.withraw-money {
+	padding: 10px;
+	background-color: white;
+	border-bottom: solid 1px #eee;
+}
+.withraw-money-title {
+	text-align: left;
+	color: #aaa;
+}
+.withraw-money-amount {
+	text-align: left;
+}
+.withraw-money-amount-number {
+	font-size: 25px;
+	color: red;
+}
+.withraw-detail {
+	margin-top: 10px;
+	background-color: white;
+}
+.withraw-detail-item {
+	display: flex;
+	align-content: space-between;
+	justify-content: space-between;
+	
+	padding: 10px;
+	border-bottom: solid 1px #eee;
+}
+.withraw-detail-item-input {
+	border: none;
+	outline: none;
+	text-align: right;
+}
+
+.withraw-buttons {
+	margin-top: 10px;
+	margin: 10px;
+}

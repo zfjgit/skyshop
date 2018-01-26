@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.course.ISeriesCourseDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.course.SeriesCourse">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		
+		<result property="title" jdbcType="VARCHAR" column="title" />
+		<result property="introduction" jdbcType="VARCHAR" column="introduction" />
+		<result property="headimg" jdbcType="VARCHAR" column="headimg" />
+		<result property="count" jdbcType="INTEGER" column="count" />
+		<result property="ticketsMoney" jdbcType="DECIMAL" column="ticketsMoney" />
+		<result property="chargeType" jdbcType="VARCHAR" column="chargeType" />
+		<result property="promotionType" jdbcType="VARCHAR" column="promotionType" />
+		<result property="isDistribution" jdbcType="INTEGER" column="isDistribution" />
+		<result property="distributionPercent" jdbcType="INTEGER" column="distributionPercent" />
+		
+		<result property="specialOffer" jdbcType="DECIMAL" column="specialOffer" />
+		<result property="buyCount" jdbcType="INTEGER" column="buyCount" />
+		
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		
+		<association property="liveStudio" column="liveStudioid" select="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioDao.get"></association>
+		<association property="category" column="categoryid" select="com.sitv.skyshop.wisdomedu.dao.course.ISeriesCourseCategoryDao.get"></association>
+	</resultMap>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM seriescourses WHERE id=#{id}
+	</select>
+	
+    <insert id="insert" statementType="PREPARED">
+        INSERT INTO seriescourses (title, introduction, headimg, count, ticketsmoney, chargetype, promotiontype, isdistribution, distributionpercent, 
+        	specialoffer, livestudioid, categoryid, createtime) 
+        VALUES (#{title}, #{introduction, jdbcType=VARCHAR}, #{headimg}, #{count}, #{ticketsMoney}, #{chargeType.code}, #{promotionType.code, jdbcType=INTEGER}, #{isDistribution}, #{distributionPercent},
+        	#{specialOffer}, #{liveStudio.id}, 
+        	<choose>
+        	    <when test="category != null">
+		        	#{category.id},
+        	    </when>
+        		<otherwise>
+					null,        		    
+        		</otherwise>	    
+        	</choose>
+        	#{createTime})
+    </insert>
+    
+    <update id="update" statementType="PREPARED">
+        UPDATE seriescourses 
+        SET 
+        	title=#{title}, introduction=#{introduction}, headimg=#{headimg}, [count]=#{count}, ticketsmoney=#{ticketsMoney}, 
+        	chargetype=#{chargeType.code}, promotiontype=#{promotionType.code, jdbcType=INTEGER},isdistribution=#{isDistribution},
+        	distributionpercent=#{distributionPercent},specialoffer=#{specialOffer},
+        	<choose>
+        	    <when test="category != null">
+		        	categoryid=#{category.id},
+        	    </when>
+        		<otherwise>
+					categoryid=null,        		    
+        		</otherwise>	    
+        	</choose>
+        	livestudioid=#{liveStudio.id}
+        WHERE id=#{id}
+    </update>
+    
+    <select id="search" resultMap="BaseResultMap" statementType="PREPARED">
+        SELECT * FROM seriescourses WHERE 1=1
+        <if test="param != null and param.liveStudio != null">
+            AND livestudioid=#{param.liveStudio.id}
+        </if>
+        ORDER BY createtime desc
+    </select>
+</mapper>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.tbataobao.dao.IShopIndustryDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.tbataobao.domain.ShopIndustry">
+		<id property="id" jdbcType="BIGINT" column="kindidx" />
+		<result property="name" jdbcType="VARCHAR" column="title" />
+	</resultMap>
+	
+	<select id="findAll" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM tb_shop_kind ORDER BY kindidx
+	</select>
+	
+	
+</mapper>

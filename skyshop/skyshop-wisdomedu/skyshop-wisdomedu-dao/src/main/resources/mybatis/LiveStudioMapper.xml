@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.livestudio.LiveStudio">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		<result property="code" jdbcType="VARCHAR" column="code" />
+		<result property="name" jdbcType="VARCHAR" column="name" />
+		<result property="introduction" jdbcType="VARCHAR" column="introduction" />
+		<result property="headimg" jdbcType="VARCHAR" column="headimg" />
+		<result property="backgroundimg" jdbcType="VARCHAR" column="backgroundimg" />
+		<result property="link" jdbcType="VARCHAR" column="link" />
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		
+		<association property="creator" column="creatorid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserDao.get"></association>
+		<association property="admin" column="adminid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserDao.get"></association>
+		<association property="type" column="livestudiotypeid" select="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioTypeDao.get"></association>
+	</resultMap>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM livestudios WHERE id=#{id}
+	</select>
+	
+    <select id="getByOpenId" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * 
+		FROM livestudios ls 
+		INNER JOIN users u ON u.id=ls.creatorid 
+		WHERE u.openid=#{openId}
+	</select>
+	
+    <select id="getFollowCount" resultType="int" statementType="PREPARED">
+		SELECT COUNT(1) 
+		FROM userlivestudios 
+		WHERE livestudioid=#{id}
+	</select>
+	
+    <select id="getIncome" resultType="DECIMAL" statementType="PREPARED">
+		SELECT ISNULL(SUM(incomeamount),0) 
+		FROM livestudioincomes 
+		WHERE livestudioid=#{id} 
+			AND createtime &gt;= #{startTime} 
+			AND createTime &lt;= #{endTime}
+	</select>
+	
+    <update id="updateHeadimg" statementType="PREPARED">
+        UPDATE livestudios SET headimg=#{headimg} WHERE id=#{id}
+    </update>
+    
+    <update id="updateName" statementType="PREPARED">
+        UPDATE livestudios SET name=#{name} WHERE id=#{id}
+    </update>
+    
+    <update id="updateIntroduction" statementType="PREPARED">
+        UPDATE livestudios SET introduction=#{introduction} WHERE id=#{id}
+    </update>
+    
+    <update id="updateBackgroundimg" statementType="PREPARED">
+        UPDATE livestudios SET backgroundimg=#{bg} WHERE id=#{id}
+    </update>
+</mapper>

@@ -1,0 +1,134 @@
+<!--#include virtual="../../common/_meta.shtml" -->
+<link rel="stylesheet" href="<!--#echo var='CONTEXT_PATH'-->/plugins/kindeditor-4.1.7/themes/default/default.css" />
+<script charset="utf-8" src="<!--#echo var='CONTEXT_PATH'-->/plugins/kindeditor-4.1.7/kindeditor.js"></script>
+<script charset="utf-8" src="<!--#echo var='CONTEXT_PATH'-->/plugins/kindeditor-4.1.7/lang/zh_CN.js"></script>
+
+<body uku-application>
+<article class="page-container">
+	<div style="width: 85%;margin: auto;">
+		<div id="div-checkAlert" class="Huialert">
+			<i class="Hui-iconfont">&#xe6a6;</i><span class="checkStatus-text"></span>
+			<div class="div-checkRemarkInfo" >
+				<div><span>审核未通过原因：</span><span class="checkRemarkInfo-text">{{shop.showRemarkInfo()}}</span></div>
+				<div><span>上一次审核时间：</span><span class="checkRemarkTime-text"></span></div>
+			</div>
+		</div>
+	</div>
+	<form class="form form-horizontal" id="form-shop">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">店铺ID：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="shop.id" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">店铺名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="shop.name" placeholder="" id="" name="name" >
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">所属行业：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box inline" >
+					<select name="industry" class="select" uku-selected="shop.industry.id" >
+						<option  uku-repeat="item in shop.industrys" uku-value="item.id" uku-data-item="item.id">{{item.name}}</option>
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">联系电话：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="shop.phone" placeholder="" id="" name="phone" >
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">店铺状态：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				 <span class="select-box inline" >
+					<select name="status" class="select" uku-selected="shop.status.code" >
+						<option  uku-repeat="item in shop.statusList" uku-value="item.code" uku-data-item="item.code">{{item.name}}</option>
+					</select>
+				</span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">审核状态：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				 <input type="text" class="input-text" uku-value="shop.checkStatus.name" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">地址：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span class="select-box inline" style="margin-right: 20px">
+					<select name="province" class="select" uku-selected="shop.province.id" uku-onchange="shop.changeProvince()">
+						<option  uku-repeat="item in shop.provinces" uku-value="item.id" uku-data-item="item.id">{{item.name}}</option>
+					</select>
+				</span>
+				<span class="select-box inline" style="margin-right: 20px">
+					<select name="city" class="select" uku-selected="shop.city.id" uku-onchange="shop.changeCity()">
+						<option  uku-repeat="item in shop.citys" uku-value="item.id" uku-data-item="item.id">{{item.name}}</option>
+					</select>
+				</span>
+				<span class="select-box inline" style="margin-right: 20px">
+					<select name="district" class="select" uku-selected="shop.district.id" >
+						<option  uku-repeat="item in shop.districts" uku-value="item.id" uku-data-item="item.id">{{item.name}}</option>
+					</select>
+				</span>
+				<div style="margin-top: 10px;">
+					<input type="text" class="input-text" uku-value="shop.detailAddress" placeholder="" id="" name="detailAddress">
+				</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">LOGO：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<div class="div-s-logo" style="width:200px;height:220px;border:solid 1px #bbb;">
+					<input type="hidden" uku-name="logo" uku-value="shop.logo"/>
+					<img alt="" class="s-logo" uku-src="shop.logo" style="width:200px;height:220px;border:none;">
+					<div class="maskBar text-c p-img-mask" uku-text="shop.showLogoMask()" uku-onclick="shop.deleteLogo()">删除</div>
+				</div>
+				<div class="btns" style="margin-top: 10px;">
+			        <div id="pickerlogo">选择文件</div>
+			    </div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">Banner：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div uku-repeat="item in shop.banners" style="display: inline-block;margin-right: 10px;">
+					<div class="div-s-banner" style="width:360px;height:160px;border:solid 1px #bbb;">
+						<input type="hidden" uku-name="'banner-' + item.index" uku-value="item.url"/>
+						<img alt="" class="p-img" uku-data-index="item.index" uku-src="item.url" style="width:360px;height:160px;border:none;">
+						<div class="maskBar text-c p-img-mask" style="width:340px;" uku-text="item.showImgMask()" uku-onclick="shop.deleteImg(item.index)">删除</div>
+					</div>
+				</div>
+				<div class="btns" style="margin-top: 10px;">
+			        <div id="picker">选择文件</div>
+			    </div>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">店铺介绍：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<textarea name="introducation" id="introducation" cols="" rows="" style="width: 850px; height: 270px; font-size: 15px;padding: 3px;" uku-value="shop.introducation"></textarea>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<button class="btn btn-primary radius" type="submit"><i class="Hui-iconfont">&#xe6a7;</i> 保存</button>
+				<button uku-onclick="shop.cancel()" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--#include virtual="../../common/_footer.shtml" -->
+<script type="text/javascript">
+
+</script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/js/merchant/shop.js"></script>
+</body>
+</html>

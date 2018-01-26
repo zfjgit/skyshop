@@ -1,0 +1,92 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>我的直播间 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/livestudio/live.css" th:href="@{/css/livestudio/live.css}"></link>
+	</head>
+	<body>
+		<div id="manage" class="livestudio">
+			<div class="live-info" v-on:click="goInfoPage()">
+				<div class="live-headimg">
+					<img alt="" src="" class="live-headimg" v-bind:src="info.headimg"/>
+				</div>
+				<div>
+					<div class="live-name">{{info.name}}</div>
+				</div>
+			</div>
+			<div class="live-data">
+				<div class="live-data-item">
+					<div>{{data.follow}}</div>
+					<div class="live-data-item-name">关注数</div>
+				</div>
+				<div class="live-data-item">
+					<div>{{data.income}}</div>
+					<div class="live-data-item-name">昨日收益</div>
+				</div>
+			</div>
+			<div class="live-create">
+				<div class="live-create-button" v-on:click="goCreateTopic()">
+					<div class="live-icon"><i class="icon Hui-iconfont">&#xe627;</i></div>
+					<div class="live-data-item-name">新建话题</div>
+				</div>
+				<div class="live-create-button" v-on:click="goCreateSeriesCourse()">
+					<div class="live-icon"><i class="icon Hui-iconfont">&#xe687;</i></div>
+					<div class="live-data-item-name">新建系列课</div>
+				</div>
+				<div class="live-create-button" v-on:click="goCreateNews()">
+					<div class="live-icon"><i class="icon Hui-iconfont">&#xe69e;</i></div>
+					<div class="live-data-item-name">发布动态</div>
+				</div>
+			</div>
+			<div class="content">
+				<div class="live-manage">
+					<div class="live-manage-item" v-on:click="goHomePageSettings()">
+						<div class="live-icon"><i class="icon Hui-iconfont">&#xe61d;</i></div>
+						<div class="">主页设置</div>
+					</div>
+					<div class="live-manage-item" v-on:click="goUserManage()">
+						<div class="live-icon"><i class="icon Hui-iconfont">&#xe611;</i></div>
+						<div class="">用户管理</div>
+					</div>
+					<div class="live-manage-item" v-on:click="goCourseManage()">
+						<div class="live-icon"><i class="icon Hui-iconfont">&#xe72d;</i></div>
+						<div class="">课程管理</div>
+					</div>
+					<div class="live-manage-item" v-on:click="goAdvisiroyManage()">
+						<div class="live-icon"><i class="icon Hui-iconfont">&#xe633;</i></div>
+						<div class="">咨询管理</div>
+					</div>
+					<div class="live-manage-item" v-on:click="goSeriesCourseCategory()">
+						<div class="live-icon"><i class="icon Hui-iconfont">&#xe6f5;</i></div>
+						<div class="">系列课分类</div>
+					</div>
+					<div class="live-manage-item" v-on:click="goNewsManage()">
+						<div class="live-icon"><i class="icon Hui-iconfont">&#xe69e;</i></div>
+						<div class="">动态管理</div>
+					</div>
+					<div class="live-manage-item" v-on:click="goIncomeManage()">
+						<div class="live-icon"><i class="icon Hui-iconfont">&#xe63a;</i></div>
+						<div class="">收益管理</div>
+					</div>
+					<div class="live-manage-item" v-on:click="goDataStatistics()">
+<!-- 						<div class="live-icon"><i class="icon Hui-iconfont">&#xe61c;</i></div> -->
+<!-- 						<div class="">数据统计</div> -->
+					</div>
+				</div>
+			</div>
+			<div class="footer">
+				<div class="menu" v-on:click="goHomePage()">
+					<div class="menu-icon"><i class="icon Hui-iconfont">&#xe625;</i></div>
+					<div class="t_menu">直播间主页</div>
+				</div>
+				<div class="menu" v-on:click="goMemberInfo()">
+					<div class="menu-icon"><i class="icon Hui-iconfont">&#xe62d;</i></div>
+					<div class="t_menu">个人中心</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/livestudio/manage.js" th:src="@{/js/livestudio/manage.js}"></script>
+</html>

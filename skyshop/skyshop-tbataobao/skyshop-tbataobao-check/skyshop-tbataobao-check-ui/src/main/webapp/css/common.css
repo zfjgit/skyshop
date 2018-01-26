@@ -1,0 +1,16 @@
+.checkStatus-text {
+	font-size: 16px;
+	font-weight: bold;
+}
+.div-checkRemarkInfo {
+	color: black;
+}
+
+
+.p-img-mask {
+	position: relative;
+	bottom: 40px;
+	height: 20px;
+	width: 180px;
+	cursor: pointer;
+}

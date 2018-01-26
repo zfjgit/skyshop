@@ -110,9 +110,7 @@
 		<if test="param != null and param.contact != null">
 			AND install_contact like '%' + #{param.contact} + '%'
 		</if>
-		<if test="sortField != null and sortDir != null">
-			ORDER BY ${sortField} ${sortDir}
-		</if>
+		ORDER BY install_sno DESC
 	</select>
 	
 </mapper>

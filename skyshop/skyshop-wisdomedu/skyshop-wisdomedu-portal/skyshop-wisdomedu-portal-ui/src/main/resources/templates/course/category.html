@@ -1,0 +1,26 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>系列课分类 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/course/category.css" th:href="@{/css/course/category.css}"></link>
+	</head>
+	<body>
+		<div id="categorys">
+			<div id="category-list">
+				<div class="categorys-item" :data-id="item.id" v-for="item in categorys">
+<!-- 					<div class="categorys-item-order">{{ item.order }}</div> -->
+					<div class="categorys-item-name">{{ item.name }}</div>
+					<div class="categorys-item-icon"><i class="icon Hui-iconfont" @click="editCategory(item)">&#xe692;</i> <i class="icon Hui-iconfont" style="color:red" @click="delCategory(item.id)">&#xe6e2;</i></div>
+				</div>
+			</div>
+			
+			<div class="categorys-buttons">
+				<div class="weui-btn weui-btn_primary categorys-buttons-btn" @click="newCategory()">新增分类</div>
+			</div>
+		</div>
+	</body>
+	
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../plugins/Sortable.js" th:src="@{/plugins/Sortable.js}"></script>
+	<script type="text/javascript" src="../js/course/category.js" th:src="@{/js/course/category.js}"></script>
+</html>

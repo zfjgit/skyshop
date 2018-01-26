@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioTypeDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.livestudio.LiveStudioType">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		<result property="name" jdbcType="VARCHAR" column="name" />
+		<result property="order" jdbcType="INTEGER" column="order" />
+		<association property="parent" column="parentid" select="get"></association>
+	</resultMap>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM livestudiotypes WHERE id=#{id}
+	</select>
+	
+</mapper>

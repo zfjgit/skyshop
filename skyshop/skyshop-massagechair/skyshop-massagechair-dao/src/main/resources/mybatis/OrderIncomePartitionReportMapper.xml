@@ -23,7 +23,7 @@
 			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND o.orders_createtime &lt;= #{param.endDate}
+			AND o.orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.order != null and param.order.payStatus != null">
 			AND o.orders_payStatus= 'A'
@@ -57,7 +57,7 @@
 			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND o.orders_createtime &lt;= #{param.endDate}
+			AND o.orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.order != null and param.order.payStatus != null">
 			AND o.orders_payStatus= 'A'
@@ -86,7 +86,7 @@
 			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND o.orders_createtime &lt;= #{param.endDate}
+			AND o.orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.order != null and param.order.payStatus != null">
 			AND o.orders_payStatus= 'A'
@@ -115,7 +115,7 @@
 			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND o.orders_createtime &lt;= #{param.endDate}
+			AND o.orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.order != null and param.order.payStatus != null">
 			AND o.orders_payStatus= 'A'
@@ -145,7 +145,7 @@
 			AND o.orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND o.orders_createtime &lt;= #{param.endDate}
+			AND o.orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.order != null and param.order.payStatus != null">
 			AND o.orders_payStatus= 'A'

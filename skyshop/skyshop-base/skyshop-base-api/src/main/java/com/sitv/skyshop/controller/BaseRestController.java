@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.sitv.skyshop.dto.Dto;
 import com.sitv.skyshop.dto.PageInfo;
@@ -30,6 +31,7 @@ import lombok.extern.slf4j.Slf4j;
  */
 @Slf4j
 @CrossOrigin
+@RestController
 public abstract class BaseRestController<S extends IBaseService<I>, I extends Dto> {
 
 	@Autowired
@@ -39,7 +41,7 @@ public abstract class BaseRestController<S extends IBaseService<I>, I extends Dt
 	protected HttpServletRequest request;
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public ResponseInfo<I> get(@NotBlank @Min(0) @PathVariable String id) {
+	public ResponseInfo<I> get(@NotBlank @Min(1) @PathVariable String id) {
 		log.debug("GET:id=" + id);
 		return ResponseInfo.SUCCESS(service.getOne(Long.valueOf(id)));
 	}
@@ -66,7 +68,7 @@ public abstract class BaseRestController<S extends IBaseService<I>, I extends Dt
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
-	public ResponseInfo<I> delete(@NotBlank @Min(0) @PathVariable String id) {
+	public ResponseInfo<I> delete(@NotBlank @Min(1) @PathVariable String id) {
 		log.debug("DELETE:id=" + id);
 		service.deleteOne(Long.valueOf(id));
 		return ResponseInfo.DELETED_SUCCESS();

@@ -167,11 +167,11 @@ public class Utils implements Serializable {
 	 * @return string
 	 * @author Zhou 2010-4-27
 	 */
-	public static String time2String(Calendar c, String pattern) {
+	public static String time2String(Calendar c, String... pattern) {
 		SimpleDateFormat formatter = new SimpleDateFormat(Constants.DATETIME_FORMAT_1);
 
-		if (!Utils.isNull(pattern)) {
-			formatter.applyPattern(pattern);
+		if (pattern != null && pattern.length == 1 && !Utils.isNull(pattern[0])) {
+			formatter.applyPattern(pattern[0]);
 		}
 		if (c == null) {
 			return formatter.format(Calendar.getInstance().getTime());

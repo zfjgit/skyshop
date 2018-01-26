@@ -23,8 +23,9 @@ public class DataSourceAdvice {
 		MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
 		Method method = methodSignature.getMethod();
 
-		if (method.getName().startsWith("add") || method.getName().startsWith("create") || method.getName().startsWith("save") || method.getName().startsWith("edit")
-				|| method.getName().startsWith("update") || method.getName().startsWith("delete") || method.getName().startsWith("remove") || method.getName().startsWith("auth")) {
+		if (method.getName().startsWith("insert") || method.getName().startsWith("add") || method.getName().startsWith("create") || method.getName().startsWith("save")
+		                || method.getName().startsWith("edit") || method.getName().startsWith("update") || method.getName().startsWith("delete")
+		                || method.getName().startsWith("remove") || method.getName().startsWith("auth")) {
 			log.debug("WRITE DATASOURCE....");
 			DataSourceSwitcher.setWrite();
 		} else {

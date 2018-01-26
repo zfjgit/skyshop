@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sitv.skyshop.common.domain.Withraw.WithrawStatus;
 import com.sitv.skyshop.common.dto.WithrawInfo;
 import com.sitv.skyshop.dto.info.EnumInfo;
@@ -27,6 +28,12 @@ public class AgencyWithrawInfo extends WithrawInfo {
 
 	private static final long serialVersionUID = -232028056019230325L;
 	private AgencyInfo agency;
+
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+	private Calendar startDate;
+
+	@JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
+	private Calendar endDate;
 
 	public AgencyWithrawInfo() {
 	}

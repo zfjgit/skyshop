@@ -1,0 +1,40 @@
+.history-item {
+	padding: 10px;
+	background-color: white;
+	border-bottom: solid 1px #eee;
+}
+.history-item-money {
+	display: flex;
+	align-content: space-between;
+	justify-content: space-between;
+}
+.history-item-money-amount {
+	align-self: baseline;
+}
+.history-item-money-number {
+	font-size: 25px;
+	color: red;
+}
+.icon-money {
+	font-size: 20px;
+	margin-top: -10px;
+	color: red;
+}
+.history-item-money-status {
+	color: green;
+	align-self: baseline;
+}
+.history-item-bankcard {
+	text-align: left;
+	margin-top: 5px;
+}
+.history-item-bankuser {
+	color: #808080;
+	text-align: left;
+}
+.history-item-time {
+	text-align: left;
+	padding-top: 5px;
+	margin-top: 5px;
+	border-top: solid 1px #eee;
+}

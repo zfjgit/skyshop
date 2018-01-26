@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.user.IUserOrderDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.user.UserOrder">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		<result property="status" jdbcType="VARCHAR" column="status" />
+		<result property="payType" jdbcType="VARCHAR" column="payType" />
+		<result property="payTransactionId" jdbcType="VARCHAR" column="payTransactionId" />
+		
+		<result property="payTime" jdbcType="TIMESTAMP" column="payTime" />
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		
+		<result property="totalAmount" jdbcType="DECIMAL" column="totalAmount" />
+		<result property="paidAmount" jdbcType="DECIMAL" column="paidAmount" />
+		<result property="discountAmount" jdbcType="DECIMAL" column="discountAmount" />
+		
+		<result property="remark" jdbcType="VARCHAR" column="remark" />
+		
+		<association property="liveStudio" column="liveStudioid" select="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioDao.get"></association>
+		<association property="user" column="userid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserDao.get"></association>
+	</resultMap>
+	
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM userorders WHERE id=#{id}
+	</select>
+    
+</mapper>

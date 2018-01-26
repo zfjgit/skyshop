@@ -1,0 +1,36 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	<title>咨询管理 - <th:block th:text="${commonTitle}"></th:block></title>
+	<link rel="stylesheet" type="text/css" href="../css/course/advisory.css" th:href="@{/css/course/advisory.css}"></link>
+</head>
+<body>
+	<div id="advisory">
+		<div class="weui-tab">
+			<div class="weui-navbar">
+				<a :class="tab == 'tab1' ? 'weui-navbar__item weui-bar__item--on' : 'weui-navbar__item'" href="#tab1" @click="setCurrentTab('tab1')">系列课</a>
+				<a :class="tab == 'tab2' ? 'weui-navbar__item weui-bar__item--on' : 'weui-navbar__item'" href="#tab2" @click="setCurrentTab('tab2')">话题</a>
+			</div>
+			<div class="weui-tab__bd">
+				<div id="tab1" :class="tab == 'tab1' ? 'weui-tab__bd-item weui-tab__bd-item--active' : 'weui-tab__bd-item'">
+					<div class="course-item" @click="goSeriesCourseAdvisory(item.id)" v-for="item in seriesCourses">
+						<div class="course-item-title">{{ item.title }}</div>
+						<div class="course-item-lasttime">{{ item.lastAdvisoryTime }}</div>
+						<div class="course-item-count">共 <span>{{ item.advisoryCount }}</span> 条</div>
+					</div>
+				</div>
+				<div id="tab2" :class="tab == 'tab2' ? 'weui-tab__bd-item weui-tab__bd-item--active' : 'weui-tab__bd-item'">
+					<div class="course-item" @click="goCourseAdvisory(item.id)" v-for="item in courses">
+						<div class="course-item-title">{{ item.title }}</div>
+						<div class="course-item-lasttime">{{ item.lastAdvisoryTime }}</div>
+						<div class="course-item-count">共 <span>{{ item.advisoryCount }}</span> 条</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+
+<th:block th:replace="common/footer" />
+<script type="text/javascript" src="../js/course/advisory.js" th:src="@{/js/course/advisory.js}"></script>
+</html>

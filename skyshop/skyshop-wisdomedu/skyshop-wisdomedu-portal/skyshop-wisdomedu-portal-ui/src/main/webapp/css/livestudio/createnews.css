@@ -1,0 +1,55 @@
+.weui-bar__item--on {
+	color: green!important;
+}
+.seriescourse-item, .course-item {
+	display: flex;
+	align-content: center;
+	justify-content: space-between;
+	padding: 5px 10px;
+	border-bottom: solid 1px #eee;
+	background-color: white;
+}
+.seriescourse-item-name, .course-item-name {
+	align-self: center;
+	color: black;
+}
+.seriescourse-item-icon, .course-item-icon {
+	align-self: center;
+	color: green;
+	font-size: 20px;
+}
+.createnews-buttons-btn {
+	margin: 10px;
+}
+.news-content {
+	height: 120px;
+	width: 96%;
+	background-color: white;
+	padding: 5px;
+	border: none;
+	outline: none;
+}
+.course-info {
+	margin-top: 10px;
+	display: flex;
+	background-color: #ddd;
+	border-radius: 5px;
+	padding: 5px;
+}
+.course-info-bg {
+	align-self: center;
+	height: 40px;
+	line-height: 40px;
+	background-color: white;
+}
+.course-info-name {
+	align-self: center;
+	margin-left: 10px;
+}
+.course-info-bg-img {
+	width: 40px;
+}
+.news-create {
+	background-color: white;
+	padding: 10px;
+}

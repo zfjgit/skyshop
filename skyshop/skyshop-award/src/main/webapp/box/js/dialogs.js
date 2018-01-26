@@ -1,4 +1,14 @@
 function showWin(name, type) {
+    try {
+        document.getElementById('award-audio').src = 'audio/win1.wav';
+        document.getElementById('award-audio').pause();
+        document.getElementById('lose-audio').pause();
+        document.getElementById('award-audio').play();
+// window.VJPlayer.play("http://8089test.s-itv.com/choujian/win1.wav");
+    } catch (e) {
+        alert(e);
+    }
+    
     $('#award').text(name);
     
     var winWidth = $('body').width();
@@ -34,11 +44,9 @@ function showWin(name, type) {
         }
     });
     
-    try {
-        window.VJPlayer.play("http://8089test.s-itv.com/choujian/win1.wav");
-    } catch (e) {
-        
-    }
+    $('#a-pointer').off('click', pointerClick);
+    
+    
 }
 
 function hideWin() {
@@ -49,9 +57,21 @@ function hideWin() {
         $('#addr').hide();
         $('#a-pointer').focus();
     });
+    
+    $('#a-pointer').on('click', pointerClick);
 }
 
 function showLose() {
+    try {
+        document.getElementById('award-audio').src = 'audio/lose.wav';
+        document.getElementById('award-audio').pause();
+        document.getElementById('win-audio').pause();
+        document.getElementById('award-audio').play();
+// window.VJPlayer.play("http://8089test.s-itv.com/choujian/lose.wav");
+    } catch (e) {
+        alert(e);
+    }
+    
     var winWidth = $('body').width();
     var winHeight = $(window).height();
     
@@ -68,11 +88,9 @@ function showLose() {
         $('#award-button-lose').focus();
     });
     
-    try {
-        window.VJPlayer.play("http://8089test.s-itv.com/choujian/lose.wav");
-    } catch (e) {
-        
-    }
+    $('#a-pointer').off('click', pointerClick);
+    
+    
 }
 
 function hideLose() {
@@ -82,6 +100,8 @@ function hideLose() {
         
         $('#a-pointer').focus();
     });
+    
+    $('#a-pointer').on('click', pointerClick);
 }
 
 function showMsg(msg, isAwards) {
@@ -117,6 +137,8 @@ function showMsg(msg, isAwards) {
         
         $('#button-msg').focus();
     });
+    
+    $('#a-pointer').off('click', pointerClick);
 }
 
 function hideMsg() {
@@ -129,6 +151,8 @@ function hideMsg() {
             $('#award-button').focus();
         }
     });
+    
+    $('#a-pointer').on('click', pointerClick);
 }
 
 function showLogin() {

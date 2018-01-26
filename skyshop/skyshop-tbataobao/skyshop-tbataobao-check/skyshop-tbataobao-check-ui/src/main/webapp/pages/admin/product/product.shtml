@@ -1,0 +1,100 @@
+<!--#include virtual="../../common/_meta.shtml" -->
+
+<body uku-application>
+<article class="page-container">
+	<div style="width: 85%;margin: auto;">
+		<div id="div-checkAlert" class="Huialert">
+			<i class="Hui-iconfont">&#xe6a6;</i><span class="checkStatus-text"></span>
+			<div class="div-checkRemarkInfo">
+				<div><span>审核未通过原因：</span><span class="checkRemarkInfo-text">{{product.showRemarkInfo()}}</span></div>
+				<div><span>上一次审核时间：</span><span class="checkRemarkTime-text"></span></div>
+			</div>
+		</div>
+	</div>
+	<form class="form form-horizontal" id="form-article-add">
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">店铺名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="product.shop.name" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">商品ID：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="product.id" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">商品名称：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="product.name" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">系统分类：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="product.sysCatagory.name" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">自定义分类：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="product.catagory.name" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">商品状态：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				 <input type="text" class="input-text" uku-value="product.status.name" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">审核状态：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				 <input type="text" class="input-text" uku-value="product.checkStatus.name" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">价格：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<span>现价：</span><span uku-text="product.price"></span>，<span>原价：</span><span uku-text="product.marketPrice" readonly="readonly"></span>
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">库存：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="product.inventoryCount" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">创建时间：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<input type="text" class="input-text" uku-value="product.createTime" placeholder="" id="" name="" readonly="readonly">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">图片：</label>
+			<div class="formControls col-xs-8 col-sm-9 skin-minimal">
+				<img alt="" uku-src="item" uku-repeat="item in product.imgs">
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-2">图文描述：</label>
+			<div class="formControls col-xs-8 col-sm-9">
+				<div id="introducation">{{product.showIntroducation()}}</div>
+			</div>
+		</div>
+		<div class="row cl">
+			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2">
+				<button uku-onclick="product.checkSuccess()" class="btn btn-primary radius" type="button"><i class="Hui-iconfont">&#xe6a7;</i> 审核通过</button>
+				<button uku-onclick="product.checkFail()" class="btn btn-danger radius" type="button"><i class="Hui-iconfont">&#xe6a6;</i> 审核不通过</button>
+				<button uku-onclick="product.checkCancel()" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
+			</div>
+		</div>
+	</form>
+</article>
+
+<!--#include virtual="../../common/_footer.shtml" -->
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/js/admin/product.js"></script>
+</body>
+</html>

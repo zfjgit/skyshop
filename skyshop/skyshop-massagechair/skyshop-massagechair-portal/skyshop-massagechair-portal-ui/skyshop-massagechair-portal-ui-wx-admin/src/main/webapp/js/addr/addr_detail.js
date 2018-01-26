@@ -124,20 +124,20 @@ function addListeners() {
         function() {
             if (!addrInfo.province || addrInfo.province.code == 0 || !addrInfo.city || addrInfo.city.code == 0 || !addrInfo.district
                 || addrInfo.district.code == 0) {
-                showMsg('请选择地址');
+                showCancelMsg('请选择地址');
                 return;
             }
             
             if (!addrInfo.detailAddress) {
-                showMsg('请输入详细地址');
+                showCancelMsg('请输入详细地址');
                 return;
             }
             if (!addrInfo.contact) {
-                showMsg('请输入联系人');
+                showCancelMsg('请输入联系人');
                 return;
             }
             if (!addrInfo.contactNumber) {
-                showMsg('请输入联系人电话');
+                showCancelMsg('请输入联系人电话');
                 return;
             }
             

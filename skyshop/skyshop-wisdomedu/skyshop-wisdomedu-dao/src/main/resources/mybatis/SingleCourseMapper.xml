@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.course.ISingleCourseDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.course.SingleCourse">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		
+		<result property="title" jdbcType="VARCHAR" column="title" />
+		<result property="introduction" jdbcType="VARCHAR" column="introduction" />
+		<result property="headimg" jdbcType="VARCHAR" column="headimg" />
+		<result property="presenter" jdbcType="VARCHAR" column="presenter" />
+		<result property="presenterIntroducation" jdbcType="VARCHAR" column="presenterIntroducation" />
+		<result property="isSilenceMode" jdbcType="INTEGER" column="isSilenceMode" />
+		<result property="isShowDetailPage" jdbcType="INTEGER" column="isShowDetailPage" />
+		<result property="passwd" jdbcType="VARCHAR" column="passwd" />
+		<result property="ticketsMoney" jdbcType="DECIMAL" column="ticketsMoney" />
+		<result property="isDistribution" jdbcType="INTEGER" column="isDistribution" />
+		<result property="distributionPercent" jdbcType="INTEGER" column="distributionPercent" />
+		
+		<result property="liveType" jdbcType="VARCHAR" column="liveType" />
+		<result property="courseForm" jdbcType="VARCHAR" column="courseForm" />
+		<result property="joinSeriesCourseStatus" jdbcType="VARCHAR" column="coursetype" />
+		
+		<result property="specialOffer" jdbcType="DECIMAL" column="specialOffer" />
+		<result property="isEnd" jdbcType="INTEGER" column="isEnd" />
+		<result property="buyCount" jdbcType="INTEGER" column="buyCount" />
+		
+		<result property="startTime" jdbcType="TIMESTAMP" column="startTime" />
+		
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		
+		<association property="liveStudio" column="liveStudioid" select="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioDao.get"></association>
+		<association property="seriesCourse" column="seriesCourseid" select="com.sitv.skyshop.wisdomedu.dao.course.ISeriesCourseDao.get"></association>
+	</resultMap>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM courses WHERE id=#{id}
+	</select>
+	
+    <insert id="insert" parameterType="com.sitv.skyshop.wisdomedu.domain.course.Course"  statementType="PREPARED">
+        INSERT INTO courses(livestudioid, title, introduction, headimg, starttime, issilencemode, seriescourseid, courseform, livetype, isshowdetailpage, passwd, ticketsmoney, 
+        	createtime, specialoffer, isend, coursetype) 
+        VALUES (#{liveStudio.id}, #{title}, #{introduction}, #{headimg}, #{startTime}, #{isSilenceMode}, 
+        	<choose>
+        	    <when test="seriesCourse != null">
+        	        #{seriesCourse.id},
+        	    </when>
+        	    <otherwise>
+        	        null,
+        	    </otherwise>
+        	</choose>
+        	#{courseForm.code}, #{liveType.code}, #{isShowDetailPage}, #{passwd}, #{ticketsMoney}, #{createTime}, #{specialOffer}, #{isEnd}, #{joinSeriesCourseStatus.code}
+        	)
+    </insert>
+    
+    <update id="update" statementType="PREPARED">
+        UPDATE courses 
+        SET 
+        	title=#{title}, introduction=#{introduction}, headimg=#{headimg}, starttime=#{startTime}, issilencemode=#{isSilenceMode}, 
+        	courseform=#{courseForm.code}, livetype=#{liveType.code, jdbcType=INTEGER},isshowdetailpage=#{isShowDetailPage},
+        	passwd=#{passwd},ticketsmoney=#{ticketsMoney}, specialoffer=#{specialOffer},coursetype=#{joinSeriesCourseStatus.code},
+        	<choose>
+        	    <when test="seriesCourse != null">
+		        	seriescourseid=#{seriesCourse.id},
+        	    </when>
+        		<otherwise>
+					seriescourseid=null,        		    
+        		</otherwise>	    
+        	</choose>
+        	livestudioid=#{liveStudio.id}
+        WHERE id=#{id}
+    </update>
+	
+    <select id="search" resultMap="BaseResultMap" statementType="PREPARED">
+        SELECT * FROM courses WHERE 1=1
+        <if test="param != null and param.liveStudio != null">
+            AND livestudioid=#{param.liveStudio.id}
+        </if>
+        ORDER BY createtime desc
+    </select>
+</mapper>

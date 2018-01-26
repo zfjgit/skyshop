@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>提现记录 - 三网通-按摩椅</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+		<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"/>
+		<meta name="apple-mobile-web-app-capable" content="yes"/>
+		<meta http-equiv="keywords" content="三网通-按摩椅"/>
+		<meta http-equiv="description" content="三网通-按摩椅"/>
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="renderer"  content="webkit|ie-comp|ie-stand">
+
+		<script type="text/javascript" src="../../js/withraw/withraw_list.js"></script>
+	</head>
+	<body>
+		<div class="h_nav" style="display: none;">
+			<div class="h_back">&lt;</div>
+			<div class="h_title">提现记录</div>
+		</div>
+		<div class="content">
+			<div class="search">
+				<div class="t_search">选择查询时段，最多查询30天或自然月内的提现记录。</div>
+				<table class="t_table">
+					<tr>
+						<td class="t_fieldname">选择开始时间</td>
+						<td class="t_fieldvalue"><input id="startDate" class="t_text t_date" uku-value="recordManage.startDate" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">选择结束时间</td>
+						<td class="t_fieldvalue"><input id="endDate" class="t_text t_date" uku-value="recordManage.endDate" readonly="readonly"/></td>
+					</tr>
+					<tr>
+						<td class="t_fieldname">处理状态</td>
+						<td class="t_fieldvalue">
+							<input id="status-picker" class="t_text" placeholder="请选择处理状态"  readonly="readonly"></input>
+						</td>
+					</tr>
+				</table>
+				<div class="t_area_btn">
+					<div class="t_table_title">提现记录</div><div id="btn_search" class="float_right weui-btn weui-btn_mini weui-btn_primary">查询</div>
+				</div>
+			</div>
+			<div class="t_search_results">
+				<div class="t_search_total">查询总金额：<span class="money">{{recordManage.total}}</span> 元</div>
+				<div class="tb_search_table">
+					<table class="t_table" style="width: 500px;">
+						<thead class="t_table_head">
+							<tr>
+								<td width="25%">提现金额（元）</td>
+								<td width="30%">提现时间</td>
+								<td width="15%">当前状态</td>
+								<td width="10%">详情</td>
+							</tr>
+						</thead>
+						<tbody class="t_table_body">
+							<tr uku-repeat="item in recordManage.records">
+								<td class="t_wrap_text t_order_no">{{item.money}}</td>
+								<td>{{item.createTime}}</td>
+								<td>{{item.status.name}}</td>
+								<td><a uku-href="item.detailUrl">{{item.id ? '&gt;' : ''}}</a></td>
+							</tr>
+						</tbody>
+					</table>
+					<div class="weui-loadmore">
+					  	<i class="weui-loading"></i>
+					  	<span class="weui-loadmore__tips">正在加载</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -38,7 +38,6 @@ public abstract class Withraw extends DomainObject implements ICheckCodeType {
 		this.bank = bank;
 		this.account = account;
 		this.accountName = accountName;
-		calcCheckCode();
 	}
 
 	public String getCheckCode() {

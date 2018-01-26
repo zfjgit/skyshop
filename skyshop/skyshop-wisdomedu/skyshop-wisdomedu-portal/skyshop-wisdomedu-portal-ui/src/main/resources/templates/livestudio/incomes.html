@@ -1,0 +1,45 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+		<title>直播间收益管理 - <th:block th:text="${commonTitle}"></th:block></title>
+		<link rel="stylesheet" type="text/css" href="../css/livestudio/incomes.css" th:href="@{/css/livestudio/incomes.css}"></link>
+	</head>
+	<body>
+		<div id="livestudioincomes">
+			<div class="income-history">
+				<div >历史总收益</div>
+				<div class="income-record-btn" @click="goHistory()">交易记录<i class="icon Hui-iconfont">&#xe6d7;</i></div>
+			</div>
+			<div class="income-total">
+				<div class="income-total-money"><span class="income-total-number">{{ total }}</span> <span class="income-total-unit">元</span></div>
+				<div class="income-total-tips">总收益 = 待结算金额 + 可提现金额 + 已提现金额</div>
+			</div>
+			<div class="income-detail">
+<!-- 				<div class="income-detail-item"> -->
+<!-- 					<div class="income-detail-number">0</div> -->
+<!-- 					<div class="income-detail-name">待结算金额</div> -->
+<!-- 					<div class="">详细&gt;</div> -->
+<!-- 				</div> -->
+				<div class="income-detail-item">
+					<div class="income-detail-number">{{ available }}</div>
+					<div class="income-detail-name">可提现金额</div>
+					<div class="weui-btn weui-btn_mini weui-btn_primary withraw-btn" @click="goWithraw()">提现</div>
+				</div>
+				<div class="income-detail-item">
+					<div class="income-detail-number">{{ withdrawn }}</div>
+					<div class="income-detail-name">已提现金额</div>
+					<div class="" @click="goWithrawHistory()">提现明细&gt;</div>
+				</div>
+			</div>
+			
+			<div class="income-categorys">
+<!-- 				<div class="income-categorys-item"> -->
+<!-- 					<div class="">收益分析</div> -->
+<!-- 					<div class="income-categorys-item-icon"><i class="icon Hui-iconfont">&#xe6d7;</i></div> -->
+<!-- 				</div> -->
+			</div>
+		</div>
+	</body>
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/livestudio/incomes.js" th:src="@{/js/livestudio/incomes.js}"></script>
+</html>

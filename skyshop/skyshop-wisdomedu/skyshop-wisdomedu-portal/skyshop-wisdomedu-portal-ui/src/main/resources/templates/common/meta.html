@@ -1,0 +1,25 @@
+<head th:with="commonTitle='三网通智慧教育'" th:fragment="common_header (title,links)">
+  	<title th:replace="${title}"></title>
+
+  	<!-- Common styles and scripts -->
+  	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"></meta>
+	<meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no, width=device-width"></meta>
+	<meta name="apple-mobile-web-app-capable" content="yes"></meta>
+	<meta http-equiv="keywords" content=""></meta>
+	<meta http-equiv="description" content=""></meta>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+	<meta name="renderer"  content="webkit|ie-comp|ie-stand"></meta>
+	
+	<link rel="Bookmark" href="../plugins/h-ui/static/h-ui.admin/images/icon.png" th:href="@{/images/logo.png}">
+	<link rel="Shortcut Icon" href="../plugins/h-ui/static/h-ui.admin/images/icon.png" th:href="@{/images/logo.png}">
+	
+	<link rel="stylesheet" type="text/css" href="../plugins/jqweui/lib/weui.css" th:href="@{/plugins/jqweui/lib/weui.css}"></link>
+	<link rel="stylesheet" type="text/css" href="../plugins/jqweui/css/jquery-weui.css" th:href="@{/plugins/jqweui/css/jquery-weui.css}"></link>
+	<link rel="stylesheet" type="text/css" href="../plugins/Hui-iconfont/1.0.8/iconfont.css" th:href="@{/plugins/Hui-iconfont/1.0.8/iconfont.css}">
+	
+	<link rel="stylesheet" type="text/css" href="../css/style.css" th:href="@{/css/style.css}"></link>
+	
+  	<!--/* Per-page placeholder for additional links */-->
+  	<th:block th:replace="${links}" />
+
+</head>

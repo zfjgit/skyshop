@@ -1,0 +1,24 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>直播间提现记录 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/livestudio/withrawhistory.css" th:href="@{/css/livestudio/withrawhistory.css}"></link>
+	</head>
+	<body>
+		<div id="history">
+			<div class="history-item" v-for="item in withraws">
+				<div class="history-item-money">
+					<div class="history-item-money-amount"><i class="icon Hui-iconfont icon-money" >&#xe63a;</i> <span class="history-item-money-number">{{ item.amount }}</span> <span>元</span></div>
+					<div class="history-item-money-status"><i class="icon Hui-iconfont icon-status" >&#xe606;</i> {{ item.status.name }}</div>
+				</div>
+				<div class="history-item-bankcard"><i class="icon Hui-iconfont icon-status" >&#xe628;</i> {{ item.bankNum }}</div>
+				<div class="history-item-bankuser"><i class="icon Hui-iconfont icon-status" >&#xe60d;</i> {{ item.bankName }}/{{ item.bankUser }}</div>
+				<div class="history-item-time"><i class="icon Hui-iconfont icon-status" >&#xe6e6;</i> {{ item.createTime }}</div>
+			</div>
+		</div>
+		
+	</body>
+	
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/livestudio/withrawhistory.js" th:src="@{/js/livestudio/withrawhistory.js}"></script>
+</html>

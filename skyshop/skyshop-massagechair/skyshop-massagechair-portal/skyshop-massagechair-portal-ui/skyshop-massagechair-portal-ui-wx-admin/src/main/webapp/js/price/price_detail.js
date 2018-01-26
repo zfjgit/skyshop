@@ -40,15 +40,15 @@ function loadOne() {
 function addListeners() {
     $('#btn_save').on('click', function() {
         if (!priceInfo.name) {
-            showMsg('请输入名称');
+            showCancelMsg('请输入名称');
             return;
         }
         if (!priceInfo.money || priceInfo.money <= 0) {
-            showMsg('请输入正确的金额');
+            showCancelMsg('请输入正确的金额');
             return;
         }
         if (!priceInfo.minutes || priceInfo.minutes <= 0) {
-            showMsg('请输入正确的时长');
+            showCancelMsg('请输入正确的时长');
             return;
         }
         

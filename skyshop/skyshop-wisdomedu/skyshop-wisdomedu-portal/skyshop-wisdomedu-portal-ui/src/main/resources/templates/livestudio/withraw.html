@@ -1,0 +1,41 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>直播间提现 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/livestudio/withraw.css" th:href="@{/css/livestudio/withraw.css}"></link>
+	</head>
+	<body>
+		<div id="withraw">
+			<div class="withraw-money">
+				<div class="withraw-money-title">当前可提现金额</div>
+				<div class="withraw-money-amount"><span class="withraw-money-amount-number">{{ available }}</span> <span>元</span></div>
+			</div>
+			
+			<div class="withraw-detail">
+				<div class="withraw-detail-item">
+					<div>提现金额</div>
+					<div><input type="number" class="withraw-detail-item-input" v-model="withraw.amount" placeholder="请输入提现金额"/></div>
+				</div>
+				<div class="withraw-detail-item">
+					<div>银行卡号</div>
+					<div><input type="number" class="withraw-detail-item-input" v-model="withraw.bankNum" placeholder="请输入银行卡号"/></div>
+				</div>
+				<div class="withraw-detail-item">
+					<div>银行卡户名</div>
+					<div><input class="withraw-detail-item-input" v-model="withraw.bankUser" placeholder="请输入银行卡户名"/></div>
+				</div>
+				<div class="withraw-detail-item">
+					<div>银行名称</div>
+					<div><input class="withraw-detail-item-input" v-model="withraw.bankName" placeholder="请输入银行名称"/></div>
+				</div>
+			</div>
+			
+			<div class="withraw-buttons">
+				<div class="weui-btn weui-btn_primary btn-confirm" @click="confirm()">申请提现</div>
+			</div>
+		</div>
+	</body>
+	
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/livestudio/withraw.js" th:src="@{/js/livestudio/withraw.js}"></script>
+</html>

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.tbataobao.dao.IProductDao" >
+
+	<resultMap id="BaseResultMap" type="com.sitv.skyshop.tbataobao.domain.Product">
+		<id property="id" jdbcType="BIGINT" column="productidx" />
+		<result property="name" jdbcType="VARCHAR" column="productname" />
+	</resultMap>
+	
+	<select id="get" resultType="java.util.HashMap" parameterType="long" statementType="PREPARED">
+		SELECT p.productIdx, p.productName, p.productStatus, p.ischecked, p.productPrice, p.marketPrice, p.inventoryCount, p.productlIntroduction introducation, 
+		p.productImage1, p.productImage2, p.productImage3, p.productImage4, p.productImage5, 
+		p.sysproductcategoryid sysCatagoryId, cfg.name sysCatagoryName,
+		convert(varchar, p.maketime, 120) makeTime, p.categoryIdx1, c.categoryName, p.shopIdx, s.shopName 
+		FROM tb_product p 
+			LEFT JOIN tb_category c ON p.categoryidx1=c.categoryidx 
+			LEFT JOIN tb_shop s ON s.idx=p.shopidx
+			LEFT JOIN configurations cfg ON cfg.id=p.sysproductcategoryid
+		WHERE p.productIdx=#{id}
+	</select>
+	
+	<select id="find" resultType="java.util.HashMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo" statementType="PREPARED">
+		SELECT p.productIdx, p.productName, p.productStatus, p.ischecked, convert(varchar, p.maketime, 120) makeTime, p.categoryIdx1, c.categoryName, p.shopIdx, s.shopName 
+		FROM tb_product p 
+			LEFT JOIN tb_category c ON p.categoryidx1=c.categoryidx 
+			LEFT JOIN tb_shop s ON s.idx=p.shopidx 
+		WHERE 1=1
+		<if test="param != null and param.name != null and param.name != '' ">
+		    AND p.productname LIKE '%' + #{param.name} + '%'
+		</if>
+		<if test="param != null and param.checkStatus != null and param.checkStatus.code != '' ">
+		    AND p.ischecked=#{param.checkStatus.code}
+		</if>
+		<if test="param != null and param.startDate != null ">
+		    AND p.maketime &gt;= #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null ">
+		    AND p.maketime &lt;= #{param.endDate}
+		</if>
+		ORDER BY p.productidx DESC
+	</select>
+	
+	<update id="updateCheckStatus" statementType="PREPARED">
+	    UPDATE tb_product SET ischecked=#{checkStatusCode} WHERE productidx=#{id}
+	</update>
+	
+	<update id="update" statementType="PREPARED" >
+	    UPDATE tb_product SET productName=#{name},productPrice=#{price},marketPrice=#{marketPrice},productStatus=#{status},inventoryCount=#{inventoryCount},
+	    	 categoryIdx1=#{productCategoryId, jdbcType=BIGINT}, sysproductcategoryid=#{sysCategoryId, jdbcType=BIGINT},productlIntroduction=#{introducation}, 
+	    	 productImage1=#{img1}, productImage2=#{img2}, productImage3=#{img3}, productImage4=#{img4}, productImage5=#{img5}, 
+	    	 ischecked=#{checkStatusCode} WHERE productidx=#{id, jdbcType=BIGINT}
+	</update>
+	
+	<update id="batchUpdateCheckStatus" statementType="PREPARED">
+	    UPDATE tb_product SET ischecked=#{checkStatusCode} WHERE productidx in 
+	    <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+	        #{item}
+		</foreach>
+	</update>
+</mapper>

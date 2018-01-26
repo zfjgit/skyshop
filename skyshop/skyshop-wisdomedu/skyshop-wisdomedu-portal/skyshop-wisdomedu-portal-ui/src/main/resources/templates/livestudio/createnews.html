@@ -1,0 +1,59 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>发布动态 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.1/css/swiper.min.css">
+	  	<link rel="stylesheet" type="text/css" href="../css/livestudio/createnews.css" th:href="@{/css/livestudio/createnews.css}"></link>
+	</head>
+	<body>
+		<div class="swiper-container">
+		<div id="createnews" class="swiper-wrapper">
+			<div id="step-1" class="swiper-slide">
+				<div class="weui-tab">
+					<div class="weui-navbar">
+						<a :class="index == 0 ? 'weui-navbar__item weui-bar__item--on' : 'weui-navbar__item' " :href="'#tab' + (index + 1)" @click="setNewsType(item.code)" v-for="(item, index) in newsTypes">
+						  	{{ item.name }}
+						</a>
+					</div>
+					<div class="weui-tab__bd">
+						<div id="tab1" class="weui-tab__bd-item weui-tab__bd-item--active">
+							<div class="seriescourse-item" v-for="item in seriesCourses" @click="selectSeriesCourse(item)">
+					    		<div class="seriescourse-item-name">{{ item.name }}</div>
+					    		<div class="seriescourse-item-icon"><i class="icon Hui-iconfont">{{ (subjectId == item.id && subjectTypeCode == 2) ? '&#xe6a7;' : '' }}</i></div>
+					    	</div>
+						</div>
+						<div id="tab2" class="weui-tab__bd-item">
+							<div class="course-item" v-for="item in courses" @click="selectCourse(item)">
+					    		<div class="course-item-name">{{ item.name }}</div>
+					    		<div class="course-item-icon"><i class="icon Hui-iconfont">{{ (subjectId == item.id && subjectTypeCode == 1 ) ? '&#xe6a7;' : '' }}</i></div>
+					    	</div>
+						</div>
+					</div>
+				</div>
+				<div class="news-buttons">
+					<div class="weui-btn weui-btn_primary createnews-buttons-btn btn_next" @click="next()">下一步</div>
+				</div>
+			</div>
+			
+			<div id="step-2" class="swiper-slide">
+				<div class="news-create">
+					<textarea class="news-content" placeholder="请输入您要发布的动态内容" v-model="content"></textarea>
+					<div class="course-info">
+						<div class="course-info-bg"><img :src="bg" class="course-info-bg-img"/></div>
+						<div class="course-info-name">{{ name }}</div>
+					</div>
+				</div>
+				
+				<div class="news-buttons">
+					<div class="weui-btn weui-btn_primary createnews-buttons-btn" @click="confirm()">发布</div>
+					<div class="weui-btn weui-btn_plain-primary createnews-buttons-btn btn_prev" >上一步</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</body>
+	
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../plugins/jqweui/js/swiper.js" th:src="@{/plugins/jqweui/js/swiper.js}"></script>
+	<script type="text/javascript" src="../js/livestudio/createnews.js" th:src="@{/js/livestudio/createnews.js}"></script>
+</html>

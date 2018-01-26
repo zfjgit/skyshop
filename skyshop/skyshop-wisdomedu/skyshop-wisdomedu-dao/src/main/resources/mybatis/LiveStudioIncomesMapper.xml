@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioIncomesDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.livestudio.LiveStudioIncomes">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		
+		<result property="type" column="type" />
+		<result property="incomeAmount" jdbcType="DECIMAL" column="incomeAmount" />
+		<result property="percent" jdbcType="INTEGER" column="percent" />
+		<result property="status" jdbcType="VARCHAR" column="status" />
+		<result property="totalAmount" jdbcType="DECIMAL" column="totalAmount" />
+		
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		<result property="settleTime" jdbcType="TIMESTAMP" column="settleTime" />
+		
+		<result property="subjectName" column="subjectName" />
+		<result property="subjectImg" column="subjectImg" />
+		
+		<association property="liveStudio" column="liveStudioid" select="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioDao.get"></association>
+		<association property="order" column="orderid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserOrderDao.get"></association>
+		<association property="user" column="userid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserDao.get"></association>
+	</resultMap>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM livestudioincomes WHERE id=#{id}
+	</select>
+	
+    <select id="search" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM livestudioincomes WHERE liveStudioid=#{param.liveStudio.id}
+		ORDER BY createtime DESC
+	</select>
+	
+</mapper>

@@ -1,0 +1,44 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>直播间动态管理 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/livestudio/newsmanage.css" th:href="@{/css/livestudio/newsmanage.css}"></link>
+	</head>
+	<body>
+		<div id="news">
+			<div class="news-item" v-for="item in news">
+				<div class="news-date">
+					<div class="news-month">{{ item.month }}月</div>
+					<div class="news-day">{{ item.day }}</div>
+				</div>
+				<div class="news-list">
+					<div class="news-list-item" v-for="n in item.news">
+						<div class="news-content">
+							<div class="news-title">{{n.content}}</div>
+							<div class="news-subject" @click="goSubject(n.subjectType.code, n.subject.id)">
+								<div class="news-subject-logo">
+									<img alt="" :src="n.subject.headimg" class="news-subject-logo-img"/>
+								</div>
+								<div class="news-subject-name">{{n.subject.title}}</div>
+							</div>
+						</div>
+						<div class="news-operations" @click="del(n.id)">
+							<div>
+								<i class="icon Hui-iconfont">&#xe697;</i> {{ n.praiseCount }}
+							</div>
+							<div>
+								<i class="icon Hui-iconfont">&#xe6e2;</i> 删除
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="add-news-btn">
+				<i class="icon Hui-iconfont">&#xe692;</i>
+			</div>
+		</div>
+	</body>
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/livestudio/newsmanage.js" th:src="@{/js/livestudio/newsmanage.js}"></script>
+</html>

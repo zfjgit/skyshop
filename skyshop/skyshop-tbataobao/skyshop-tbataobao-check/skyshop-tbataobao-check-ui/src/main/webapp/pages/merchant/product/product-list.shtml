@@ -1,0 +1,82 @@
+﻿<!--#include virtual="../../common/_meta.shtml" -->
+
+<body uku-application>
+<!--#include virtual="../common/_header.shtml" -->
+
+<!--#include virtual="../common/_menu.shtml" -->
+
+<section class="Hui-article-box">
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span>
+		信息管理
+		<span class="c-gray en">&gt;</span>
+		商品管理
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+	</nav>
+	<div class="Hui-article">
+		<article class="cl pd-20">
+			<div class="text-c" >
+				<span class="select-box inline" style="margin-right: 20px;">
+					<select name="" class="select" uku-selected="productManage.checkStatus|code">
+						<option uku-repeat="item in productManage.checkStatusList" uku-value="item.code" uku-data-item="item">{{item.name}}</option>
+					</select>
+				</span>
+				<span style="height: 35px;line-height: 35px;display: inline-block;">创建时间：</span>
+				<input type="text" onclick="WdatePicker({onpicked:function(dp){productManage.startDate = dp.cal.getNewDateStr();},maxDate:'#F{$dp.$D(\'logmax\')||\'%y-%M-%d\'}'})" id="logmin" uku-value="productManage.startDate" class="input-text Wdate" style="width:120px;">
+				-
+				<input type="text" onclick="WdatePicker({onpicked:function(dp){productManage.endDate = dp.cal.getNewDateStr();},minDate:'#F{$dp.$D(\'logmin\')}',maxDate:'%y-%M-%d'})" id="logmax" uku-value="productManage.endDate" class="input-text Wdate" style="width:120px;">
+				
+				<input type="text" name="" id="" placeholder=" 商品名称"  uku-value="productManage.name" style="width:250px" class="input-text">
+				<button name=""  uku-onclick="productManage.search()" class="btn btn-success" type="button"><i class="Hui-iconfont">&#xe665;</i> 搜商品</button>
+			</div>
+			<div class="cl pd-5 bg-1 bk-gray mt-20">
+				<span class="l">
+<!-- 					<a href="javascript:;" uku-onclick="productManage.allCheckSuccess()" class="btn btn-primary radius"><i class="Hui-iconfont" style="font-size: 15px;">&#xe6a7;</i> 批量通过</a> -->
+<!-- 					<a href="javascript:;" uku-onclick="productManage.deleteAll()" class="btn btn-danger radius"><i class="Hui-iconfont" style="font-size: 15px;">&#xe6e2;</i> 批量删除</a> -->
+				</span>
+				<span class="l" style="height: 30px;line-height: 30px;">共有数据：<strong>{{productManage.page.total}}</strong> 条</span>
+			</div>
+			<div class="mt-20">
+				<table class="table table-border table-bordered table-bg table-hover table-sort">
+					<thead>
+						<tr class="text-c">
+							<th width="25"><input type="checkbox" name="" uku-value="productManage.isCheckedAll" uku-onclick="productManage.checkedAll(this)"></th>
+							<th width="80">ID</th>
+							<th width="350">名称</th>
+							<th width="180">分类</th>
+							<th width="280">店家</th>
+							<th width="250">创建时间</th>
+							<th width="100">产品状态</th>
+							<th width="100">审核状态</th>
+							<th width="70">操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr class="text-c" uku-repeat="item in productManage.products" >
+							<td><input type="checkbox" uku-value="item.isChecked" name=""></td>
+							<td>{{item.id}}</td>
+							<td>{{item.name}}</td>
+							<td>{{item.catagory.name}}</td>
+							<td>{{item.shop.name}}</td>
+							<td>{{item.createTime}}</td>
+							<td>{{item.status.name}}</td>
+							<td class="td-status"><span uku-class="item.checkStatus.code == 0 ? 'label radius label-warning' : item.checkStatus.code == 1 ? 'label radius label-success' : 'label radius label-danger'">{{item.checkStatus.name}}</span></td>
+							<td class="f-14 td-manage">
+								<a style="text-decoration:none" class="ml-5" uku-onclick="productManage.openDetailLayer(item);" href="javascript:;" title="修改"><i class="Hui-iconfont" style="font-size: 20px;">&#xe60c;</i></a>
+<!-- 								<a style="text-decoration:none" class="ml-5" uku-onclick="productManage.deleteOne(item);" href="javascript:;" title="删除"><i class="Hui-iconfont" style="font-size: 20px;">&#xe6e2;</i></a> -->
+							</td>
+						</tr>
+					</tbody>
+				</table>
+				<div id="div-page" style="margin-top: 10px;"></div>
+			</div>
+		</article>
+	</div>
+</section>
+
+<!--#include virtual="../../common/_footer.shtml" -->
+
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/js/merchant/product-list.js"></script>
+</body>
+</html>

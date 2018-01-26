@@ -1,0 +1,61 @@
+.income-history {
+	display: flex;
+	align-content: space-between;
+	justify-content: space-between;
+	padding: 10px;
+	border-bottom: solid 1px #eee;
+	background-color: white;
+}
+.income-record-btn {
+	color: #aaa;
+}
+
+.income-total {
+	padding: 10px;
+	border-bottom: solid 1px #eee;
+	background-color: white;
+	text-align: left;
+}
+.income-total-money {
+	text-align: left;
+}
+.income-total-number {
+	font-size: 25px;
+	color: red;
+}
+.income-total-unit {
+}
+.income-total-tips {
+	color: #aaa;
+	text-align: left;
+}
+.income-detail {
+	display: flex;
+	padding: 10px;
+	background-color: white;
+	border-bottom: solid 1px #eee;
+}
+.income-detail-item {
+	flex-grow: 1;
+}
+.income-detail-name {
+	margin: 5px 0;
+	color: #dcd578;
+}
+.withraw-btn {
+	line-height: 1.6;
+}
+.income-categorys {
+	margin-top: 10px;
+	background-color: white;
+}
+.income-categorys-item {
+	padding: 10px;
+	border-bottom: solid 1px #eee;
+	display: flex;
+	align-content: space-between;
+	justify-content: space-between;
+}
+.income-categorys-item-icon {
+	color: #aaa;
+}

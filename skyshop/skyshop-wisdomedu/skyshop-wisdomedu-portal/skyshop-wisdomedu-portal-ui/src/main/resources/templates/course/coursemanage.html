@@ -1,0 +1,51 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+<title>直播间课程管理 - <th:block th:text="${commonTitle}"></th:block></title>
+<link rel="stylesheet" type="text/css" href="../css/course/coursemanage.css" th:href="@{/css/course/coursemanage.css}"></link>
+</head>
+<body>
+	<div id="coursemanage">
+		<div class="weui-tab">
+			<div class="weui-navbar">
+				<a :class="tab == 'tab1' ? 'weui-navbar__item weui-bar__item--on' : 'weui-navbar__item'" href="#tab1" @click="setCurrentTab('tab1')">系列课</a>
+				<a :class="tab == 'tab2' ? 'weui-navbar__item weui-bar__item--on' : 'weui-navbar__item'" href="#tab2" @click="setCurrentTab('tab2')">课程/话题</a>
+			</div>
+			<div class="weui-tab__bd">
+				<div id="tab1" :class="tab == 'tab1' ? 'weui-tab__bd-item weui-tab__bd-item--active' : 'weui-tab__bd-item'">
+					<div class="course-item" v-for="item in seriesCourses">
+						<div class="course-logo" @click='goSeriesCourseDetail(item.id)'>
+							<img alt="" :src="item.headimg" class="course-logo-img"/>
+						</div>
+						<div class="course-info">
+							<div class="course-info-name" @click='goSeriesCourseDetail(item.id)'>
+								<div class="course-info-name-text">{{ item.title }}</div>
+								<div class="course-info-buy"><i class="icon Hui-iconfont">&#xe611;</i> {{ item.buyCount }} 人购买</div>
+							</div>
+							<div class="course-time"><i class="icon Hui-iconfont">&#xe690;</i> {{ item.createTime }}</div>
+							<div class="course-operations" @click="editSeriesCourse(item.id)"><i class="icon Hui-iconfont">&#xe692;</i> 编辑</div>
+						</div>
+					</div>
+				</div>
+				<div id="tab2" :class="tab == 'tab2' ? 'weui-tab__bd-item weui-tab__bd-item--active' : 'weui-tab__bd-item'">
+					<div class="course-item" v-for="item in courses">
+						<div class="course-logo" @click='goCourseDetail(item.id)'>
+							<img alt="" :src="item.headimg" class="course-logo-img"/>
+						</div>
+						<div class="course-info">
+							<div class="course-info-name" @click='goCourseDetail(item.id)'>
+								<div class="course-info-name-text">{{item.title }}</div>
+								<div class="course-info-buy"><i class="icon Hui-iconfont">&#xe611;</i> {{item.buyCount}} 人购买</div>
+							</div>
+							<div class="course-time"><i class="icon Hui-iconfont">&#xe690;</i> {{item.createTime}}</div>
+							<div class="course-operations" @click="editCourse(item.id)"><i class="icon Hui-iconfont">&#xe692;</i> 编辑</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<th:block th:replace="common/footer" />
+<script type="text/javascript" src="../js/course/coursemanage.js" th:src="@{/js/course/coursemanage.js}"></script>
+</html>

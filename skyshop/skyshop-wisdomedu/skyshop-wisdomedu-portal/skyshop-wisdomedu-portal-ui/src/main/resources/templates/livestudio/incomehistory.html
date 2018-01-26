@@ -1,0 +1,24 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>直播间交易记录 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/livestudio/incomehistory.css" th:href="@{/css/livestudio/incomehistory.css}"></link>
+	</head>
+	<body>
+		<div id="historys">
+			<div class="history-item" v-for="item in incomes">
+				<div class="history-item-icon"><i class="icon Hui-iconfont">&#xe63a;</i></div>
+				<div class="history-item-subject">
+					<div class="history-item-name">{{ item.subjectName }}</div>
+					<div class="history-item-time">{{ item.createTime }}</div>
+				</div>
+				<div>
+					<div class="history-item-money">+{{ item.incomeAmount }}</div>
+					<div class="history-item-money">总收益：{{ item.totalAmount }}</div>
+				</div>
+			</div>
+		</div>
+	</body>
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/livestudio/incomehistory.js" th:src="@{/js/livestudio/incomehistory.js}"></script>
+</html>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.user.IUserOrderItemDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.user.UserOrderItem">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		<result property="subjectType" jdbcType="VARCHAR" column="subjectType" />
+		<result property="subjectName" jdbcType="VARCHAR" column="subjectName" />
+		<result property="subjectImg" jdbcType="VARCHAR" column="subjectImg" />
+		<result property="qty" jdbcType="INTEGER" column="qty" />
+		
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		
+		<result property="price" jdbcType="DECIMAL" column="price" />
+		<result property="discountPrice" jdbcType="DECIMAL" column="discountPrice" />
+		
+		<result property="isGroupBuy" jdbcType="INTEGER" column="isGroupBuy" />
+		
+		<result property="remark" jdbcType="VARCHAR" column="remark" />
+		
+		<association property="order" column="userorderid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserOrderDao.get"></association>
+		<association property="user" column="userid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserDao.get"></association>
+		
+		<discriminator javaType="string" column="subjectType">
+		    <case value="1" resultType="com.sitv.skyshop.wisdomedu.domain.user.UserOrderItem">
+				<association property="subject" column="subjectid" select="com.sitv.skyshop.wisdomedu.dao.course.ISingleCourseDao.get"></association>
+		    </case>
+		    <case value="2" resultType="com.sitv.skyshop.wisdomedu.domain.user.UserOrderItem">
+		        <association property="subject" column="subjectid" select="com.sitv.skyshop.wisdomedu.dao.course.ISeriesCourseDao.get"></association>
+		    </case>
+		</discriminator>
+	</resultMap>
+	
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM userorderitems WHERE id=#{id}
+	</select>
+    
+</mapper>

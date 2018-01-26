@@ -1,0 +1,46 @@
+<!--[if lt IE 9]>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/html5.js"></script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/respond.min.js"></script>
+<![endif]-->
+
+
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/static/h-ui/js/H-ui.js"></script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/static/h-ui.admin/js/H-ui.admin.page.js"></script>
+
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/jquery.validation/1.14.0/jquery.validate.js"></script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/jquery.validation/1.14.0/validate-methods.js"></script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/jquery.validation/1.14.0/messages_zh.js"></script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/jquery.validation/1.14.0/additional-methods.js"></script>
+
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/datatables/1.10.0/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/laypage/1.2/laypage.js"></script>
+
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/h-ui/lib/webuploader/0.1.5/webuploader.min.js"></script>
+
+<!--[if IE 6]>
+<script type="text/javascript" src="http://lib.h-ui.net/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+
+
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/jqweui/js/jquery-weui.js"></script>
+
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/jquery-custom-params.js"></script>
+
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/ukulelejs/dist/uku.js"></script>
+
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/plugins/vue.min.js"></script>
+
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/js/common/data.js"></script>
+<script type="text/javascript" src="<!--#echo var='CONTEXT_PATH'-->/js/common/ctx.js"></script>
+<script>
+	function exit() {
+		del('/syschecker/logout/admin', '', function(d){
+			sessionStorage.clear();
+			window.location.href = config.ui_server_url + '/login.shtml';
+		});
+	}
+</script>

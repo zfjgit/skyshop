@@ -159,7 +159,7 @@ function drawRouletteWheel() {
             }
 		  	
 			// 添加对应图标
-  			if(text.indexOf("商贸通") >= 0){
+  			if(text.indexOf("大米") >= 0){
 	  			var img = document.getElementById("shan-img");
 	  			img.onload = function(){  
 		  			ctx.drawImage(img, -15, 30);      
@@ -355,6 +355,157 @@ function initText() {
     $('body').css('background-image', 'url("' + bg + '")');
 }
 
+// 旋转转盘 item:奖品位置; txt：提示语;
+var rotateFn = function (angles, item){
+    $('#pointer').stopRotate();
+    
+    $('#pointer').rotate({
+        angle: 0,
+        animateTo: angles + 1080,
+        duration: 9000,
+        callback: function (){
+            if(!turnplate.playid) {
+                showMsg('数据连接错误，请检查您的网络连接');
+                return;
+            }
+            
+            turnplate.bRotate = !turnplate.bRotate;
+            
+            var prize = turnplate.prizes[item];
+            
+            turnplate.prize_type = prize.prizes_type;
+            
+            if(prize.prizes_type == 'B' && prize.prizes_original == 0) {
+                showLose();
+                return;
+            }
+            
+            turnplate.playtimes --;
+            
+            showWin(prize.prizes_name, prize.prizes_type);
+            
+            var point = 0;
+            if(prize.prizes_type == 'B') {
+                point = prize.prizes_original;
+            } else {
+                if(turnplate.player.user_tel) {
+                    if(turnplate.player.user_name && turnplate.player.user_address) {
+                        var addr = turnplate.player.user_address + ' / ' + turnplate.player.user_tel + ' / ' + turnplate.player.user_name;
+                        var smstext = sms2.replace('#player#', turnplate.player.account).replace('#prize#', prize.prizes_name).replace('#address#', addr);
+                        var tpl = encodeURI(turnplate.player.user_tel) + '|' + smstext;
+                        $.post(sms, 'type=sms&md5=' + encrypt(tpl).ciphertext.toString(), function(d) {
+                        });
+                    } else {
+                        var smstext = sms1.replace('#player#', turnplate.player.account).replace('#prize#', prize.prizes_name);
+                        var tpl = encodeURI(turnplate.player.user_tel) + '|' + smstext;
+                        $.post(sms, 'type=sms&md5=' + encrypt(tpl).ciphertext.toString(), function(d) {
+                        });
+                    }
+                }
+            }
+            
+            var param = 'type=winning&winning_sno=' + turnplate.playid + '&prize_type=' + prize.prizes_type + '&prize_name=' + prize.prizes_name + 
+                        '&point=' + point;
+            
+            $.post(url, param, function(d){
+                if(d) {
+                    var data = $.parseJSON(d);
+                    if(data.status == 1) {
+                        var point = data.point;
+                        
+                        turnplate.player.point = point;
+                        $('#point').text(point);
+                        setCookie('point', point);
+                        
+                        if(prize.prizes_type == 'B') {
+                            turnplate.playid = '';
+                        }
+                    } else {
+                        showMsg('数据连接错误，请检查您的网络连接');
+                    }
+                }
+            });
+        }
+    });
+    
+    try {
+        document.getElementById('award-audio').src = 'audio/award.wav';
+        document.getElementById('award-audio').play();
+// window.VJPlayer.play("http://8089test.s-itv.com/choujian/award.wav");
+    } catch (e) {
+        alert(e);
+    }
+};
+
+
+var pointerClick = function (){
+    if(turnplate.bRotate) {
+        return;
+    }
+    
+    if(!turnplate.player || !turnplate.player.account || !turnplate.player.pwd) {
+        showMsg('您需要先登录才能参与抽奖');
+        return;
+    }
+    
+    if(turnplate.player.point < turnplate.cost) {
+        showMsg('您的大米点数余额不足，请充值');
+        return;
+    }
+    
+    var account = turnplate.player.account;
+    var pwd = turnplate.player.pwd;
+    $.post(url, 'type=luckDraw&user2_no=' + account + '&user2_pwd=' + pwd + '&game_sno=' + gameid, function(d){
+        if(d) {
+            d = d.replace('\r', '').replace('\n', '');
+            
+            var data = $.parseJSON(d);
+            if(data.status == 1) {
+                var point = data.point;
+                var winning_sno = data.winning_sno;
+                
+                var user_name = data.user_name;
+                var user_tel = data.user_tel;
+                var user_address = data.user_address;
+                
+                $('#user_address').val(user_address);
+                $('#user_name').val(user_name);
+                $('#user_tel').val(user_tel);
+                
+                // var user_name = getCookie('user_name');
+                // var user_tel = getCookie('user_tel');
+                // var user_address = getCookie('user_address');
+                
+                turnplate.player.user_name = user_name;
+                turnplate.player.user_tel = user_tel;
+                turnplate.player.user_address = user_address;
+                
+                turnplate.player.point = point;
+                $('#point').text(point);
+                setCookie('point', point);
+                
+                turnplate.playid = winning_sno;
+                turnplate.playtimes ++;
+            } else {
+                turnplate.playid = '';
+                showMsg('数据连接错误，请检查您的网络连接');
+            }
+        }
+    });
+    
+    turnplate.bRotate = !turnplate.bRotate;
+    
+    // 获取随机数(奖品个数范围内)
+    // var item = rnd(0, turnplate.prizes.length - 1);
+    var item = updateRandom();
+    
+    var itemAngles = 360 / turnplate.prizes.length;
+    var angles = item * itemAngles;
+    
+    rotateFn(angles, item);
+};
+
+
 $(function() {
     initFocus();
     
@@ -431,154 +582,10 @@ $(function() {
 	        showMsg('奖品信息加载失败');
 	    }
 	});
-	
-	// 旋转转盘 item:奖品位置; txt：提示语;
-	var rotateFn = function (angles, item){
-		$('#pointer').stopRotate();
-		
-		$('#pointer').rotate({
-			angle: 0,
-			animateTo: angles + 1080,
-			duration: 9000,
-			callback: function (){
-			    if(!turnplate.playid) {
-			        showMsg('数据连接错误，请检查您的网络连接');
-			        return;
-			    }
-			    
-				turnplate.bRotate = !turnplate.bRotate;
-				
-				var prize = turnplate.prizes[item];
-				
-				turnplate.prize_type = prize.prizes_type;
-				
-				if(prize.prizes_type == 'B' && prize.prizes_original == 0) {
-				    showLose();
-					return;
-				}
-				
-				turnplate.playtimes --;
-				
-				showWin(prize.prizes_name, prize.prizes_type);
-				
-				var point = 0;
-				if(prize.prizes_type == 'B') {
-				    point = prize.prizes_original;
-				} else {
-					if(turnplate.player.user_tel) {
-						if(turnplate.player.user_name && turnplate.player.user_address) {
-							var addr = turnplate.player.user_address + ' / ' + turnplate.player.user_tel + ' / ' + turnplate.player.user_name;
-							var smstext = sms2.replace('#player#', turnplate.player.account).replace('#prize#', prize.prizes_name).replace('#address#', addr);
-							var tpl = encodeURI(turnplate.player.user_tel) + '|' + smstext;
-							$.post(sms, 'type=sms&md5=' + encrypt(tpl).ciphertext.toString(), function(d) {
-							});
-						} else {
-                            var smstext = sms1.replace('#player#', turnplate.player.account).replace('#prize#', prize.prizes_name);
-							var tpl = encodeURI(turnplate.player.user_tel) + '|' + smstext;
-							$.post(sms, 'type=sms&md5=' + encrypt(tpl).ciphertext.toString(), function(d) {
-							});
-						}
-					}
-				}
-				
-				var param = 'type=winning&winning_sno=' + turnplate.playid + '&prize_type=' + prize.prizes_type + '&prize_name=' + prize.prizes_name + 
-				            '&point=' + point;
-				
-				$.post(url, param, function(d){
-                    if(d) {
-                        var data = $.parseJSON(d);
-                        if(data.status == 1) {
-                            var point = data.point;
-                            
-                            turnplate.player.point = point;
-                            $('#point').text(point);
-                            setCookie('point', point);
-                            
-                            if(prize.prizes_type == 'B') {
-                                turnplate.playid = '';
-                            }
-                        } else {
-                            showMsg('数据连接错误，请检查您的网络连接');
-                        }
-                    }
-                });
-			}
-		});
-		
-		try {
-		    window.VJPlayer.play("http://8089test.s-itv.com/choujian/award.wav");
-		} catch (e) {
-	        
-	    }
-	};
 
-	$('#a-pointer').click(function (){
-		if(turnplate.bRotate) {
-			return;
-		}
-		
-		if(!turnplate.player || !turnplate.player.account || !turnplate.player.pwd) {
-		    showMsg('您需要先登录才能参与抽奖');
-		    return;
-		}
-		
-		if(turnplate.player.point < turnplate.cost) {
-		    showMsg('您的商贸通点数余额不足，请充值');
-		    return;
-		}
-		
-		var account = turnplate.player.account;
-		var pwd = turnplate.player.pwd;
-		$.post(url, 'type=luckDraw&user2_no=' + account + '&user2_pwd=' + pwd + '&game_sno=' + gameid, function(d){
-		    if(d) {
-		        d = d.replace('\r', '').replace('\n', '');
-                
-		        var data = $.parseJSON(d);
-		        if(data.status == 1) {
-		            var point = data.point;
-		            var winning_sno = data.winning_sno;
-		            
-		            var user_name = data.user_name;
-		            var user_tel = data.user_tel;
-		            var user_address = data.user_address;
-		            
-		            $('#user_address').val(user_address);
-		            $('#user_name').val(user_name);
-		            $('#user_tel').val(user_tel);
-		            
-		            // var user_name = getCookie('user_name');
-                    // var user_tel = getCookie('user_tel');
-                    // var user_address = getCookie('user_address');
-		            
-		            turnplate.player.user_name = user_name;
-		            turnplate.player.user_tel = user_tel;
-		            turnplate.player.user_address = user_address;
-		            
-		            turnplate.player.point = point;
-		            $('#point').text(point);
-		            setCookie('point', point);
-		            
-		            turnplate.playid = winning_sno;
-		            turnplate.playtimes ++;
-		        } else {
-		            turnplate.playid = '';
-		            showMsg('数据连接错误，请检查您的网络连接');
-		        }
-		    }
-		});
-		
-		turnplate.bRotate = !turnplate.bRotate;
-		
-		// 获取随机数(奖品个数范围内)
-		// var item = rnd(0, turnplate.prizes.length - 1);
-		var item = updateRandom();
-		
-		var itemAngles = 360 / turnplate.prizes.length;
-		var angles = item * itemAngles;
-		
-		rotateFn(angles, item);
-	});
+	$('#a-pointer').on('click', pointerClick);
 });
+
 
 function saveNewAddr() {
     var p = $('#province').val();
@@ -675,7 +682,7 @@ function doLogin(account, pwd) {
                 setCookie('pwd', '');
                 setCookie('point', 0);
                 
-                showMsg('商贸通账号或密码错误');
+                showMsg('大米账号或密码错误');
             }
         }
     });
@@ -708,7 +715,7 @@ function doMacLogin(mac) {
                 setCookie('pwd', '');
                 setCookie('point', 0);
                 
-                showMsg('商贸通账号或密码错误');
+                showMsg('大米账号或密码错误');
             }
         }
     });

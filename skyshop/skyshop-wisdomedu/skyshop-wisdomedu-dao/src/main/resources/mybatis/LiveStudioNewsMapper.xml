@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioNewsDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.livestudio.LiveStudioNews">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		
+		<result property="subjectType" jdbcType="VARCHAR" column="courseType" />
+		<result property="content" jdbcType="VARCHAR" column="content" />
+		<result property="praiseCount" jdbcType="INTEGER" column="praiseCount" />
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		
+		<association property="liveStudio" column="liveStudioid" select="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioDao.get"></association>
+		<discriminator javaType="string" column="courseType">
+		    <case value="1" resultType="com.sitv.skyshop.wisdomedu.domain.livestudio.LiveStudioNews">
+				<association property="subject" column="courseid" select="com.sitv.skyshop.wisdomedu.dao.course.ISingleCourseDao.get"></association>
+		    </case>
+		    <case value="2" resultType="com.sitv.skyshop.wisdomedu.domain.livestudio.LiveStudioNews">
+		        <association property="subject" column="courseid" select="com.sitv.skyshop.wisdomedu.dao.course.ISeriesCourseDao.get"></association>
+		    </case>
+		</discriminator>
+	</resultMap>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM livestudionews WHERE id=#{id}
+	</select>
+	
+    <select id="search" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM livestudionews WHERE 1=1
+		<if test="param != null and param.liveStudio != null">
+		    AND livestudioid=#{param.liveStudio.id}
+		</if>
+		ORDER BY createtime DESC
+	</select>
+	
+    <insert id="insert" statementType="PREPARED">
+        INSERT INTO livestudionews (courseType, courseId, livestudioid, content, praisecount, createtime) VALUES (#{subjectType.code}, #{subject.id}, #{liveStudio.id}, #{content}, #{praiseCount}, #{createTime})
+    </insert>
+</mapper>

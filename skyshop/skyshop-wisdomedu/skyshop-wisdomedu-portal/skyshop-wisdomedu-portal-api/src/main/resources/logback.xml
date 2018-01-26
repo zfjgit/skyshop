@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="true">
+	<property name="logfile_path" value="${catalina.home}/logs"></property>
+	<property name="logfile_name" value="wisdomedu"></property>
+
+	<appender name="stdout" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder charset="UTF-8">
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} %level [%thread]
+				%replace(%caller{1}){'(\bCaller\+?0?\s*at?)|\r|\n|\t', ''} - %msg%n
+			</pattern>
+		</encoder>
+	</appender>
+
+<!-- 	<appender name="logfile" -->
+<!-- 		class="ch.qos.logback.core.rolling.RollingFileAppender"> -->
+<!-- 		<File>${logfile_path}/${logfile_name}.log</File> -->
+<!-- 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy"> -->
+<!-- 			<FileNamePattern>${logfile_path}/${logfile_name}.log.%d{yyyy-MM-dd}.gz -->
+<!-- 			</FileNamePattern> -->
+<!-- 		</rollingPolicy> -->
+<!-- 		<encoder charset="UTF-8"> -->
+<!-- 			<pattern>%d{yyyy-MM-dd HH:mm:ss} %level [%thread] -->
+<!-- 				%replace(%caller{1}){'(\bCaller\+?0?\s*at?)|\r|\n|\t', ''} - %msg%n -->
+<!-- 			</pattern> -->
+<!-- 		</encoder> -->
+<!-- 	</appender> -->
+
+	<appender name="logfile"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+<!-- 		<File>${logfile_path}/${logfile_name}.log</File> -->
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!--日志文件归档文件名 按天来回滚{yyyy-MM-dd｝，如果需要按小时来回滚，则设置为{yyyy-MM-dd_HH} -->
+			<FileNamePattern>${logfile_path}/${logfile_name}.%d{yyyy-MM-dd}.%i.log
+			</FileNamePattern>
+			<!--日滚，如果超过7天，则会将前面1天的日志文件删除 -->
+			<MaxHistory>7</MaxHistory>
+			<!--按文件大小滚动，日志文件超过设置大小则归档一次 -->
+			<timeBasedFileNamingAndTriggeringPolicy
+				class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+				<!-- or whenever the file size reaches 50MB 就归档 -->
+				<maxFileSize>5MB</maxFileSize>
+			</timeBasedFileNamingAndTriggeringPolicy>
+		</rollingPolicy>
+		<layout class="ch.qos.logback.classic.PatternLayout">
+			<!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符 -->
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} - %msg%n
+			</pattern>
+		</layout>
+	</appender>
+
+	<logger name="org.apache" additivity="false">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="org.springframework" additivity="false">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="org.springframework.data.redis" additivity="false">
+		<level value="INFO" />
+	</logger>
+	<logger name="springfox.documentation" additivity="false">
+		<level value="INFO" />
+	</logger>
+	<logger name="net.sf.ehcache" additivity="false">
+		<level value="INFO" />
+	</logger>
+	<logger name="org.mybatis" additivity="false">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="org.hibernate" additivity="false">
+		<level value="INFO" />
+	</logger>
+	<logger name="com.alibaba" additivity="false">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="com.sitv.skyshop" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="com.sitv.skyshop.base" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="com.sitv.skyshop.common" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="com.sitv.skyshop.common.dao" additivity="false">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="com.sitv.skyshop.wisdomedu.service" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="com.sitv.skyshop.wisdomedu.task" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="com.sitv.skyshop.wisdomedu.portal" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="com.sitv.skyshop.wisdomedu.runner" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+	<logger name="com.sitv.skyshop.wisdomedu.dao" additivity="true">
+		<level value="DEBUG" />
+	</logger>
+
+	<logger name="mybatis.dao." additivity="false">
+		<level value="DEBUG" />
+	</logger>
+
+
+	<root level="DEBUG">
+		<appender-ref ref="stdout" />
+	</root>
+	<root level="DEBUG">
+		<appender-ref ref="logfile" />
+	</root>
+</configuration>
+

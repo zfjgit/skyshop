@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.tbataobao.dao.ISysCategoryDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.common.domain.SysCategory">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		<result property="name" jdbcType="VARCHAR" column="name" />
+		<result property="level" jdbcType="INTEGER" column="level" />
+		<association property="parent" column="parentid" select="get"></association>
+	</resultMap>
+	
+	<select id="findChildrens" resultMap="BaseResultMap" parameterType="long" statementType="PREPARED">
+		SELECT * 
+		FROM configurations
+		WHERE parentid=#{id} AND classification='PRODUCTCATEGORY'
+	</select>
+	
+	<select id="get" resultMap="BaseResultMap" parameterType="long" statementType="PREPARED">
+	    SELECT * 
+		FROM configurations
+		WHERE id=#{id}
+	</select>
+	
+</mapper>

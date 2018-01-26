@@ -83,8 +83,6 @@
 		<if test="param != null and param.operator != null and param.operator.name != null">
 			AND simcard_operator = #{param.operator.code}
 		</if>
-		<if test="sortField != null and sortDir != null">
-			ORDER BY ${sortField} ${sortDir}
-		</if>
+		ORDER BY simcard_sno DESC
 	</select>
 </mapper>

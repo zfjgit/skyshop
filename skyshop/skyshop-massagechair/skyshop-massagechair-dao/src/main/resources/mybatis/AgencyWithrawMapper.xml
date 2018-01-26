@@ -41,6 +41,30 @@
 		WHERE record_sno=#{id}
 	</update>
 	
+	<select id="getWithrawTotalMoney" resultType="java.math.BigDecimal" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
+		SELECT ISNULL(sum(record_money),0)
+		FROM tab_present_record  
+		WHERE 1 = 1 
+			AND user3_sno = #{param.agency.id}
+		<if test="param != null and param.bank != null">
+			AND bank_name LIKE '%' + #{param.bank} +'%'
+		</if>
+		<if test="param != null and param.accountName != null">
+			AND bank_user LIKE '%' + #{param.accountName} + '%'
+		</if>
+		<if test="param != null and param.account != null">
+			AND bank_num = #{param.account}
+		</if>
+		<if test="param != null and param.status != null and param.status.code != ''">
+			AND record_status = #{param.status.code}
+		</if>
+		<if test="param != null and param.endDate != null">
+			AND cdate &lt; (#{param.endDate} + 1)
+		</if>
+		<if test="param != null and param.startDate != null">
+			AND cdate &gt;= #{param.startDate}
+		</if>
+	</select>
 
 	<select id="search" resultMap="BaseResultMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo">
 		SELECT *
@@ -56,19 +80,17 @@
 		<if test="param != null and param.account != null">
 			AND bank_num = #{param.account}
 		</if>
-		<if test="param != null and param.status != null">
+		<if test="param != null and param.status != null and param.status.code != ''">
 			AND record_status = #{param.status.code}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND cdate &lt;= #{param.endDate}
+			AND cdate &lt; (#{param.endDate} + 1)
 		</if>
 		
 		<if test="param != null and param.startDate != null">
 			AND cdate &gt;= #{param.startDate}
 		</if>
-		<if test="sortField != null and sortDir != null">
-			ORDER BY ${sortField} ${sortDir}
-		</if>
+		ORDER BY record_sno DESC
 	</select>
 	
 </mapper>

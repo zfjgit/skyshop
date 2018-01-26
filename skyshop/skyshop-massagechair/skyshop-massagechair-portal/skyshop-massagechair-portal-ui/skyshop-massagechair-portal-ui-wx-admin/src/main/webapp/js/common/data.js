@@ -370,6 +370,51 @@ function AgencyInfo() {
     this.detailUrl = 'agents_detail.html?';
 }
 
+function WithrawRecordManageInfo() {
+    this.page = new PageInfo();
+    
+    this.records = [ new WithrawInfo() ];
+    this.total = 0;
+    this.startDate = today(-30);
+    this.endDate = today();
+    this.status = new EnumInfo();
+    
+    // NEW("A", "待审核"), PROCESSING("B", "处理中"), DONE("C", "提现成功"), FAILED("D", "提现失败");
+    this.statusItems = [ {
+        code : '',
+        name : '全部'
+    }, {
+        code : 'A',
+        name : '待审核'
+    }, {
+        code : 'B',
+        name : '处理中'
+    }, {
+        code : 'C',
+        name : '提现成功'
+    }, {
+        code : 'D',
+        name : '提现失败'
+    }, ];
+    
+    this.statusPairs = {};
+}
+
+function WithrawInfo() {
+    this.money = '';
+    this.agency = new AgencyInfo();
+    this.bank = new BankAccountInfo();
+    this.status = new EnumInfo();
+    
+    this.detailUrl = 'withraw_detail.html?';
+}
+
+function BankAccountInfo() {
+    this.bank = '';
+    this.account = '';
+    this.accountName = '';
+}
+
 function EnumInfo() {
     this.code = '';
     this.name = '';

@@ -1,0 +1,85 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>创建话题/课程 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/course/course.css" th:href="@{/css/course/course.css}"></link>
+	  	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/3.3.1/css/swiper.min.css">
+	</head>
+	<body>
+		<div class="swiper-container">
+		<div id="course" class="swiper-wrapper">
+			<div id="step-1" class="swiper-slide">
+				<div class="course-field">
+					<div class="course-field-name">课程主题</div>
+					<div class="course-field-value">
+						<textarea rows="" cols="" placeholder="请输入课程主题" class="course-field-title" v-model="title"></textarea>
+					</div>
+				</div>
+				
+				<div class="course-field">
+					<div class="course-field-name">开始时间</div>
+					<div class="course-field-value">
+						<input type="text" id='datetime-picker' readonly="readonly" @change="setStartTime()"/>
+					</div>
+				</div>
+				
+				<div class="course-field">
+					<div class="course-field-name">课程形式</div>
+					<div class="course-field-form-item" v-for="(item, index) in formTypes" @click="setCourseForm(item.code)">
+						<div class="course-field-form-item-select">
+							<i class="icon Hui-iconfont" :style="item.code == formTypeCode ? 'color: red' : ''">{{ item.code == formTypeCode ? '&#xe6a8;' : '&#xe608;' }}</i>
+						</div>
+						<div class="course-field-form-item-text">
+							<div class="">{{item.name}}</div>
+							<div class="course-field-form-item-text-hint">{{item.hint}}</div>
+						</div>
+						<div class="course-field-form-item-example" @click.stop="showExample(index)">
+							<i class="icon Hui-iconfont">&#xe667;</i> <span class="">示例</span>
+						</div>
+					</div>
+				</div>
+				
+				<div>
+					<div class="weui-btn weui-btn_primary margin_10px btn_next" @click="next()">下一步</div>
+				</div>
+			</div>
+			
+			<div id="step-2" class="swiper-slide">
+				<div class="live-type-select-title">
+					选择直播类型
+				</div>
+				<div class="live-type-select-hint">
+					选择后不能更改
+				</div>
+				
+				<div class="live-type-select">
+					<div class="live-type-select-item" v-for="(item, index) in liveTypes" @click="setLiveType(item.code)">
+						<div class="live-type-icon">
+							<live-type-icon :class="item.iconclass" :style="item.code == liveTypeCode ? 'color:red' : ''"></live-type-icon>
+						</div>
+						<div class="live-type-title">
+							{{ item.name }}
+						</div>
+						<div class="live-type-arrow" :style="item.code == liveTypeCode ? '' : 'display:none'"></div>
+					</div>
+				</div>
+				
+				<div class="live-type-item-settings">
+					<div class="live-type-select-item" v-for="(item, index) in liveTypes" :style="item.code == liveTypeCode ? '' : 'display:none'">
+						<div :is="item.component" ></div>
+					</div>
+				</div>
+				
+				<div class="live-type-buttons">
+					<a href="javascript:;" class="weui-btn weui-btn_primary btn_confirm" @click="confirm()">确定</a>
+					<a href="javascript:;" class="weui-btn weui-btn_plain-primary btn_prev" >上一步</a>
+				</div>
+			</div>
+		</div>
+		</div>
+	</body>
+	
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../plugins/jqweui/js/swiper.js" th:src="@{/plugins/jqweui/js/swiper.js}"></script>
+	<script type="text/javascript" src="../js/course/createsinglecourse.js" th:src="@{/js/course/createsinglecourse.js}"></script>
+</html>

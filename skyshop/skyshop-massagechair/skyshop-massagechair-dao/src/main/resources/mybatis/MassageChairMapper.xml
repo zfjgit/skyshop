@@ -170,8 +170,6 @@
 		<if test="param != null and param.installationAddress != null and param.installationAddress.fullAddress != null">
 			AND m.install_sno=#{param.installationAddress.id}
 		</if>
-		<if test="sortField != null and sortDir != null">
-			ORDER BY ${sortField} ${sortDir}
-		</if>
+		ORDER BY chairs_sno DESC
 	</select>
 </mapper>

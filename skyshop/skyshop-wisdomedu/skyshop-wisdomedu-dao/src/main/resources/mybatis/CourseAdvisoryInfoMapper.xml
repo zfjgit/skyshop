@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.course.ICourseAdvisoryDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.dto.course.CourseAdvisoryInfo">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		<result property="title" jdbcType="VARCHAR" column="title" />
+		<result property="advisoryCount" jdbcType="INTEGER" column="advisoryCount" />
+		<result property="lastAdvisoryTime" jdbcType="TIMESTAMP" column="lastAdvisoryTime" />
+	</resultMap>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM users WHERE id=#{id}
+	</select>
+	
+    <select id="findCourseAdvisorys" resultMap="BaseResultMap" statementType="PREPARED">
+        SELECT c.id, c.title, ISNULL(SUM(1), 0) advisoryCount, MAX(a.createTime) lastAdvisoryTime 
+        FROM usercourseadvisorys a,
+        	<choose>
+        	    <when test="advisorySubjectType.code == 1">
+        	        courses c
+        	    </when>
+        	    <otherwise>
+        	        seriescourses c
+        	    </otherwise>
+        	</choose> 
+        WHERE a.courseid=c.id AND a.coursetype=#{advisorySubjectType.code} 
+        GROUP BY c.id, c.title
+    </select>
+    
+    
+</mapper>

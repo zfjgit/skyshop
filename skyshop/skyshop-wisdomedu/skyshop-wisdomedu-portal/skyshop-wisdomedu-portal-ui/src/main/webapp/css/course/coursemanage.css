@@ -1,0 +1,43 @@
+.course-item {
+	display: flex;
+	
+	padding: 10px;
+	background-color: white;
+	border-bottom: solid 1px #eee;
+}
+.course-logo {
+}
+.course-logo-img {
+	width: 70px;
+	height: 55px;
+}
+.course-info {
+	text-align: left;
+	flex-grow: 1;
+	margin-left: 10px;
+	align-self: center;
+}
+.course-info-name {
+	display: flex;
+	
+	align-content: space-between;
+	justify-content: space-between;
+}
+.course-info-name-text {
+	text-align: left;
+}
+.course-info-buy {
+	text-align: right;
+}
+.course-time {
+	text-align: left;
+	color: #aaa;
+	margin-top: 5px;
+}
+.course-operations {
+	text-align: right;
+	border-top: dotted 1px #eee;
+	margin-top: 5px;
+	padding-top: 5px;
+	color: red;
+}

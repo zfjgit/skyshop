@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.wisdomedu.dao.user.IUserLiveStudioDao" >
+
+    <resultMap id="BaseResultMap" type="com.sitv.skyshop.wisdomedu.domain.user.UserLiveStudio">
+		<id property="id" jdbcType="BIGINT" column="id" />
+		<result property="isLiveNotice" jdbcType="INTEGER" column="isLiveNotice" />
+		<result property="createTime" jdbcType="TIMESTAMP" column="createTime" />
+		<association property="user" column="userid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserDao.get"></association>
+		<association property="liveStudio" column="liveStudioid" select="com.sitv.skyshop.wisdomedu.dao.livestudio.ILiveStudioDao.get"></association>
+	</resultMap>
+    
+    <select id="get" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM userlivestudios WHERE id=#{id}
+	</select>
+	
+    <select id="search" resultMap="BaseResultMap" statementType="PREPARED">
+		SELECT * FROM userlivestudios WHERE 1=1
+		<if test="param != null and param.liveStudio != null">
+		    AND livestudioid=#{param.liveStudio.id}
+		</if>
+		ORDER BY createtime DESC
+	</select>
+	
+    <delete id="delete" statementType="PREPARED">
+        DELETE FROM userlivestudios WHERE id=#{id}
+    </delete>
+	
+</mapper>

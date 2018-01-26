@@ -1,0 +1,58 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>设置直播间背景 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/livestudio/settings.css" th:href="@{/css/livestudio/settings.css}"></link>
+	</head>
+	<body>
+		<div id="settings">
+			<div class="live-page-header" v-bind:style="bg">
+				<div class="live-page-header-info">
+					<div class="live-page-header-logo">
+						<img alt="" v-bind:src="logo" class="live-page-header-logo-img"/>
+					</div>	
+					<div class="live-page-header-text">
+						<div class="live-page-header-name">{{name}}</div>
+						<div class="live-page-header-follow">{{follow}} 人关注</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="live-page-bg-chose">
+				<div class="live-page-bg-upload">
+					<div class="live-page-bg-upload-title">1.自定义背景</div>
+					<div class="live-page-bg-upload-zone">
+						<div class="live-page-bg-upload-text">
+							<div class="live-page-bg-upload-btn">
+								<i class="icon Hui-iconfont">&#xe612;</i>上传图片
+							</div>
+							<div class="live-page-bg-upload-tips">
+								从相册选择上传背景（尺寸：750x370）
+							</div>
+						</div>
+						<input id="file" type="file" v-on:change="uploadBg()" class="live-page-bg-upload-file"/>
+					</div>
+				</div>
+				
+				<div class="live-page-bg-select">
+					<div class="live-page-bg-upload-title">2.选择背景模板</div>
+					<div class="live-page-bg-select-zone">
+						<div v-for="(item, index) in bgs" class="live-page-bg-select-div">
+							<img alt="" :src="item.url" @click="selectBg(index)" class="live-page-bg-select-img"/>
+							<div class="live-page-bg-select-div-cover" :style="item.url == selectedBg ? 'display:flex' : 'display:none'">
+								<i class="icon Hui-iconfont">&#xe6a8;</i>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<div class="live-page-bg-confirm">
+				<div class="weui-btn weui-btn_primary live-page-bg-confirm-btn" @click="confirm()">确定</div>
+			</div>
+		</div>
+	</body>
+	
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/livestudio/settings.js" th:src="@{/js/livestudio/settings.js}"></script>
+</html>

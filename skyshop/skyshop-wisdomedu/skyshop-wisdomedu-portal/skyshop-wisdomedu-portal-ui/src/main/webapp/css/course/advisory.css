@@ -1,0 +1,87 @@
+.course-item {
+	background-color: white;
+	border-bottom: solid 1px #eee;
+	padding: 10px;
+}
+.course-item-title {
+	text-align: left;
+	font-size: 15px;
+}
+.course-item-lasttime {
+	text-align: left;
+	color: #aaa;
+	margin-top: 5px;
+}
+.course-item-count {
+	text-align: right;
+	color: #aaa;
+}
+
+.advisory-item {
+	display: flex;
+	padding: 10px;
+	background-color: white;
+	border-bottom: solid 1px #eee;
+}
+.adv-user-logo {
+}
+.adv-user-logo-img {
+	width: 40px;
+	height: 40px;
+	border-radius: 50%;
+	border: solid 1px #eee;
+}
+.adv-user-content {
+	margin-left: 10px;
+	flex-grow: 1;
+}
+.adv-username {
+	color: #606060;
+	text-align: left;
+	font-size: 14px;
+}
+.adv-content {
+	text-align: left;
+	margin-top: 5px;
+	font-size: 14px;
+}
+.adv-operations {
+	margin-top: 5px;
+	display: flex;
+	align-content: space-between;
+	justify-content: space-between;
+	padding-bottom: 5px;
+}
+.adv-time {
+	align-self: center;
+	color: #ccc;
+	text-align: left;
+}
+.adv-reply-btn {
+	text-align: right;
+	flex-grow: 1;
+	font-size: 13px;
+}
+.adv-reply {
+	padding: 5px;
+	border-top: solid 1px #eee;
+}
+.adv-reply-title {
+	color: #606060;
+	text-align: left;
+	font-size: 14px;
+	border-left: solid 5px green;
+	padding-left: 5px;
+}
+.adv-reply-content {
+	margin-top: 5px;
+	text-align: left;
+	font-size: 14px;
+	padding-left: 10px;
+}
+.adv-reply-time {
+	margin-top: 5px;
+	color: #ccc;
+	text-align: left;
+	padding-left: 10px;
+}

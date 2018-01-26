@@ -3,6 +3,8 @@
  */
 package com.sitv.skyshop.common.service;
 
+import java.util.List;
+
 import com.sitv.skyshop.common.dto.IndustryInfo;
 import com.sitv.skyshop.service.IBaseService;
 
@@ -11,5 +13,7 @@ import com.sitv.skyshop.service.IBaseService;
  * @version 2017年7月25日
  */
 public interface IIndustryService extends IBaseService<IndustryInfo> {
+
+	List<IndustryInfo> findAll();
 
 }

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sitv.skyshop.tbataobao.dao.IShopDao" >
+    
+	<select id="get" resultType="java.util.HashMap" parameterType="long" statementType="PREPARED">
+		SELECT s.idx id, s.shopName name, s.userphone phone, convert(varchar, s.createTime, 120) createTime, s.status, 
+			p.areaidx provinceid, p.areaname province, c.areaidx cityid, c.areaname city, d.areaidx districtid, d.areaname district, 
+			s.userAddress, k.kindidx industryId, k.title industryName,s.ischecked, s.remark, 
+			s.logo, s.banner banner1, s.banner2, s.banner3
+		FROM tb_shop s 
+			LEFT JOIN tb_shop_kind k ON s.kindidx=k.kindidx
+			LEFT JOIN tb_area p ON s.province=p.areaidx
+			LEFT JOIN tb_area c ON s.city=c.areaidx
+			LEFT JOIN tb_area d ON s.district=d.areaidx
+		WHERE idx=#{id}
+	</select>
+	
+	<select id="find" resultType="java.util.HashMap" parameterType="com.sitv.skyshop.dto.SearchParamInfo" statementType="PREPARED">
+		SELECT s.idx id, s.shopName name, s.userphone phone, convert(varchar, s.createTime, 120) createTime, s.status, 
+			p.areaname province, c.areaname city, d.areaname district, s.userAddress, k.title industry,s.ischecked
+		FROM tb_shop s 
+			LEFT JOIN tb_shop_kind k ON s.kindidx=k.kindidx
+			LEFT JOIN tb_area p ON s.province=p.areaidx
+			LEFT JOIN tb_area c ON s.city=c.areaidx
+			LEFT JOIN tb_area d ON s.district=d.areaidx
+		WHERE s.ismanager=0
+		<if test="param != null and param.name != null and param.name != '' ">
+		    AND s.shopname LIKE '%' + #{param.name} + '%'
+		</if>
+		<if test="param != null and param.checkStatus != null and param.checkStatus.code != '' ">
+		    AND s.ischecked=#{param.checkStatus.code}
+		</if>
+		<if test="param != null and param.startDate != null ">
+		    AND s.createTime &gt;= #{param.startDate}
+		</if>
+		<if test="param != null and param.endDate != null ">
+		    AND s.createTime &lt;= #{param.endDate}
+		</if>
+		ORDER BY s.idx DESC
+	</select>
+	
+	<update id="update" statementType="PREPARED">
+	    UPDATE tb_shop 
+	    SET shopname=#{name}, userPhone=#{phone}, province=#{province}, city=#{city}, district=#{district}, useraddress=#{detailAddress}, remark=#{introducation}, 
+	    	logo=#{logo}, banner=#{banner}, banner2=#{banner2}, banner3=#{banner3}, kindidx=#{industry}, status=#{status}, ischecked=0
+	    WHERE idx=#{id}
+	</update>
+	
+	<update id="updateCheckStatus" statementType="PREPARED">
+	    UPDATE tb_shop SET ischecked=#{checkStatusCode} WHERE idx=#{id}
+	</update>
+	
+	<update id="batchUpdateCheckStatus" statementType="PREPARED">
+	    UPDATE tb_shop SET ischecked=#{checkStatusCode} WHERE idx in 
+	    <foreach collection="ids" item="item" index="index" open="(" separator="," close=")">
+	        #{item}
+		</foreach>
+	</update>
+</mapper>

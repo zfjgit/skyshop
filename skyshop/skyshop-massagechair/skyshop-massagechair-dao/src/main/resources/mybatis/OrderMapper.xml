@@ -114,7 +114,7 @@
 			AND orders_createtime &gt;= #{param.startDate}
 		</if>
 		<if test="param != null and param.endDate != null">
-			AND orders_createtime &lt;= #{param.endDate}
+			AND orders_createtime &lt; (#{param.endDate} + 1)
 		</if>
 		<if test="param != null and param.installationAddress != null">
 			AND install_sno= #{param.installationAddress.id}

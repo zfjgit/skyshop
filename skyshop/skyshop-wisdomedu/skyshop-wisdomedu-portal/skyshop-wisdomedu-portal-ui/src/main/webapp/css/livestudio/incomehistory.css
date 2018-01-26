@@ -1,0 +1,32 @@
+.history-item {
+	display: flex;
+	padding: 10px;
+	background-color: white;
+	border-bottom: solid 1px #eee;
+}
+.history-item-icon {
+	width: 30px;
+	height: 30px;
+	line-height: 20px;
+	border: solid 1px red;
+	border-radius: 50%;
+	align-self: center;
+	font-size: 25px;
+	color: red;
+}
+.history-item-subject {
+	flex-grow: 1;
+	flex-basis: 50%;
+	text-align: left;
+	margin-left: 10px;
+}
+.history-item-name {
+	text-align: left;
+}
+.history-item-time {
+	text-align: left;
+	color: #aaa;
+}
+.history-item-money {
+	text-align: right;
+}

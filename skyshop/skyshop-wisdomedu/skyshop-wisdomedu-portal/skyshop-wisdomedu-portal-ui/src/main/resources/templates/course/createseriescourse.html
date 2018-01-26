@@ -1,0 +1,71 @@
+<!DOCTYPE html >
+<html xmlns:th="http://www.thymeleaf.org">
+	<head th:replace="common/meta ::common_header (~{::title},~{::link})">
+	  	<title>创建系列课 - <th:block th:text="${commonTitle}"></th:block></title>
+	  	<link rel="stylesheet" type="text/css" href="../css/course/seriescourse.css" th:href="@{/css/course/seriescourse.css}"></link>
+	</head>
+	<body>
+		<div id="seriescourse">
+			<div class="seriescourse-poster">
+				<div class="seriescourse-poster-div" :style="posterUploadBg">
+					<div class="seriescourse-poster-icon" :style="poster == '' ? '' : 'display:none'"><i class="icon Hui-iconfont">&#xe612;</i></div>
+					<div class="seriescourse-poster-title" :style="poster == '' ? '' : 'display:none'">上传系列课海报</div>
+					<div class="seriescourse-poster-size" :style="poster == '' ? '' : 'display:none'">(800x500)</div>
+					
+					<div class="seriescourse-poster-bottom-size" :style="poster == '' ? 'display:none' : ''">海报尺寸800x500</div>
+					
+					<input id="file" type="file" v-on:change="uploadPoster()" class="seriescourse-poster-upload"/>
+				</div>
+			</div>
+			
+			<div class="seriescourse-detail">
+				<div class="seriescourse-detail-item">
+					<div>系列课名称</div>
+					<div class="seriescourse-detail-item-value"><input name="name" placeholder="系列课名称最多40个字" v-model="name"/></div>
+				</div>
+				<div class="seriescourse-detail-item">
+					<div>系列课简介</div>
+					<div class="seriescourse-detail-item-value" @click="editIntro()"><input maxlength="10" v-model="introduction" readonly="readonly"/><i class="icon Hui-iconfont">&#xe6d7;</i></div>
+				</div>
+				<div class="seriescourse-detail-item">
+					<div>排课计划</div>
+					<div class="seriescourse-detail-item-value"><input name="count" placeholder="请填写具体的开课的节数" v-model="count"/></div>
+				</div>
+				<div class="seriescourse-detail-item">
+					<div>系列课分类</div>
+					<div class="seriescourse-detail-item-value" @click="showSelectCategory()"><span>{{categoryName}}</span><span><i class="icon Hui-iconfont">&#xe6d7;</i></span></div>
+				</div>
+				<div class="seriescourse-detail-item">
+					<div>收费类型</div>
+					<div class="seriescourse-detail-item-value">固定收费</div>
+				</div>
+				<div class="seriescourse-detail-item">
+					<div>价格（元）</div>
+					<div class="seriescourse-detail-item-value"><input name="tickets" v-model="tickets" placeholder="请输入门票价格"/></div>
+				</div>
+			</div>
+			
+			<div class="seriescourse-buttons">
+				<div class="weui-btn weui-btn_primary seriescourse-buttons-confirm" @click="confirm()">确定</div>
+			</div>
+			
+			<div id="categorys" class="weui-popup__container popup-bottom">
+			  	<div class="weui-popup__overlay"></div>
+			  	<div class="weui-popup__modal">
+			  		<div class="category-item">选择系列课分类</div>
+			    	<div class="category-item" v-for="item in categorys" @click="selectCategory(item)">
+			    		<div class="category-item-name">{{ item.name }}</div>
+			    		<div class="category-item-icon"><i class="icon Hui-iconfont">{{ categoryId == item.id ? '&#xe6a7;' : '' }}</i></div>
+			    	</div>
+			    	<div class="categorys-buttons">
+			    		<div class="categorys-buttons-btn" @click="cancel()">取消</div>
+			    		<div class="categorys-buttons-btn btn-confirm" @click="confirmCategory()">确定</div>
+			    	</div>
+			  	</div>
+			</div>
+		</div>
+	</body>
+	
+	<th:block th:replace="common/footer" />
+	<script type="text/javascript" src="../js/course/createseriescourse.js" th:src="@{/js/course/createseriescourse.js}"></script>
+</html>

@@ -108,13 +108,13 @@ function initOperatorPicker() {
 function addListeners() {
     $('#btn_save').on('click', function() {
         if (simInfo.sim == '') {
-            showMsg('请输入SIM卡号');
+            showCancelMsg('请输入SIM卡号');
             return;
         }
         
         var dueDate = $('#sim-picker').val();
         if (dueDate == '') {
-            showMsg('请选择到期日');
+            showCancelMsg('请选择到期日');
             return;
         }
         
