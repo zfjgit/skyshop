@@ -70,7 +70,7 @@
 	<repositories>
 		<repository>
 			<id>maven-central</id>
-			<url>http://localhost:8088/nexus/content/repositories/central/</url>
+			<url>http://localhost:8888/repository/maven-central/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -82,7 +82,7 @@
 
 		<repository>
 			<id>nexus-releases</id>
-			<url>http://localhost:8088/nexus/content/repositories/releases/</url>
+			<url>http://localhost:8888/repository/maven-releases/</url>
 			<releases>
 				<enabled>true</enabled>
 			</releases>
@@ -93,7 +93,7 @@
 		
 		<repository>
 			<id>nexus-snapshots</id>
-			<url>http://localhost:8088/nexus/content/repositories/snapshots/</url>
+			<url>http://localhost:8888/repository/maven-snapshots/</url>
 			<releases>
 				<enabled>false</enabled>
 			</releases>
@@ -154,12 +154,12 @@
 		<repository>
 			<id>nexus-releases</id>
 			<name>Nexus Releases Repository</name>
-			<url>http://localhost:8088/nexus/content/repositories/releases/</url>
+			<url>http://localhost:8888/repository/maven-releases/</url>
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
 			<name>Nexus Snapshots Repository</name>
-			<url>http://localhost:8088/nexus/content/repositories/snapshots/</url>
+			<url>http://localhost:8888/repository/maven-snapshots/</url>
 		</snapshotRepository>
 	</distributionManagement>
 
