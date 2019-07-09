@@ -8,7 +8,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
@@ -20,8 +19,9 @@ import org.springframework.context.annotation.Configuration;
 @EnableAutoConfiguration
 @SpringBootApplication
 @ComponentScan("com.sitv.skyshop")
-public class Application extends SpringBootServletInitializer {
+public class Application extends org.springframework.boot.web.servlet.support.SpringBootServletInitializer {
 
+	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(Application.class);
 	}

@@ -1,6 +1,7 @@
 package com.sitv.skyshop.common.exception.handler;
 
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
+
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import com.sitv.skyshop.dto.ResponseInfo;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
 	private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
 	@ResponseBody

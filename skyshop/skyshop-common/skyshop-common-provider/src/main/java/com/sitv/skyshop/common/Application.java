@@ -5,6 +5,7 @@ package com.sitv.skyshop.common;
 
 import org.springframework.boot.Banner.Mode;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.web.servlet.ServletComponentScan;
 import org.springframework.cloud.client.SpringCloudApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -27,7 +28,7 @@ public class Application {
 	public static void main(String[] args) {
 		SpringApplication springApplication = new SpringApplication(Application.class);
 		springApplication.setBannerMode(Mode.OFF);
-		springApplication.setWebEnvironment(true);
+		springApplication.setWebApplicationType(WebApplicationType.SERVLET);
 		springApplication.run(args);
 	}
 }

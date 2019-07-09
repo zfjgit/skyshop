@@ -20,7 +20,7 @@
 		<result property="remark" jdbcType="VARCHAR" column="remark" />
 		
 		<association property="order" column="userorderid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserOrderDao.get"></association>
-		<association property="user" column="userid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserDao.get"></association>
+<!-- 		<association property="user" column="userid" select="com.sitv.skyshop.wisdomedu.dao.user.IUserDao.get"></association> -->
 		
 		<discriminator javaType="string" column="subjectType">
 		    <case value="1" resultType="com.sitv.skyshop.wisdomedu.domain.user.UserOrderItem">

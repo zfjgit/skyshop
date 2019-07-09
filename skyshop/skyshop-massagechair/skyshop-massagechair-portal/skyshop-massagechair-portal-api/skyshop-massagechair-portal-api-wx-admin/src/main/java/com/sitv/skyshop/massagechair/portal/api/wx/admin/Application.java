@@ -9,7 +9,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.ServletComponentScan;
-import org.springframework.boot.web.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -26,7 +25,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 @ComponentScan({ "com.sitv.skyshop" })
 @ServletComponentScan({ "com.sitv.skyshop" })
 @EnableAspectJAutoProxy(proxyTargetClass = true)
-public class Application extends SpringBootServletInitializer {
+public class Application extends org.springframework.boot.web.servlet.support.SpringBootServletInitializer {
 
 	@Bean
 	public MethodValidationPostProcessor methodValidationPostProcessor() {
@@ -34,8 +33,8 @@ public class Application extends SpringBootServletInitializer {
 	}
 
 	@Bean
-	public FilterRegistrationBean filterRegistrationBean() {
-		FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+	public FilterRegistrationBean<CharacterEncodingFilter> filterRegistrationBean() {
+		FilterRegistrationBean<CharacterEncodingFilter> registrationBean = new FilterRegistrationBean<>();
 		CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
 		characterEncodingFilter.setForceEncoding(true);
 		characterEncodingFilter.setEncoding("UTF-8");
@@ -43,6 +42,7 @@ public class Application extends SpringBootServletInitializer {
 		return registrationBean;
 	}
 
+	@Override
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
 		return builder.sources(Application.class);
 	}

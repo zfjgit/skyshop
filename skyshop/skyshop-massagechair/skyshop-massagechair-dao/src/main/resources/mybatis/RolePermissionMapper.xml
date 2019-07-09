@@ -4,7 +4,7 @@
 <mapper namespace="com.sitv.skyshop.massagechair.dao.user.IRolePermissionDao" >
 
 	<resultMap id="BaseResultMap" type="com.sitv.skyshop.massagechair.domain.user.UserRole">
-		<association property="permission" column="permissionid" select="com.sitv.skyshop.massagechair.dao.user.IPermissionDao.get"/>
+<!-- 		<association property="permission" column="permissionid" select="com.sitv.skyshop.massagechair.dao.user.IPermissionDao.get"/> -->
 		<association property="role" column="roleid" select="com.sitv.skyshop.massagechair.dao.user.IRoleDao.get"/>
 	</resultMap>
 	

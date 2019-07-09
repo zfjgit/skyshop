@@ -10,7 +10,7 @@
 		<result property="introduction" jdbcType="VARCHAR" column="introduction" />
 		<result property="headimg" jdbcType="VARCHAR" column="headimg" />
 		<result property="presenter" jdbcType="VARCHAR" column="presenter" />
-		<result property="presenterIntroducation" jdbcType="VARCHAR" column="presenterIntroducation" />
+		<result property="presenterIntroduction" jdbcType="VARCHAR" column="presenterIntroducation" />
 		<result property="isSilenceMode" jdbcType="INTEGER" column="isSilenceMode" />
 		<result property="isShowDetailPage" jdbcType="INTEGER" column="isShowDetailPage" />
 		<result property="passwd" jdbcType="VARCHAR" column="passwd" />
