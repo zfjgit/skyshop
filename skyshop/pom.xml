@@ -18,7 +18,7 @@
 	<properties>
 		<kaptcha.version>2.3.2</kaptcha.version>
 		<skyshop.version>1.0.0-SNAPSHOT</skyshop.version>
-		<springboot.version>2.1.6.RELEASE</springboot.version>
+		<springboot.version>2.5.12</springboot.version>
 		
 		<!-- swagger版本导致feign 空指针错误 -->
 		<!-- 1. 如果swagger版本是v1.x，那么请参考：https://segmentfault.com/a/1190000006595187 -->
